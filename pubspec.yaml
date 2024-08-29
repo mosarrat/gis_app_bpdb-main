@@ -1,0 +1,126 @@
+name: gis_app_bpdb
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.3 <4.0.0'
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+  http: ^1.2.1
+  intl: ^0.19.0
+  awesome_snackbar_content: ^0.1.1
+  flutter_async_autocomplete: ^0.1.1
+  connectivity: ^3.0.6
+  #geolocator: ^12.0.0
+  fluttertoast: ^8.2.5
+  carousel_slider: ^4.2.1
+  flutter_map: any
+  latlong2: ^0.9.1
+  flutter_map_geojson: ^1.0.8
+  #flutter_map_cancellable_tile_provider: ^3.0.0
+  fl_chart: ^0.68.0
+  flutter_map_arcgis: any # or the latest version on Pub
+  dio: any # or the latest version on Pub
+  latlng: any
+  # awesome_dialog: ^3.2.1
+  pie_chart: ^5.4.0
+  get_storage: ^2.0.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+# The following section is specific to Flutter packages.
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/carousel/
+    - assets/images/android-drawer.jpg
+    - assets/images/android-drawer-bg.jpg
+    - assets/images/bpdb_logo.png
+    - assets/images/profile_avater.png
+    #- assets/icons/1.png
+    #- assets/icons/2.png
+    #- assets/icons/3.png
+    #- assets/icons/4.png
+    #- assets/icons/5.png
+    #- assets/icons/6.png
+    #- assets/icons/7.png
+    #- assets/icons/8.png
+    #- assets/icons/9.png
+    #- assets/icons/10.png
+    #- assets/icons/11.png
+    #- assets/icons/12.png
+    #- assets/icons/13.png
+    - assets/icons/appicon.png
+    #- assets/icons/busicon.png
+    - assets/icons/rhd-icon.png
+    - android/app/src/main/res/mipmap-hdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-xhdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png
+    - android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+    #- assets/docs/app_how_to_use.pdf
+    #- assets/sounds/tap.mp3
+    #- assets/sounds/remove.mp3
+    #- assets/json/road_list.json
+    #- assets/json/road_link_list.json
+    #- assets/json/road_link_direction_list.json
+    #- assets/icons/101.png
+    #- assets/icons/102.png
+    #- assets/icons/103.png
+    #- assets/icons/104.png
+    - assets/lang/bangla.png
+    - assets/lang/english.png
+    - assets/icons/substation.png
+    - assets/icons/feederline.png
+    - assets/icons/feederline_2.png
+    - assets/icons/region_menu.png
+    - assets/icons/worldwide.png
+    - assets/icons/pole.png
+    - assets/icons/view_profile.png
+    - assets/icons/profile_main.png
+    - assets/icons/profile_settings.png
+    - assets/icons/profile_summary.png
+    - assets/icons/transformer.png
+    - assets/icons/power-line.png
+    
+  fonts:
+    - family: Exo2
+      fonts:
+        - asset: assets/fonts/Exo2-Regular.ttf
+        - asset: assets/fonts/Exo2-Bold.ttf
+        - asset: assets/fonts/Exo2-Italic.ttf
+        - asset: assets/fonts/Exo2-Light.ttf
+        - asset: assets/fonts/Exo2-Thin.ttf
+    - family: NotoSansBengali
+      fonts:
+        - asset: assets/fonts/bangla_fonts/NotoSansBengali-Regular.ttf
+        - asset: assets/fonts/bangla_fonts/NotoSansBengali-Bold.ttf
+          weight: 700

@@ -4,6 +4,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:gis_app_bpdb/models/region_delails_lookup/dt_info.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
@@ -295,6 +296,8 @@ class CallApi {
       throw Exception('Failed to load hill cutting points!');
     }
   }
+
+  //Future<List<TransformerDetails>> fetchDT({required int substation, required int feederLineId}) {}
 
   //#endregion
 

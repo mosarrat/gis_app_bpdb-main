@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import '../constants/constant.dart';
 import '../models/app_config.dart';
 import '../models/region_delails_lookup/circle.dart';
+import '../models/region_delails_lookup/dt_details.dart';
+import '../models/region_delails_lookup/dt_info.dart';
 import '../models/region_delails_lookup/esu.dart';
 import '../models/region_delails_lookup/poleDetailsId.dart';
 import '../models/region_delails_lookup/poleId.dart';
@@ -15,6 +17,7 @@ import '../models/region_delails_lookup/snd.dart';
 import '../models/region_delails_lookup/substation.dart';
 import '../models/regions/pole.dart';
 import '../models/regions/zone.dart';
+import 'package:gis_app_bpdb/models/region_delails_lookup/dt_info.dart';
 
 class CallApi {
   Future<bool> isConnected() async {
@@ -138,4 +141,54 @@ class CallApi {
       throw Exception('Failed to load Pole info');
     }
   }
+
+  Future<List<TransformerDetails>> fetchDT({
+    int? substation,
+    int? feederLineId,
+  }) async {
+    final String apiUrl = '$myAPILink/api/DistributionTransformers';
+
+    final Uri uri = Uri.parse(
+      feederLineId != 0
+          ? '$apiUrl/search${feederLineId != null ? '?substationId=$substation&feederLineId=$feederLineId' : ''}'
+          : '$apiUrl/search${substation != null ? '?substationId=$substation' : ''}',
+    );
+
+    //print('Constructed URI: $uri');
+
+    try {
+      final response = await http.get(uri);
+      //print('Response status code: ${response.statusCode}');
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = jsonDecode(response.body);
+        //print('Response data: $data');
+
+        List<TransformerDetails> dts =
+            data.map((json) => TransformerDetails.fromJson(json)).toList();
+        //print('Parsed Consumers: $consumers');
+
+        return dts;
+      } else {
+        throw Exception(
+            'Failed to load DT Info! Status code: ${response.statusCode}');
+      }
+    } catch (e) {
+      //print('Error caught: $e');
+      throw Exception('Failed to load DT Info: $e');
+    }
+  }
+
+  Future<List<Transformer>> fetchDTByDetailsId(int id) async {
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/DistributionTransformers/$id'));
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data
+          .map<Transformer>((json) => Transformer.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load Dt info');
+    }
+  } 
 }

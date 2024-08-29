@@ -18,6 +18,7 @@ import 'views/consumers/filter_consumers.dart';
 //import 'widgets/chart/bar_chart_view.dart';
 import 'views/consumers/new_consumer_exp.dart';
 import 'views/consumers/view_tariff_sub_category.dart';
+import 'views/dt/filter_dt.dart';
 import 'views/feederline/new_feeder_ex.dart';
 // import 'views/feederline/new_feederline.dart';
 import 'views/feederline/view_feederline.dart';
@@ -622,12 +623,12 @@ class _DashboardState extends State<Dashboard> {
                               ),
                               title: const Text('View DT Details'),
                               onTap: () async {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => FilterDTDetails(),
-                                //   ),
-                                // );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => FilterDTDetails(),
+                                  ),
+                                );
                               },
                             ),
                           ),

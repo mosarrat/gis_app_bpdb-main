@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../constants/constant.dart';
 import '../models/app_config.dart';
+import '../models/consumer_form_lookup/consumer_list.dart';
 import '../models/consumer_lookup/consumers.dart';
 import '../models/consumer_form_lookup/connection_status.dart';
 import '../models/consumer_form_lookup/connection_type.dart';
@@ -242,26 +244,26 @@ class CallConsumerApi {
 
     // print('feederLineId: $feederLineId');
     // print('consumerNo: $consumerNo');
-
     final Uri uri = Uri.parse(
       consumerNo != null && consumerNo.isNotEmpty
           ? '$apiUrl/$consumerNo'
           : '$apiUrl/search${feederLineId != null ? '?feederLineId=$feederLineId' : ''}',
+          // : '$apiUrl/searchByfeederLineId${feederLineId != null ? '?id=$feederLineId' : ''}',
     );
 
-    //print('Constructed URI: $uri');
+    // print('Constructed URI: $uri');
 
     try {
       final response = await http.get(uri);
-      //print('Response status code: ${response.statusCode}');
-
+      // print('Response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
+        debugPrint(response.body);
         List<dynamic> data = jsonDecode(response.body);
         //print('Response data: $data');
 
         List<Consumers> consumers =
             data.map((json) => Consumers.fromJson(json)).toList();
-        //print('Parsed Consumers: $consumers');
+        // print('Parsed Consumers: $consumers');
 
         return consumers;
       } else {
@@ -269,10 +271,45 @@ class CallConsumerApi {
             'Failed to load consumers! Status code: ${response.statusCode}');
       }
     } catch (e) {
-      //print('Error caught: $e');
+      // print('$e');
       throw Exception('Failed to load consumers: $e');
     }
   }
+
+//   Future<List<ConsumerInfo>> fetchConsumers({
+//   int? feederLineId,
+//   String? consumerNo,
+// }) async {
+//   final String apiUrl = '$myAPILink/api/Consumers';
+
+//   final Uri uri = Uri.parse(
+//     consumerNo != null && consumerNo.isNotEmpty
+//         ? '$apiUrl/$consumerNo'
+//         : '$apiUrl/searchByfeederLineId${feederLineId != null ? '?id=$feederLineId' : ''}',
+//   );
+
+//   print('Constructed URI: $uri');
+
+//   try {
+//   final response = await http.get(uri);
+//   print('Response status code: ${response.statusCode}');
+//   print('Response body: ${response.body}'); // Log the full response body
+//   if (response.statusCode == 200) {
+//     return compute(parseConsumers, response.body);
+//   } else {
+//     throw Exception('Failed to load consumers! Status code: ${response.statusCode}');
+//   }
+// } catch (e) {
+//   print('Error: $e');
+//   throw Exception('Failed to load consumers: $e');
+// }
+// }
+
+List<ConsumerInfo> parseConsumers(String responseBody) {
+  final List<dynamic> data = jsonDecode(responseBody);
+  return data.map((json) => ConsumerInfo.fromJson(json)).toList();
+}
+  
 
   Future<Consumers> createConsumer(Consumers consumer) async {
     /// Condition Checking ///
@@ -284,10 +321,14 @@ class CallConsumerApi {
         'circleId': consumer.circleId != 0 ? consumer.circleId : null,
         'sndId': consumer.sndId != 0 ? consumer.sndId : null,
         'esuId': consumer.esuId != 0 ? consumer.esuId : null,
-        'substationId': consumer.substationId != 0 ? consumer.substationId : null,
-        'feederLineId': consumer.feederLineId != 0 ? consumer.feederLineId : null,
-        'poleDetailsId': consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
-        'servicesPointId': consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
+        'substationId':
+            consumer.substationId != 0 ? consumer.substationId : null,
+        'feederLineId':
+            consumer.feederLineId != 0 ? consumer.feederLineId : null,
+        'poleDetailsId':
+            consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
+        'servicesPointId':
+            consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
         'dtId': consumer.dtId != 0 ? consumer.dtId : null,
         'feederUId': consumer.feederUId != 0 ? consumer.feederUId : null,
         'unionGeoCode': consumer.unionGeoCode,
@@ -396,10 +437,14 @@ class CallConsumerApi {
         'circleId': consumer.circleId != 0 ? consumer.circleId : null,
         'sndId': consumer.sndId != 0 ? consumer.sndId : null,
         'esuId': consumer.esuId != 0 ? consumer.esuId : null,
-        'substationId': consumer.substationId != 0 ? consumer.substationId : null,
-        'feederLineId': consumer.feederLineId != 0 ? consumer.feederLineId : null,
-        'poleDetailsId': consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
-        'servicesPointId': consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
+        'substationId':
+            consumer.substationId != 0 ? consumer.substationId : null,
+        'feederLineId':
+            consumer.feederLineId != 0 ? consumer.feederLineId : null,
+        'poleDetailsId':
+            consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
+        'servicesPointId':
+            consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
         'dtId': consumer.dtId != 0 ? consumer.dtId : null,
         'feederUId': consumer.feederUId != 0 ? consumer.feederUId : null,
         'unionGeoCode': consumer.unionGeoCode,
@@ -429,14 +474,17 @@ class CallConsumerApi {
         'meterModel': consumer.meterModel,
         'meterNumber': consumer.meterNumber,
         'meterManufacturer': consumer.meterManufacturer,
-        'meterReading': consumer.meterReading != 0 ? consumer.meterReading : null,
+        'meterReading':
+            consumer.meterReading != 0 ? consumer.meterReading : null,
         'phasingCodeTypeId':
             consumer.phasingCodeTypeId != 0 ? consumer.phasingCodeTypeId : null,
-        'operatingVoltageId':
-            consumer.operatingVoltageId != 0 ? consumer.operatingVoltageId : null,
+        'operatingVoltageId': consumer.operatingVoltageId != 0
+            ? consumer.operatingVoltageId
+            : null,
         'installDate': consumer.installDate,
-        'connectionStatusId':
-            consumer.connectionStatusId != 0 ? consumer.connectionStatusId : null,
+        'connectionStatusId': consumer.connectionStatusId != 0
+            ? consumer.connectionStatusId
+            : null,
         'connectionTypeId':
             consumer.connectionTypeId != 0 ? consumer.connectionTypeId : null,
         'sanctionedLoad':

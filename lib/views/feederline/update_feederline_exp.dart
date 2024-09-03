@@ -819,7 +819,7 @@ class _EditDialogState extends State<EditDialog> {
                         margin: const EdgeInsets.only(right: 10, bottom: 10,),
                         child: TextButton(
                           child: const Text(
-                            'Cancel',
+                            'Close',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold),

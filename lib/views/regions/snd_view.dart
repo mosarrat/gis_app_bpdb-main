@@ -265,7 +265,7 @@ class _ViewSndState extends State<ViewSnd> {
                             color: const Color.fromARGB(255, 5, 161, 182),
                             child: 
                               TextButton(
-                                child: const Text('Cancel', 
+                                child: const Text('Close', 
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                                 onPressed: () {

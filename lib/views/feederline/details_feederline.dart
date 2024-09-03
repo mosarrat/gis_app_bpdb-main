@@ -72,7 +72,7 @@ Future<void> showDetailDialog(BuildContext context, CallApiService apiService,
                         title: const Text('Region Information'),
                         // tilePadding: EdgeInsets.zero, // Removes padding around the title
                         childrenPadding: EdgeInsets.zero, // Removes padding around the children
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         //trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
                         children: [
@@ -123,7 +123,7 @@ Future<void> showDetailDialog(BuildContext context, CallApiService apiService,
                         title: const Text('Feeder Line Information'),
                         // tilePadding: EdgeInsets.zero, // Removes padding around the title
                         childrenPadding: EdgeInsets.zero, // Removes padding around the children
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor:
                             const Color.fromARGB(255, 241, 245, 245),
                         //trailing: const SizedBox(),
@@ -189,7 +189,7 @@ Future<void> showDetailDialog(BuildContext context, CallApiService apiService,
                         title: const Text('Meter Information'),
                         // tilePadding: EdgeInsets.zero, 
                         childrenPadding: EdgeInsets.zero, 
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
                         //trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
@@ -258,7 +258,7 @@ Future<void> showDetailDialog(BuildContext context, CallApiService apiService,
                         title: const Text('Remarks Information'),
                         // tilePadding: EdgeInsets.zero, 
                         childrenPadding: EdgeInsets.zero, 
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor:
                               const Color.fromARGB(255, 241, 245, 245),
                         //trailing: const SizedBox(),
@@ -286,7 +286,7 @@ Future<void> showDetailDialog(BuildContext context, CallApiService apiService,
                             color: const Color.fromARGB(255, 5, 161, 182),
                             child: 
                               TextButton(
-                                child: const Text('Cancel', 
+                                child: const Text('Close', 
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                                 onPressed: () {

@@ -195,7 +195,7 @@ class _ViewCirclesState extends State<ViewCircles> {
                             color: const Color.fromARGB(255, 5, 161, 182),
                             child: 
                               TextButton(
-                                child: const Text('Cancel', 
+                                child: const Text('Close', 
                                 style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                                 ),
                                 onPressed: () {

@@ -351,7 +351,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             255, 5, 161, 182),
                                         child: TextButton(
                                           child: const Text(
-                                            'Cancel',
+                                            'Close',
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold),

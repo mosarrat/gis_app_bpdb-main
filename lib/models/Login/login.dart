@@ -25,10 +25,10 @@ class LoginResponse {
 }
 
 class User {
-  final String? ZoneId;
-  final String? CircleId;
-  final String? SndId;
-  final String? EsuId;
+  final int? ZoneId;
+  final int? CircleId;
+  final int? SndId;
+  final int? EsuId;
   final String? UserName;
   final String? Email;
   final String? GroupName;

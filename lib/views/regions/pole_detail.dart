@@ -114,7 +114,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                   title: const Text('Region Information'),
                                       // tilePadding: EdgeInsets.zero, 
                                       childrenPadding: EdgeInsets.zero, 
-                                      minTileHeight: 25,
+                                      //minTileHeight: 25,
                                       collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
                                       // trailing: const SizedBox(),
                                       textColor: const Color.fromARGB(255, 5, 161, 182),
@@ -156,7 +156,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                 child: ExpansionTile(
                                   title: const Text('Feeder Wise Pole Information'),
                                   childrenPadding: EdgeInsets.zero, 
-                                  minTileHeight: 25,
+                                  //minTileHeight: 25,
                                   collapsedBackgroundColor:
                                   const Color.fromARGB(255, 241, 245, 245),
                                   // trailing: const SizedBox(),
@@ -251,7 +251,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                 child: ExpansionTile(
                                   title: const Text('Pole Unique Information '),
                                   childrenPadding: EdgeInsets.zero, 
-                                  minTileHeight: 25,
+                                  //minTileHeight: 25,
                                   collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
                                   // trailing: const SizedBox(),
                                   textColor: const Color.fromARGB(255, 5, 161, 182),
@@ -403,7 +403,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                       margin: const EdgeInsets.only(right: 5, bottom: 5,),
                       child: 
                         TextButton(
-                          child: const Text('Cancel', 
+                          child: const Text('Close', 
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                           onPressed: () {

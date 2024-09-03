@@ -151,10 +151,11 @@ class CallApi {
     final Uri uri = Uri.parse(
       feederLineId != 0
           ? '$apiUrl/search${feederLineId != null ? '?substationId=$substation&feederLineId=$feederLineId' : ''}'
+          //? '$apiUrl/search${feederLineId != null ? '?feederLineId=$feederLineId' : ''}'
           : '$apiUrl/search${substation != null ? '?substationId=$substation' : ''}',
     );
 
-    //print('Constructed URI: $uri');
+    //debugPrint('$uri');
 
     try {
       final response = await http.get(uri);

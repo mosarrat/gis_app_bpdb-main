@@ -275,7 +275,7 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             ListTile(
-              minTileHeight: 40,
+              //minTileHeight: 40,
               leading: Icon(
                 Icons.home,
                 // color: const Color.fromARGB(255, 40, 138, 196),
@@ -298,7 +298,7 @@ class _DashboardState extends State<Dashboard> {
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
-                minTileHeight: 40,
+                //minTileHeight: 40,
                 key: region,
                 onExpansionChanged: (expanded) {
                   if (expanded = true) {
@@ -326,7 +326,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 20,
+                            //minTileHeight: 20,,
                             leading: const Icon(
                               Icons.location_pin,
                               color: Color.fromARGB(255, 7, 105, 185),
@@ -345,7 +345,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 20,
+                            //minTileHeight: 20,,
                             leading: const Icon(
                               Icons.circle,
                               color: Color.fromARGB(255, 124, 173, 7),
@@ -364,7 +364,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 20,
+                            //minTileHeight: 20,,
                             leading: const Icon(
                               Icons.circle_outlined,
                               color: Color.fromARGB(255, 241, 59, 59),
@@ -383,7 +383,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 20,
+                            //minTileHeight: 20,,
                             leading: const Icon(
                               Icons.circle_outlined,
                               color: Color.fromARGB(255, 241, 183, 59),
@@ -402,7 +402,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 20,
+                            //minTileHeight: 20,,
                             leading: Image.asset(
                               'assets/icons/substation.png',
                               width: 24,
@@ -432,7 +432,7 @@ class _DashboardState extends State<Dashboard> {
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
-                minTileHeight: 40,
+                //minTileHeight: 40,
                 key: feederline,
                 onExpansionChanged: (expanded) {
                   if (expanded = true) {
@@ -462,7 +462,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 40,
+                            //minTileHeight: 40,
                             leading: const Icon(
                               Icons.add,
                               color: Color.fromARGB(255, 7, 105, 185),
@@ -482,7 +482,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 40,
+                            //minTileHeight: 40,
                             leading: const Icon(
                               Icons.view_agenda,
                               color: Color.fromARGB(255, 124, 173, 7),
@@ -501,7 +501,7 @@ class _DashboardState extends State<Dashboard> {
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
                         //   child: ListTile(
-                        //     minTileHeight: 40,
+                        //     //minTileHeight: 40,
                         //     leading: const Icon(
                         //       Icons.table_chart,
                         //       color: Color.fromARGB(255, 241, 59, 59),
@@ -529,7 +529,7 @@ class _DashboardState extends State<Dashboard> {
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
-                minTileHeight: 40,
+                //minTileHeight: 40,
                 key: pole,
                 onExpansionChanged: (expanded) {
                   if (expanded = true) {
@@ -559,7 +559,7 @@ class _DashboardState extends State<Dashboard> {
                           Padding(
                             padding: const EdgeInsets.only(left: 16.0),
                             child: ListTile(
-                              minTileHeight: 40,
+                              //minTileHeight: 40,
                               leading: const Icon(
                                 Icons.view_stream,
                                 color: Color.fromARGB(255, 35, 159, 216),
@@ -587,7 +587,7 @@ class _DashboardState extends State<Dashboard> {
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
-                minTileHeight: 40,
+                //minTileHeight: 40,
                 key: dt,
                 onExpansionChanged: (expanded) {
                   if (expanded = true) {
@@ -616,7 +616,7 @@ class _DashboardState extends State<Dashboard> {
                           Padding(
                             padding: const EdgeInsets.only(left: 16.0),
                             child: ListTile(
-                              minTileHeight: 40,
+                              //minTileHeight: 40,
                               leading: const Icon(
                                 Icons.view_stream,
                                 color: Color.fromARGB(255, 35, 159, 216),
@@ -645,7 +645,7 @@ class _DashboardState extends State<Dashboard> {
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
-                minTileHeight: 40,
+                //minTileHeight: 40,
                 key: consumer,
                 onExpansionChanged: (expanded) {
                   if (expanded = true) {
@@ -673,7 +673,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 40,
+                            //minTileHeight: 40,
                             leading: const Icon(
                               Icons.group_add,
                               color: Color.fromARGB(255, 7, 105, 185),
@@ -695,7 +695,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 40,
+                            //minTileHeight: 40,
                             leading: const Icon(
                               Icons.groups_2_outlined,
                               color: Color.fromARGB(255, 124, 173, 7),
@@ -716,7 +716,7 @@ class _DashboardState extends State<Dashboard> {
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
                         //   child: ListTile(
-                        //     minTileHeight: 40,
+                        //     //minTileHeight: 40,
                         //     leading: const Icon(
                         //       Icons.groups_2_outlined,
                         //       color: Color.fromARGB(255, 124, 173, 7),
@@ -743,7 +743,7 @@ class _DashboardState extends State<Dashboard> {
             ),
 
             // ListTile(
-            //   minTileHeight: 40,
+            //   //minTileHeight: 40,
             //   leading: Icon(
             //     Icons.map_rounded,
             //     color: const Color.fromARGB(255, 127, 83, 134),
@@ -759,7 +759,7 @@ class _DashboardState extends State<Dashboard> {
             //   },
             // ),
             ListTile(
-              minTileHeight: 40,
+              //minTileHeight: 40,
               leading: Icon(
                 Icons.map_rounded,
                 color: const Color.fromARGB(255, 127, 83, 134),
@@ -780,7 +780,7 @@ class _DashboardState extends State<Dashboard> {
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
-                minTileHeight: 40,
+                //minTileHeight: 40,
                 key: profile,
                 onExpansionChanged: (expanded) {
                   if (expanded = true) {
@@ -809,7 +809,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 40,
+                            //minTileHeight: 40,
                             leading: Image.asset(
                               'assets/icons/profile_summary.png',
                               width: 24,
@@ -836,7 +836,7 @@ class _DashboardState extends State<Dashboard> {
                         Padding(
                           padding: const EdgeInsets.only(left: 16.0),
                           child: ListTile(
-                            minTileHeight: 40,
+                            //minTileHeight: 40,
                             leading: Image.asset(
                               'assets/icons/profile_settings.png',
                               width: 24,
@@ -862,7 +862,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             ///////////////-----Profile Menu-----////////////////
             ListTile(
-              minTileHeight: 40,
+              //minTileHeight: 40,
               leading: Icon(
                 Icons.logout,
                 color: Colors.amber[600],

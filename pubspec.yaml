@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
+  sdk: '>=3.3.4 <4.0.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -50,11 +50,17 @@ dependencies:
   # awesome_dialog: ^3.2.1
   pie_chart: ^5.4.0
   get_storage: ^2.0.3
+  flutter_launcher_icons: "^0.13.1"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/appicon.png"
 
 # The following section is specific to Flutter packages.
 flutter:
@@ -78,7 +84,7 @@ flutter:
     #- assets/icons/11.png
     #- assets/icons/12.png
     #- assets/icons/13.png
-    - assets/icons/appicon.png
+    - assets/icons/
     #- assets/icons/busicon.png
     - assets/icons/rhd-icon.png
     - android/app/src/main/res/mipmap-hdpi/ic_launcher.png

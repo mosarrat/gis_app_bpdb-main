@@ -143,7 +143,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                         title: const Text('Administrative Information'),
                         // tilePadding: EdgeInsets.zero, // Removes padding around the title
                         childrenPadding: EdgeInsets.zero, // Removes padding around the children
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         // trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
                         children: [
@@ -184,7 +184,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                         title: const Text('Consumer Information'),
                         // tilePadding: EdgeInsets.zero, // Removes padding around the title
                         childrenPadding: EdgeInsets.zero, // Removes padding around the children
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor:
                             const Color.fromARGB(255, 241, 245, 245),
                         // trailing: const SizedBox(),
@@ -226,7 +226,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                         title: const Text('Meter Information'),
                         // tilePadding: EdgeInsets.zero, 
                         childrenPadding: EdgeInsets.zero, 
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
                         // trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
@@ -271,7 +271,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                         title: const Text('Tariff Information'),
                         // tilePadding: EdgeInsets.zero, 
                         childrenPadding: EdgeInsets.zero, 
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor:
                               const Color.fromARGB(255, 241, 245, 245),
                         // trailing: const SizedBox(),
@@ -301,7 +301,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                         title: const Text('Connection, Business, Bill, Services Information'),
                         // tilePadding: EdgeInsets.zero, 
                         childrenPadding: EdgeInsets.zero, 
-                        minTileHeight: 25,
+                        //minTileHeight: 25,
                         collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
                         // trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),

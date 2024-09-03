@@ -621,8 +621,8 @@ class _EditDialogState extends State<EditDialog> {
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor:
-                        WidgetStateProperty.all<Color>(Colors.blue),
+                    backgroundColor:MaterialStatePropertyAll<Color>(Colors.blue),
+                        //WidgetStateProperty.all<Color>(Colors.blue),
                   ),
                   child:
                       const Text('Save', style: TextStyle(color: Colors.white)),

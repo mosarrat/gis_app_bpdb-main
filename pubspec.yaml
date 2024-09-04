@@ -116,6 +116,21 @@ flutter:
     - assets/icons/profile_summary.png
     - assets/icons/transformer.png
     - assets/icons/power-line.png
+    - assets/map_legend/zone.png
+    - assets/map_legend/circle.png
+    - assets/map_legend/snd.png
+    - assets/map_legend/feederline_0.4k.png
+    - assets/map_legend/feederline_11k.png
+    - assets/map_legend/feederline_33k.png
+    - assets/map_legend/pole.png
+    - assets/map_legend/consumers.png
+    - assets/map_legend/consumer_serviceline.png
+    - assets/map_legend/dt.png
+    - assets/map_legend/substation_map.png
+    - assets/map_legend/common_pole.png
+    - assets/map_legend/lt_pole.png
+    - assets/map_legend/service_point.png
+
     
   fonts:
     - family: Exo2

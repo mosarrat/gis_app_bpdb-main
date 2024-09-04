@@ -5,6 +5,9 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_arcgis/flutter_map_arcgis.dart';
 import 'package:latlong2/latlong.dart';
 
+import 'filter_map.dart';
+import 'map_legends.dart';
+
 class ArcGISMapViewer extends StatefulWidget {
   const ArcGISMapViewer({
     super.key,
@@ -12,11 +15,14 @@ class ArcGISMapViewer extends StatefulWidget {
   });
 
   final String title;
+
   @override
   _ArcGISMapViewer createState() => _ArcGISMapViewer();
 }
 
 class _ArcGISMapViewer extends State<ArcGISMapViewer> {
+  bool isMapLegendsOpen = false;
+
   @override
   void initState() {
     super.initState();
@@ -28,37 +34,35 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(70),
-        child: AppBar(
-          iconTheme: const IconThemeData(
-            color: Colors.white, //change your color here
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: const Text(
-            'Map Viewer',
-            style: TextStyle(
-              fontSize: 25,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.white, // change your color here
             ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+            title: const Text(
+              'Map Viewer',
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            backgroundColor: const Color.fromARGB(255, 5, 161, 182),
           ),
-          backgroundColor: const Color.fromARGB(255, 5, 161, 182),
         ),
-      ),
-        //AppBar(title: Text('Map Viewer')),
         body: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
             children: [
               Flexible(
                 child: FlutterMap(
-                  options: MapOptions(
-                    // center: LatLng(39.7644863,-105.0199111), // line
+                  options: const MapOptions(
                     center: LatLng(23.7817257, 90.3455213),
                     zoom: 7.0,
                   ),
@@ -66,7 +70,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                     TileLayer(
                       urlTemplate:
                           'http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',
-                      subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+                      subdomains: const ['mt0', 'mt1', 'mt2', 'mt3'],
                     ),
                     FeatureLayer(
                       FeatureLayerOptions(
@@ -76,7 +80,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                           print(attributes);
                         },
                         render: (dynamic attributes) {
-                          return PolygonOptions(
+                          return const PolygonOptions(
                               borderColor: Colors.red,
                               color: Colors.black45,
                               borderStrokeWidth: 2,
@@ -88,8 +92,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/2",
                       "polyline",
                       render: (dynamic attributes) {
-                        // You can render by attribute
-                        return PolygonLineOptions(
+                        return const PolygonLineOptions(
                             borderColor: Colors.red,
                             color: Colors.red,
                             borderStrokeWidth: 2);
@@ -102,11 +105,10 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/3",
                       "point",
                       render: (dynamic attributes) {
-                        // You can render by attribute
-                        return PointOptions(
+                        return const PointOptions(
                           width: 30.0,
                           height: 30.0,
-                          builder: const Icon(Icons.pin_drop),
+                          builder: Icon(Icons.pin_drop),
                         );
                       },
                       onTap: (attributes, LatLng location) {
@@ -115,12 +117,12 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: Text('Consumer Location'),
+                              title: const Text('Consumer Location'),
                               content: Text(
                                   'Name: ${attributes['consumer_name']}\nConsumer No: ${attributes['consumer_no']}'),
                               actions: <Widget>[
                                 TextButton(
-                                  child: Text('OK'),
+                                  child: const Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -132,6 +134,66 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       },
                     )),
                   ],
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  color: Colors.white,
+                  constraints: const BoxConstraints(
+                    minWidth: 25,
+                    minHeight: 25,
+                    maxWidth: 25,
+                    maxHeight: 25,
+                  ),
+                  margin: const EdgeInsets.all(8),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 20,
+                    icon: const Icon(
+                      Icons.table_rows_rounded,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        barrierColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return MapFilter();
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  color: Colors.white,
+                  constraints: const BoxConstraints(
+                    minWidth: 25,
+                    minHeight: 25,
+                    maxWidth: 25,
+                    maxHeight: 25,
+                  ),
+                  margin: const EdgeInsets.all(8),
+                  child: IconButton(
+                    padding: EdgeInsets.zero,
+                    iconSize: 25,
+                    icon: const Icon(
+                      Icons.legend_toggle_rounded,
+                      color: Colors.blue,
+                    ),
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        barrierColor: Colors.transparent,
+                        builder: (context) {
+                          return MapLegends();
+                        },
+                      );
+                    },
+                  ),
                 ),
               ),
             ],

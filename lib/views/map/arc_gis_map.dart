@@ -21,7 +21,34 @@ class ArcGISMapViewer extends StatefulWidget {
 }
 
 class _ArcGISMapViewer extends State<ArcGISMapViewer> {
-  bool isMapLegendsOpen = false;
+  // bool _showMapFilter = false;
+  // bool _showMapLegends = false;
+
+  // void _toggleMapFilter() {
+  //   setState(() {
+  //     _showMapFilter = !_showMapFilter;
+  //   });
+  // }
+
+  // void _toggleMapLegends() {
+  //   setState(() {
+  //     _showMapLegends = !_showMapLegends;
+  //   });
+  // }
+  bool _showMapFilter = false;
+  bool _showMapLegends = false;
+
+  void _toggleMapFilter() {
+    setState(() {
+      _showMapFilter = !_showMapFilter;
+    });
+  }
+
+  void _toggleMapLegends() {
+    setState(() {
+      _showMapLegends = !_showMapLegends;
+    });
+  }
 
   @override
   void initState() {
@@ -53,7 +80,8 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                 color: Colors.white,
               ),
             ),
-            backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            // backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            backgroundColor: Color.fromARGB(255, 3, 89, 100),
           ),
         ),
         body: Padding(
@@ -136,6 +164,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                   ],
                 ),
               ),
+              
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -154,18 +183,11 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       Icons.table_rows_rounded,
                       color: Colors.blue,
                     ),
-                    onPressed: () {
-                      showDialog(
-                        barrierColor: Colors.transparent,
-                        context: context,
-                        builder: (context) {
-                          return MapFilter();
-                        },
-                      );
-                    },
+                    onPressed: _toggleMapFilter,
                   ),
                 ),
               ),
+
               Align(
                 alignment: Alignment.bottomRight,
                 child: Container(
@@ -184,15 +206,40 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       Icons.legend_toggle_rounded,
                       color: Colors.blue,
                     ),
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        barrierColor: Colors.transparent,
-                        builder: (context) {
-                          return MapLegends();
-                        },
-                      );
-                    },
+                    onPressed: _toggleMapLegends,
+                  ),
+                ),
+              ),
+              Visibility(
+                visible: _showMapFilter,
+                child: Positioned(
+                  top: 5, 
+                  right: 5,
+                  left: 200,
+                  child: Container(
+                    padding: EdgeInsets.all(0),
+                    color: Colors.white,
+                    child: MapFilter(
+                      isVisible: _showMapFilter,
+                      onClose: _toggleMapFilter,
+                    ), 
+                  ),
+                ),
+              ),
+
+              Visibility(
+                visible: _showMapLegends,
+                child: Positioned(
+                  bottom: 5, 
+                  right: 5,
+                  left: 200,
+                  child: Container(
+                    padding: EdgeInsets.all(0),
+                    color: Colors.white,
+                    child: MapLegends(
+                      isVisible: _showMapLegends,
+                      onClose: _toggleMapLegends,
+                    ), 
                   ),
                 ),
               ),

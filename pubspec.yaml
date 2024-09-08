@@ -119,6 +119,7 @@ flutter:
     - assets/map_legend/zone.png
     - assets/map_legend/circle.png
     - assets/map_legend/snd.png
+    - assets/map_legend/esu.png
     - assets/map_legend/feederline_0.4k.png
     - assets/map_legend/feederline_11k.png
     - assets/map_legend/feederline_33k.png

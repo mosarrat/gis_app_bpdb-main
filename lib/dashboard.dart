@@ -227,6 +227,7 @@ class _DashboardState extends State<Dashboard> {
       //////////////////////////////////////////////////////////////////////////////////////
       endDrawer: Drawer(
         width: MediaQuery.of(context).size.width * 0.7,
+        backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
@@ -244,9 +245,7 @@ class _DashboardState extends State<Dashboard> {
                           AssetImage('assets/images/bpdb_logo.png'),
                       radius: 35,
                     ),
-                    SizedBox(
-                        width:
-                            15), // Adds some spacing between the avatar and text
+                    SizedBox(width: 15), // Adds some spacing between the avatar and text
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -319,19 +318,13 @@ class _DashboardState extends State<Dashboard> {
                 title: const Text('Regions'),
                 children: [
                   Container(
-                    height: height*0.3,
+                    height: height*0.27,
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 20,,
-                            leading: const Icon(
-                              Icons.location_pin,
-                              color: Color.fromARGB(255, 7, 105, 185),
-                            ),
-                            title: const Text('Zones'),
+                          padding: const EdgeInsets.only(left: 30.0),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -340,17 +333,25 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Image.asset('assets/map_legend/zone.png',
+                                  width: 24,
+                                  height: 24,
+                                  colorBlendMode: BlendMode.multiply,
+                                ),
+                                SizedBox(width: 8), 
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('Zones', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 20,,
-                            leading: const Icon(
-                              Icons.circle,
-                              color: Color.fromARGB(255, 124, 173, 7),
-                            ),
-                            title: const Text('Circles'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -359,17 +360,25 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Image.asset('assets/map_legend/circle.png',
+                                  width: 24,
+                                  height: 24,
+                                  colorBlendMode: BlendMode.multiply,
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('Circles', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 20,,
-                            leading: const Icon(
-                              Icons.circle_outlined,
-                              color: Color.fromARGB(255, 241, 59, 59),
-                            ),
-                            title: const Text('Snd'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -378,17 +387,25 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Image.asset('assets/map_legend/snd.png',
+                                  width: 24,
+                                  height: 24,
+                                  colorBlendMode: BlendMode.multiply,
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('SnD', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 20,,
-                            leading: const Icon(
-                              Icons.circle_outlined,
-                              color: Color.fromARGB(255, 241, 183, 59),
-                            ),
-                            title: const Text('Esu'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -397,18 +414,25 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Image.asset('assets/map_legend/esu.png',
+                                  width: 24,
+                                  height: 24,
+                                  colorBlendMode: BlendMode.multiply,
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('Esu', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 20,,
-                            leading: Image.asset(
-                              'assets/icons/substation.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            title: const Text('Substation'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -417,11 +441,24 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Image.asset('assets/map_legend/substation_map.png',
+                                  width: 24,
+                                  height: 24,
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('Substation', style: TextStyle(fontSize: 16),),
+                                ),
+                                // Text('Substation', style: TextStyle(fontSize: 16),),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    //),
                   ),
                 ],
               ),
@@ -460,34 +497,34 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 40,
-                            leading: const Icon(
-                              Icons.add,
-                              color: Color.fromARGB(255, 7, 105, 185),
-                            ),
-                            title: const Text('New Feeder Line'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 8),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  // builder: (context) => NewFedderLine(),
                                   builder: (context) => NewFedderLineExp(),
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.add,
+                                  color: Color.fromARGB(255, 7, 105, 185),
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('New Feeder Line', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 40,
-                            leading: const Icon(
-                              Icons.view_agenda,
-                              color: Color.fromARGB(255, 124, 173, 7),
-                            ),
-                            title: const Text('View Feeder Line'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 18),
+                          child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -496,8 +533,22 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.view_agenda,
+                                  color: Color.fromARGB(255, 124, 173, 7),
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('View Feeder Line', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                        
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
                         //   child: ListTile(
@@ -666,44 +717,41 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Container(
                     //height: 144,
-                    height: height * 0.12,
+                    height: height * 0.13,
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 40,
-                            leading: const Icon(
-                              Icons.group_add,
-                              color: Color.fromARGB(255, 7, 105, 185),
-                            ),
-                            title: const Text('New Consumer'),
+                          padding: const EdgeInsets.only(left: 30.0, top: 8),
+                          child: GestureDetector(
                             onTap: () async {
-                              //List<String> roadLinkNumbers = await dbHelper.getRoadLinkNumbers();
-
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  // builder: (context) => NewConsumer(),
                                   builder: (context) => NewConsumerExp(),
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.group_add,
+                                  color: Color.fromARGB(255, 7, 105, 185),
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('New Consumer', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 40,
-                            leading: const Icon(
-                              Icons.groups_2_outlined,
-                              color: Color.fromARGB(255, 124, 173, 7),
-                            ),
-                            title: const Text('View Consumers'),
-                            onTap: () async {
-                              //List<String> roadLinkNumbers = await dbHelper.getRoadLinkNumbers();
 
+                        Padding(
+                          padding: const EdgeInsets.only(left: 30.0, top: 18),
+                          child: GestureDetector(
+                            onTap: () async {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -711,8 +759,22 @@ class _DashboardState extends State<Dashboard> {
                                 ),
                               );
                             },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.groups_2_outlined,
+                                  color: Color.fromARGB(255, 124, 173, 7),
+                                ),
+                                SizedBox(width: 8),
+                                Container(
+                                  width: width * 0.5,
+                                  child: Text('View Consumers', style: TextStyle(fontSize: 16),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                        
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
                         //   child: ListTile(
@@ -802,12 +864,12 @@ class _DashboardState extends State<Dashboard> {
                 title: const Text('Profile'),
                 children: [
                   Container(
-                    height: height * 0.12,
+                    //height: height * 0.13,
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
+                          padding: const EdgeInsets.only(left: 16.0, top: 0),
                           child: ListTile(
                             //minTileHeight: 40,
                             leading: Image.asset(
@@ -833,26 +895,26 @@ class _DashboardState extends State<Dashboard> {
                             },
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 16.0),
-                          child: ListTile(
-                            //minTileHeight: 40,
-                            leading: Image.asset(
-                              'assets/icons/profile_settings.png',
-                              width: 24,
-                              height: 24,
-                            ),
-                            title: const Text('Manage Profile'),
-                            onTap: () async {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (context) => ManageProfile(),
-                              //   ),
-                              // );
-                            },
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 16.0),
+                        //   child: ListTile(
+                        //     //minTileHeight: 40,
+                        //     leading: Image.asset(
+                        //       'assets/icons/profile_settings.png',
+                        //       width: 24,
+                        //       height: 24,
+                        //     ),
+                        //     title: const Text('Manage Profile'),
+                        //     onTap: () async {
+                        //       // Navigator.push(
+                        //       //   context,
+                        //       //   MaterialPageRoute(
+                        //       //     builder: (context) => ManageProfile(),
+                        //       //   ),
+                        //       // );
+                        //     },
+                        //   ),
+                        // ),
                       ],
                     ),
                     //),

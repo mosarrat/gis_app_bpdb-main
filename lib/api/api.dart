@@ -12,6 +12,7 @@ import '../constants/constant.dart';
 import '../models/app_config.dart';
 import '../models/consumer_lookup/tariff_sub_category,dart';
 import '../models/consumer_lookup/single_consumers.dart';
+import '../models/region_delails_lookup/circle.dart';
 import '../models/regions/distribution_transformer.dart';
 // import '../models/regions/esu_info.dart';
 import '../models/regions/feeder_line.dart';
@@ -84,19 +85,37 @@ class CallApi {
       throw Exception('Failed to load zone info');
     }
   }
+//////////////////////------Map Daetails-------///////////////////////////  
+  Future<void> fetchZoneDetailsInfo(int zoneId) async {
+  final response = await http.get(Uri.parse('$myAPILink/api/ZoneInfoes/$zoneId'));
 
-
-  Future<List<Zone>> fetchZoneDetailsInfo(int zoneId) async {
-    final response = await http.get(
-        Uri.parse('$myAPILink/api/ZoneInfoes/$zoneId'));
-
-    if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map<Zone>((json) => Zone.fromJson(json)).toList();
-    } else {
-      throw Exception('Failed to load Zone info');
-    }
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    final zone = Zone.fromJson(data);
+    GlobalVariables.centerLatitude = zone.centerLatitude;
+    GlobalVariables.centerLongitude = zone.centerLongitude;
+    GlobalVariables.defaultZoomLevel = zone.defaultZoomLevel.toDouble();
+  } else {
+    throw Exception('Failed to load Zone info');
   }
+}
+
+  Future<void> fetchCircleDetailsInfo(int circleId) async {
+  final response = await http.get(Uri.parse('$myAPILink/api/CircleInfoes/$circleId'));
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    final circle = Circle.fromJson(data);
+    GlobalVariables.centerLatitude = circle.centerLatitude;
+    GlobalVariables.centerLongitude = circle.centerLongitude;
+    GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
+  } else {
+    throw Exception('Failed to load Zone info');
+  }
+}
+//////////////////////------Map Daetails-------///////////////////////////  
+
 
   Future<List<Circles>> fetchCircleInfo(int zoneId) async {
     final response = await http
@@ -121,7 +140,7 @@ class CallApi {
       throw Exception('Failed to load SnD info');
     }
   }
-  
+
   Future<List<Substation>> fetchSubstationInfo(int sndId) async {
     final response = await http
         .get(Uri.parse('$myAPILink/api/Substations/search?sndId=$sndId'));
@@ -465,6 +484,4 @@ class CallApi {
   // }
 
   // // #endregion
-
-
 }

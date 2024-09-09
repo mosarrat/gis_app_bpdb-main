@@ -7,6 +7,9 @@ import '../../models/regions/substation.dart';
 import '../../models/regions/zone.dart';
 import '../../models/regions/circle.dart';
 import 'arc_gis_map.dart';
+import '../../constants/constant.dart';
+
+import 'package:fluttertoast/fluttertoast.dart';
 
 class MapFilter extends StatefulWidget {
   const MapFilter({
@@ -41,10 +44,11 @@ class MapFilter extends StatefulWidget {
 
 class _MapFilterState extends State<MapFilter> {
   late Future<List<Zone>> zones;
-  late Future<List<Circles>> circles;
-  late Future<List<SndInfo>> snds;
-  late Future<List<Substation>> substations;
-  late Future<List<FeederLine>> feederLines;
+  late Future<List<Zone>> zonedetail;
+  late Future<List<Circles>> circles = Future.value([]);
+  late Future<List<SndInfo>> snds = Future.value([]);
+  late Future<List<Substation>> substations = Future.value([]);
+  late Future<List<FeederLine>> feederLines = Future.value([]);
 
   int? selectedZoneId;
   int? selectedCircleId;
@@ -58,28 +62,35 @@ class _MapFilterState extends State<MapFilter> {
   @override
   void initState() {
     super.initState();
-    zones = CallApi().fetchZoneInfo();
-    circles = Future.value([]);
-    snds = Future.value([]);
-    substations = Future.value([]);
-    feederLines = Future.value([]);
 
-    if (widget.zoneId != 0) {
+    zones = CallApi().fetchZoneInfo();
+
+    // Initialize other futures based on the widget properties
+    if (widget.zoneId != null && widget.zoneId != 0) {
       selectedZoneId = widget.zoneId;
+      circles = CallApi().fetchCircleInfo(widget.zoneId!);
     }
-    if (widget.circleId != 0) {
+    
+    if (widget.circleId != null && widget.circleId != 0) {
       selectedCircleId = widget.circleId;
+      snds = CallApi().fetchSnDInfo(widget.circleId!);
     }
-    if (widget.sndId != 0) {
+
+    if (widget.sndId != null && widget.sndId != 0) {
       selectedSnDId = widget.sndId;
+      substations = CallApi().fetchSubstationInfo(widget.sndId!);
     }
-    if (widget.substationId != 0) {
+
+    if (widget.substationId != null && widget.substationId != 0) {
       selectedSubstationId = widget.substationId;
+      feederLines = CallApi().fetchFeederLineInfo(widget.substationId!);
     }
-    if (widget.feederlineId != 0) {
+
+    if (widget.feederlineId != null && widget.feederlineId != 0) {
       selectedFeederLineId = widget.feederlineId;
     }
   }
+
 
   void setLoading(bool loading) {
     if (isLoading != loading) {
@@ -88,38 +99,67 @@ class _MapFilterState extends State<MapFilter> {
       });
     }
   }
+  void onZoneChanged(int? value) async {
+  setLoading(true);
+  selectedZoneId = value;
+  selectedCircleId = null;
+  selectedSnDId = null;
+  selectedSubstationId = null;
+  selectedFeederLineId = null;
 
-  void onZoneChanged(int? value) {
-    setLoading(true);
-    selectedZoneId = value;
-    //print(selectedZoneId);
-    selectedCircleId = null;
-    selectedSnDId = null;
-    selectedSubstationId = null;
-    selectedFeederLineId = null;
-    circles = CallApi().fetchCircleInfo(value!).whenComplete(() {
-      setLoading(false);
-    });
-    snds = Future.value([]);
-    substations = Future.value([]);
-    feederLines = Future.value([]);
+  circles = CallApi().fetchCircleInfo(value!).whenComplete(() {
+    setLoading(false);
+  });
+
+  snds = Future.value([]);
+  substations = Future.value([]);
+  feederLines = Future.value([]);
+
+  try {
+    // Fetch and set zone details information
+    await CallApi().fetchZoneDetailsInfo(value!);
+
+    // Ensure global variables are updated before navigating
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ArcGISMapViewer(
           title: 'Map Viewer',
-          mapUrl:
-              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/15",
+          mapUrl: "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/15",
           zoneId: value,
-          centerLatitude: widget.centerLatitude,
-          centerLongitude: widget.centerLongitude,
-          defaultZoomLevel: widget.defaultZoomLevel,
+          centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
+          centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
+          defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
         ),
       ),
     );
-  }
 
-  void onCircleChanged(int? value) {
+    // Fluttertoast.showToast(
+    //   msg: (GlobalVariables.defaultZoomLevel ?? 0).toString(),
+    //   toastLength: Toast.LENGTH_LONG,
+    //   gravity: ToastGravity.CENTER,
+    //   timeInSecForIosWeb: 1,
+    //   backgroundColor: Colors.red,
+    //   textColor: Colors.white,
+    //   fontSize: 16.0,
+    // );
+  } catch (e) {
+    print('Error: $e');
+    Fluttertoast.showToast(
+      msg: 'Failed to load Zone info',
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  } finally {
+    setLoading(false);
+  }
+}
+
+  void onCircleChanged(int? value) async {
     setLoading(true);
     selectedCircleId = value;
     selectedSnDId = null;
@@ -131,6 +171,11 @@ class _MapFilterState extends State<MapFilter> {
     substations = Future.value([]);
     feederLines = Future.value([]);
 
+  try {
+    // Fetch and set zone details information
+    await CallApi().fetchCircleDetailsInfo(value!);
+
+    // Ensure global variables are updated before navigating
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -138,14 +183,30 @@ class _MapFilterState extends State<MapFilter> {
           title: 'Map Viewer',
           mapUrl:
               "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/14",
-          circleId: value,
-          centerLatitude: widget.centerLatitude,
-          centerLongitude: widget.centerLongitude,
-          defaultZoomLevel: widget.defaultZoomLevel,
+          zoneId: selectedZoneId,
+          circleId: selectedCircleId,
+          centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
+          centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
+          defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
         ),
       ),
     );
+
+  } catch (e) {
+    print('Error: $e');
+    Fluttertoast.showToast(
+      msg: 'Failed to load Circle info',
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  } finally {
+    setLoading(false);
   }
+}
 
   void onSnDChanged(int? value) {
     setLoading(true);
@@ -597,87 +658,87 @@ class _MapFilterState extends State<MapFilter> {
                         },
                       ),
                       const SizedBox(height: 5.0),
-                      FutureBuilder<List<FeederLine>>(
-                        future: feederLines,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const SizedBox.shrink();
-                          }
+                      // FutureBuilder<List<FeederLine>>(
+                      //   future: feederLines,
+                      //   builder: (context, snapshot) {
+                      //     if (snapshot.connectionState ==
+                      //         ConnectionState.waiting) {
+                      //       return const SizedBox.shrink();
+                      //     }
 
-                          if (snapshot.hasError) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              height: 42,
-                              child: DropdownButtonFormField<int>(
-                                isExpanded: true,
-                                decoration: const InputDecoration(
-                                  labelText: 'Feeder Line',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                  ),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 4),
-                                ),
-                                value: null,
-                                hint: const Text(
-                                  'No Feeder Lines available!',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.red,
-                                  ),
-                                ),
-                                items: [],
-                                onChanged: null,
-                              ),
-                            );
-                          } else if (snapshot.hasData) {
-                            return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
-                              height: 42,
-                              child: DropdownButtonFormField<int>(
-                                isExpanded: true,
-                                decoration: const InputDecoration(
-                                  labelText: 'Feeder Line',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                  ),
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 4),
-                                ),
-                                value: selectedFeederLineId,
-                                hint: const Text(
-                                  'Select a Feeder Line',
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                                items: snapshot.data!.map((feederline) {
-                                  return DropdownMenuItem<int>(
-                                    value: feederline.feederLineId,
-                                    child: Text(
-                                      '${feederline.feederLineCode}: ${feederline.feederlineName}',
-                                      style: TextStyle(fontSize: 12),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (value) {
-                                  setState(() {
-                                    selectedFeederLineId = value;
-                                    onFeederlineChange(value);
-                                  });
-                                },
-                              ),
-                            );
-                          } else {
-                            return const Text(
-                              'No Feederline available!',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.red,
-                              ),
-                            );
-                          }
-                        },
-                      ),
+                      //     if (snapshot.hasError) {
+                      //       return Container(
+                      //         width: MediaQuery.of(context).size.width * 0.6,
+                      //         height: 42,
+                      //         child: DropdownButtonFormField<int>(
+                      //           isExpanded: true,
+                      //           decoration: const InputDecoration(
+                      //             labelText: 'Feeder Line',
+                      //             labelStyle: TextStyle(
+                      //               color: Colors.blue,
+                      //             ),
+                      //             contentPadding:
+                      //                 EdgeInsets.symmetric(vertical: 4),
+                      //           ),
+                      //           value: null,
+                      //           hint: const Text(
+                      //             'No Feeder Lines available!',
+                      //             style: TextStyle(
+                      //               fontSize: 12,
+                      //               color: Colors.red,
+                      //             ),
+                      //           ),
+                      //           items: [],
+                      //           onChanged: null,
+                      //         ),
+                      //       );
+                      //     } else if (snapshot.hasData) {
+                      //       return Container(
+                      //         width: MediaQuery.of(context).size.width * 0.6,
+                      //         height: 42,
+                      //         child: DropdownButtonFormField<int>(
+                      //           isExpanded: true,
+                      //           decoration: const InputDecoration(
+                      //             labelText: 'Feeder Line',
+                      //             labelStyle: TextStyle(
+                      //               color: Colors.blue,
+                      //             ),
+                      //             contentPadding:
+                      //                 EdgeInsets.symmetric(vertical: 4),
+                      //           ),
+                      //           value: selectedFeederLineId,
+                      //           hint: const Text(
+                      //             'Select a Feeder Line',
+                      //             style: TextStyle(fontSize: 12),
+                      //           ),
+                      //           items: snapshot.data!.map((feederline) {
+                      //             return DropdownMenuItem<int>(
+                      //               value: feederline.feederLineId,
+                      //               child: Text(
+                      //                 '${feederline.feederLineCode}: ${feederline.feederlineName}',
+                      //                 style: TextStyle(fontSize: 12),
+                      //               ),
+                      //             );
+                      //           }).toList(),
+                      //           onChanged: (value) {
+                      //             setState(() {
+                      //               selectedFeederLineId = value;
+                      //               onFeederlineChange(value);
+                      //             });
+                      //           },
+                      //         ),
+                      //       );
+                      //     } else {
+                      //       return const Text(
+                      //         'No Feederline available!',
+                      //         style: TextStyle(
+                      //           fontSize: 12,
+                      //           color: Colors.red,
+                      //         ),
+                      //       );
+                      //     }
+                      //   },
+                      // ),
                     ],
                   ),
                 ),

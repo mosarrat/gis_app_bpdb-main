@@ -9,6 +9,8 @@ import 'package:latlong2/latlong.dart';
 import 'filter_map.dart';
 import 'map_legends.dart';
 
+import 'package:fluttertoast/fluttertoast.dart';
+
 class ArcGISMapViewer extends StatefulWidget {
   const ArcGISMapViewer({
     super.key,
@@ -99,10 +101,12 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
             backgroundColor: Color.fromARGB(255, 3, 89, 100),
           ),
         ),
+        
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: [
+              
               Flexible(
                 child: FlutterMap(
                   options: MapOptions(
@@ -131,9 +135,57 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                         },
                       ),
                     ),
+
+                    FeatureLayer(FeatureLayerOptions(
+                      "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/2",
+                      "polyline",
+                      render: (dynamic attributes) {
+                        return const PolygonLineOptions(
+                            borderColor: Colors.red,
+                            color: Colors.red,
+                            borderStrokeWidth: 2);
+                      },
+                      onTap: (attributes, LatLng location) {
+                        print(attributes);
+                      },
+                    )),
+                    FeatureLayer(FeatureLayerOptions(
+                      "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/3",
+                      "point",
+                      render: (dynamic attributes) {
+                        return const PointOptions(
+                          width: 30.0,
+                          height: 30.0,
+                          builder: Icon(Icons.pin_drop),
+                        );
+                      },
+                      onTap: (attributes, LatLng location) {
+                        print(attributes);
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Consumer Location'),
+                              content: Text(
+                                  'Name: ${attributes['consumer_name']}\nConsumer No: ${attributes['consumer_no']}'),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: const Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      },
+                    )),
                   ],
                 ),
               ),
+
+              
               Align(
                 alignment: Alignment.topRight,
                 child: Container(

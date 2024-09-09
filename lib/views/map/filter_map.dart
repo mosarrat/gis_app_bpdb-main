@@ -6,20 +6,42 @@ import '../../models/regions/snd_info.dart';
 import '../../models/regions/substation.dart';
 import '../../models/regions/zone.dart';
 import '../../models/regions/circle.dart';
+import 'arc_gis_map.dart';
 
 class MapFilter extends StatefulWidget {
-  const MapFilter({super.key, required this.isVisible, required this.onClose});
+  const MapFilter({
+    super.key,
+    required this.isVisible,
+    required this.onClose,
+    this.zoneId,
+    this.circleId,
+    this.sndId,
+    this.substationId,
+    this.feederlineId,
+    this.centerLatitude,
+    this.centerLongitude,
+    this.defaultZoomLevel,
+    int? substaionId,
+  });
 
   final bool isVisible;
   final VoidCallback onClose;
+  final int? zoneId;
+  final int? circleId;
+  final int? sndId;
+  final int? substationId;
+  final int? feederlineId;
+  final double? centerLatitude;
+  final double? centerLongitude;
+  final double? defaultZoomLevel;
 
   @override
   State<MapFilter> createState() => _MapFilterState();
 }
 
 class _MapFilterState extends State<MapFilter> {
-    late Future<List<Zone>> zones;
-  late Future<List<Circle>> circles;
+  late Future<List<Zone>> zones;
+  late Future<List<Circles>> circles;
   late Future<List<SndInfo>> snds;
   late Future<List<Substation>> substations;
   late Future<List<FeederLine>> feederLines;
@@ -30,16 +52,33 @@ class _MapFilterState extends State<MapFilter> {
   int? selectedSubstationId;
   int? selectedFeederLineId;
   bool isLoading = false;
+  String? mapUrl;
+  int? zoneId;
 
   @override
   void initState() {
     super.initState();
-
     zones = CallApi().fetchZoneInfo();
     circles = Future.value([]);
     snds = Future.value([]);
     substations = Future.value([]);
     feederLines = Future.value([]);
+
+    if (widget.zoneId != 0) {
+      selectedZoneId = widget.zoneId;
+    }
+    if (widget.circleId != 0) {
+      selectedCircleId = widget.circleId;
+    }
+    if (widget.sndId != 0) {
+      selectedSnDId = widget.sndId;
+    }
+    if (widget.substationId != 0) {
+      selectedSubstationId = widget.substationId;
+    }
+    if (widget.feederlineId != 0) {
+      selectedFeederLineId = widget.feederlineId;
+    }
   }
 
   void setLoading(bool loading) {
@@ -53,6 +92,7 @@ class _MapFilterState extends State<MapFilter> {
   void onZoneChanged(int? value) {
     setLoading(true);
     selectedZoneId = value;
+    //print(selectedZoneId);
     selectedCircleId = null;
     selectedSnDId = null;
     selectedSubstationId = null;
@@ -63,6 +103,20 @@ class _MapFilterState extends State<MapFilter> {
     snds = Future.value([]);
     substations = Future.value([]);
     feederLines = Future.value([]);
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArcGISMapViewer(
+          title: 'Map Viewer',
+          mapUrl:
+              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/15",
+          zoneId: value,
+          centerLatitude: widget.centerLatitude,
+          centerLongitude: widget.centerLongitude,
+          defaultZoomLevel: widget.defaultZoomLevel,
+        ),
+      ),
+    );
   }
 
   void onCircleChanged(int? value) {
@@ -76,6 +130,21 @@ class _MapFilterState extends State<MapFilter> {
     });
     substations = Future.value([]);
     feederLines = Future.value([]);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArcGISMapViewer(
+          title: 'Map Viewer',
+          mapUrl:
+              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/14",
+          circleId: value,
+          centerLatitude: widget.centerLatitude,
+          centerLongitude: widget.centerLongitude,
+          defaultZoomLevel: widget.defaultZoomLevel,
+        ),
+      ),
+    );
   }
 
   void onSnDChanged(int? value) {
@@ -87,6 +156,21 @@ class _MapFilterState extends State<MapFilter> {
       setLoading(false);
     });
     feederLines = Future.value([]);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArcGISMapViewer(
+          title: 'Map Viewer',
+          mapUrl:
+              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/13",
+          sndId: value,
+          centerLatitude: widget.centerLatitude,
+          centerLongitude: widget.centerLongitude,
+          defaultZoomLevel: widget.defaultZoomLevel,
+        ),
+      ),
+    );
   }
 
   void onSubstationChanged(int? value) {
@@ -96,6 +180,37 @@ class _MapFilterState extends State<MapFilter> {
     feederLines = CallApi().fetchFeederLineInfo(value!).whenComplete(() {
       setLoading(false);
     });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArcGISMapViewer(
+          title: 'Map Viewer',
+          mapUrl:
+              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/10",
+          substationId: value,
+          centerLatitude: widget.centerLatitude,
+          centerLongitude: widget.centerLongitude,
+          defaultZoomLevel: widget.defaultZoomLevel,
+        ),
+      ),
+    );
+  }
+
+  void onFeederlineChange(int? value) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ArcGISMapViewer(
+          title: 'Map Viewer',
+          mapUrl:
+              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/9",
+          feederlineId: value,
+          centerLatitude: widget.centerLatitude,
+          centerLongitude: widget.centerLongitude,
+          defaultZoomLevel: widget.defaultZoomLevel,
+        ),
+      ),
+    );
   }
 
   @override
@@ -104,7 +219,7 @@ class _MapFilterState extends State<MapFilter> {
       visible: widget.isVisible,
       child: Container(
         //width: 200,
-        height: MediaQuery.of(context).size.height * 0.3, 
+        height: MediaQuery.of(context).size.height * 0.3,
         color: Colors.white,
         child: Column(
           children: [
@@ -138,7 +253,7 @@ class _MapFilterState extends State<MapFilter> {
                     ),
                   ),
                   const SizedBox(width: 14),
-                  Expanded(child: Container()), 
+                  Expanded(child: Container()),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
                     iconSize: 16,
@@ -158,76 +273,98 @@ class _MapFilterState extends State<MapFilter> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                          FutureBuilder<List<Zone>>(
-                          future: zones,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
-                              return const SizedBox.shrink();
-                            }
-
-                            if (snapshot.hasError) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width * 0.6, 
-                                child: DropdownButtonFormField<int>(
-                                  isExpanded: true,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Zone',
-                                    labelStyle: TextStyle(
-                                      color: Colors.blue,
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 4),
-                                  ),
-                                  value: null,
-                                  hint: const Text('No Zones available!', style: TextStyle(fontSize: 12, color: Colors.red,),),
-                                  items: [],
-                                  onChanged: null,
-                                ),
-                              );
-                            } else if (snapshot.hasData) {
-                              return Container(
-                                width: MediaQuery.of(context).size.width * 0.6, 
-                                height: 42,
-                                child: DropdownButtonFormField<int>(
-                                  isExpanded: true,
-                                  decoration: const InputDecoration(
-                                    labelText: 'Zone',
-                                    labelStyle: TextStyle(
-                                      color: Colors.blue,
-                                    ),
-                                    contentPadding: EdgeInsets.symmetric(vertical: 4),
-                                  ),
-                                  value: selectedZoneId,
-                                  hint: const Text('Select a Zone', style: TextStyle(fontSize: 12),),
-                                  items: snapshot.data!.map((zone) {
-                                    return DropdownMenuItem<int>(
-                                      value: zone.zoneId,
-                                      child: Text('${zone.zoneId}: ${zone.zoneName}', style: TextStyle(fontSize: 12),),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      selectedZoneId = value;
-                                      onZoneChanged(value);
-                                    });
-                                  },
-                                ),
-                              );
-                            } else {
-                              return const Text('No Zones available!', style: TextStyle(fontSize: 12, color: Colors.red,),);
-                            }
-                          },
-                        ),
-                        const SizedBox(height: 5.0),
-                        FutureBuilder<List<Circle>>(
-                        future: circles,
+                      FutureBuilder<List<Zone>>(
+                        future: zones,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const SizedBox.shrink();
                           }
 
                           if (snapshot.hasError) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6, 
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              child: DropdownButtonFormField<int>(
+                                isExpanded: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Zone',
+                                  labelStyle: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
+                                ),
+                                value: null,
+                                hint: const Text(
+                                  'No Zones available!',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
+                                items: [],
+                                onChanged: null,
+                              ),
+                            );
+                          } else if (snapshot.hasData) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              height: 42,
+                              child: DropdownButtonFormField<int>(
+                                isExpanded: true,
+                                decoration: const InputDecoration(
+                                  labelText: 'Zone',
+                                  labelStyle: TextStyle(
+                                    color: Colors.blue,
+                                  ),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
+                                ),
+                                value: selectedZoneId,
+                                hint: const Text(
+                                  'Select a Zone',
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                                items: snapshot.data!.map((zone) {
+                                  return DropdownMenuItem<int>(
+                                    value: zone.zoneId,
+                                    child: Text(
+                                      '${zone.zoneId}: ${zone.zoneName}',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedZoneId = value;
+                                    onZoneChanged(value);
+                                  });
+                                },
+                              ),
+                            );
+                          } else {
+                            return const Text(
+                              'No Zones available!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                      const SizedBox(height: 5.0),
+                      FutureBuilder<List<Circles>>(
+                        future: circles,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const SizedBox.shrink();
+                          }
+
+                          if (snapshot.hasError) {
+                            return Container(
+                              width: MediaQuery.of(context).size.width * 0.6,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: const InputDecoration(
@@ -235,17 +372,24 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: null,
-                                hint: const Text('No Circles available!', style: TextStyle(fontSize: 12, color: Colors.red,),),
+                                hint: const Text(
+                                  'No Circles available!',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
                                 items: [],
                                 onChanged: null,
                               ),
                             );
                           } else if (snapshot.hasData) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6, 
+                              width: MediaQuery.of(context).size.width * 0.6,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -254,14 +398,21 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: selectedCircleId,
-                                hint: const Text('Select a Circle', style: TextStyle(fontSize: 12),),
+                                hint: const Text(
+                                  'Select a Circle',
+                                  style: TextStyle(fontSize: 12),
+                                ),
                                 items: snapshot.data!.map((circle) {
                                   return DropdownMenuItem<int>(
                                     value: circle.circleId,
-                                    child: Text('${circle.circleId}: ${circle.circleName}', style: TextStyle(fontSize: 12),),
+                                    child: Text(
+                                      '${circle.circleId}: ${circle.circleName}',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -273,21 +424,28 @@ class _MapFilterState extends State<MapFilter> {
                               ),
                             );
                           } else {
-                            return const Text('No SnDs available!', style: TextStyle(fontSize: 12, color: Colors.red,),);
+                            return const Text(
+                              'No SnDs available!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
+                            );
                           }
                         },
                       ),
                       const SizedBox(height: 5.0),
-                        FutureBuilder<List<SndInfo>>(
+                      FutureBuilder<List<SndInfo>>(
                         future: snds,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const SizedBox.shrink();
                           }
 
                           if (snapshot.hasError) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.8, 
+                              width: MediaQuery.of(context).size.width * 0.8,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -298,14 +456,20 @@ class _MapFilterState extends State<MapFilter> {
                                   ),
                                 ),
                                 value: null,
-                                hint: const Text('No SnDs available!', style: TextStyle(fontSize: 12, color: Colors.red,),),
+                                hint: const Text(
+                                  'No SnDs available!',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
                                 items: [],
                                 onChanged: null,
                               ),
                             );
                           } else if (snapshot.hasData) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6, 
+                              width: MediaQuery.of(context).size.width * 0.6,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -314,14 +478,21 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: selectedSnDId,
-                                hint: const Text('Select a SnD', style: TextStyle(fontSize: 12),),
+                                hint: const Text(
+                                  'Select a SnD',
+                                  style: TextStyle(fontSize: 12),
+                                ),
                                 items: snapshot.data!.map((snd) {
                                   return DropdownMenuItem<int>(
                                     value: snd.sndId,
-                                    child: Text('${snd.sndCode}: ${snd.sndName}', style: TextStyle(fontSize: 12),),
+                                    child: Text(
+                                      '${snd.sndCode}: ${snd.sndName}',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -333,7 +504,13 @@ class _MapFilterState extends State<MapFilter> {
                               ),
                             );
                           } else {
-                            return const Text('No SnDs available!', style: TextStyle(fontSize: 12, color: Colors.red,),);
+                            return const Text(
+                              'No SnDs available!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
+                            );
                           }
                         },
                       ),
@@ -341,7 +518,8 @@ class _MapFilterState extends State<MapFilter> {
                       FutureBuilder<List<Substation>>(
                         future: substations,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const SizedBox.shrink();
                           }
 
@@ -356,10 +534,17 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: null,
-                                hint: const Text('No Substations available!', style: TextStyle(fontSize: 12, color: Colors.red,),),
+                                hint: const Text(
+                                  'No Substations available!',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
                                 items: [],
                                 onChanged: null,
                               ),
@@ -375,14 +560,21 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: selectedSubstationId,
-                                hint: const Text('Select a Substation', style: TextStyle(fontSize: 12),),
+                                hint: const Text(
+                                  'Select a Substation',
+                                  style: TextStyle(fontSize: 12),
+                                ),
                                 items: snapshot.data!.map((substation) {
                                   return DropdownMenuItem<int>(
                                     value: substation.substationId,
-                                    child: Text('${substation.substationCode}: ${substation.substationName}', style: TextStyle(fontSize: 12),),
+                                    child: Text(
+                                      '${substation.substationCode}: ${substation.substationName}',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -394,7 +586,13 @@ class _MapFilterState extends State<MapFilter> {
                               ),
                             );
                           } else {
-                            return const Text('No SnDs available!', style: TextStyle(fontSize: 12, color: Colors.red,),);
+                            return const Text(
+                              'No SnDs available!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
+                            );
                           }
                         },
                       ),
@@ -402,7 +600,8 @@ class _MapFilterState extends State<MapFilter> {
                       FutureBuilder<List<FeederLine>>(
                         future: feederLines,
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return const SizedBox.shrink();
                           }
 
@@ -417,10 +616,17 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: null,
-                                hint: const Text('No Feeder Lines available!', style: TextStyle(fontSize: 12, color: Colors.red,),),
+                                hint: const Text(
+                                  'No Feeder Lines available!',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.red,
+                                  ),
+                                ),
                                 items: [],
                                 onChanged: null,
                               ),
@@ -436,25 +642,39 @@ class _MapFilterState extends State<MapFilter> {
                                   labelStyle: TextStyle(
                                     color: Colors.blue,
                                   ),
-                                  contentPadding: EdgeInsets.symmetric(vertical: 4),
+                                  contentPadding:
+                                      EdgeInsets.symmetric(vertical: 4),
                                 ),
                                 value: selectedFeederLineId,
-                                hint: const Text('Select a Feeder Line', style: TextStyle(fontSize: 12),),
+                                hint: const Text(
+                                  'Select a Feeder Line',
+                                  style: TextStyle(fontSize: 12),
+                                ),
                                 items: snapshot.data!.map((feederline) {
                                   return DropdownMenuItem<int>(
                                     value: feederline.feederLineId,
-                                    child: Text('${feederline.feederLineCode}: ${feederline.feederlineName}', style: TextStyle(fontSize: 12),),
+                                    child: Text(
+                                      '${feederline.feederLineCode}: ${feederline.feederlineName}',
+                                      style: TextStyle(fontSize: 12),
+                                    ),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
                                     selectedFeederLineId = value;
+                                    onFeederlineChange(value);
                                   });
                                 },
                               ),
                             );
                           } else {
-                            return const Text('No SnDs available!', style: TextStyle(fontSize: 12, color: Colors.red,),);
+                            return const Text(
+                              'No Feederline available!',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.red,
+                              ),
+                            );
                           }
                         },
                       ),
@@ -469,5 +689,3 @@ class _MapFilterState extends State<MapFilter> {
     );
   }
 }
-
-

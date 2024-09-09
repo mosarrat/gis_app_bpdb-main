@@ -830,8 +830,20 @@ class _DashboardState extends State<Dashboard> {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(
-                    builder: (context) => ArcGISMapViewer(title: 'Map Viewer'),
+                    MaterialPageRoute(
+                      builder: (context) => ArcGISMapViewer(
+                        title: 'Map Viewer',
+                        mapUrl: "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer", 
+                        zoneId: 0,
+                        circleId: 0,
+                        sndId: 0,
+                        substationId: 0,
+                        feederlineId: 0,
+                        centerLatitude: 23.7817257,
+                        centerLongitude: 90.3455213,
+                        defaultZoomLevel: 7, 
+
+                    ),
                   ),
                 );
               },

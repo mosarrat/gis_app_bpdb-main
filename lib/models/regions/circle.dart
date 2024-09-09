@@ -1,18 +1,18 @@
-class Circle {
+class Circles {
   final int circleId;
   final int zoneId;
   final String circleCode;
   final String circleName;
 
-  Circle({
+  Circles({
     required this.circleId,
     required this.zoneId,
     required this.circleCode,
     required this.circleName,
   });
 
-  factory Circle.fromJson(Map<String, dynamic> json) {
-    return Circle(
+  factory Circles.fromJson(Map<String, dynamic> json) {
+    return Circles(
       circleId: json['circleId'],
       zoneId: json['zoneId'],
       circleCode: json['circleCode'],

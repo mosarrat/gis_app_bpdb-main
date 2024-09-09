@@ -20,7 +20,7 @@ class FilterPoleDetails extends StatefulWidget {
 
 class _FilterPoleDetailsState extends State<FilterPoleDetails> {
   late Future<List<Zone>> zones;
-  late Future<List<Circle>> circles;
+  late Future<List<Circles>> circles;
   late Future<List<SndInfo>> snds;
   late Future<List<Substation>> substations;
   late Future<List<FeederLine>> feederLines;
@@ -178,7 +178,7 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
                       },
                     ),
                     const SizedBox(height: 16.0),
-                    FutureBuilder<List<Circle>>(
+                    FutureBuilder<List<Circles>>(
                       future: circles,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==

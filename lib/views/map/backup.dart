@@ -14,26 +14,10 @@ class ArcGISMapViewer extends StatefulWidget {
     super.key,
     required this.title,
     required this.mapUrl,
-    this.zoneId,
-    this.circleId,
-    this.sndId,
-    this.substationId,
-    this.feederlineId,
-    this.centerLatitude,
-    this.centerLongitude,
-    this.defaultZoomLevel, 
   });
 
   final String title;
   final String mapUrl;
-  final int? zoneId;
-  final int? circleId;
-  final int? sndId;
-  final int? substationId;
-  final int? feederlineId;
-  final double? centerLatitude;
-  final double? centerLongitude;
-  final double? defaultZoomLevel;
 
   @override
   _ArcGISMapViewer createState() => _ArcGISMapViewer();
@@ -43,7 +27,6 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
   bool _showMapFilter = false;
   bool _showMapLegends = false;
   String? mapurl;
-  int? zoneId;
 
   void _toggleMapFilter() {
     setState(() {
@@ -60,7 +43,6 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
   @override
   void initState() {
     super.initState();
-    //print(widget.zoneId);
   }
 
   @override
@@ -105,9 +87,9 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
             children: [
               Flexible(
                 child: FlutterMap(
-                  options: MapOptions(
-                    center: LatLng(widget.centerLatitude!, widget.centerLongitude!),
-                    zoom: widget.defaultZoomLevel,
+                  options: const MapOptions(
+                    center: LatLng(23.7817257, 90.3455213),
+                    zoom: 7.0,
                   ),
                   children: [
                     TileLayer(
@@ -131,6 +113,67 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                         },
                       ),
                     ),
+                    // FeatureLayer(
+                    //   FeatureLayerOptions(
+                    //     "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/15",
+                    //     "polygon",
+                    //     onTap: (dynamic attributes, LatLng location) {
+                    //       print(attributes);
+                    //     },
+                    //     render: (dynamic attributes) {
+                    //       return const PolygonOptions(
+                    //           borderColor: Colors.red,
+                    //           color: Colors.black45,
+                    //           borderStrokeWidth: 2,
+                    //           isFilled: false);
+                    //     },
+                    //   ),
+                    // ),
+                    // FeatureLayer(FeatureLayerOptions(
+                    //   "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/2",
+                    //   "polyline",
+                    //   render: (dynamic attributes) {
+                    //     return const PolygonLineOptions(
+                    //         borderColor: Colors.red,
+                    //         color: Colors.red,
+                    //         borderStrokeWidth: 2);
+                    //   },
+                    //   onTap: (attributes, LatLng location) {
+                    //     print(attributes);
+                    //   },
+                    // )),
+                    // FeatureLayer(FeatureLayerOptions(
+                    //   "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/3",
+                    //   "point",
+                    //   render: (dynamic attributes) {
+                    //     return const PointOptions(
+                    //       width: 30.0,
+                    //       height: 30.0,
+                    //       builder: Icon(Icons.pin_drop),
+                    //     );
+                    //   },
+                    //   onTap: (attributes, LatLng location) {
+                    //     print(attributes);
+                    //     showDialog(
+                    //       context: context,
+                    //       builder: (BuildContext context) {
+                    //         return AlertDialog(
+                    //           title: const Text('Consumer Location'),
+                    //           content: Text(
+                    //               'Name: ${attributes['consumer_name']}\nConsumer No: ${attributes['consumer_no']}'),
+                    //           actions: <Widget>[
+                    //             TextButton(
+                    //               child: const Text('OK'),
+                    //               onPressed: () {
+                    //                 Navigator.of(context).pop();
+                    //               },
+                    //             ),
+                    //           ],
+                    //         );
+                    //       },
+                    //     );
+                    //   },
+                    // )),
                   ],
                 ),
               ),
@@ -190,14 +233,6 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                     child: MapFilter(
                       isVisible: _showMapFilter,
                       onClose: _toggleMapFilter,
-                      zoneId: widget.zoneId,
-                      circleId: widget.circleId,
-                      sndId: widget.sndId,
-                      substaionId: widget.substationId,
-                      feederlineId: widget.feederlineId,
-                      centerLatitude: widget.centerLatitude,
-                      centerLongitude: widget.centerLongitude,
-                      defaultZoomLevel: widget.defaultZoomLevel,
                     ),
                   ),
                 ),

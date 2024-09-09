@@ -92,6 +92,8 @@ class CallApi {
     }
   }
 
+
+
   Future<List<Pole>> fetchPoleInfo(int feederId) async {
     final response = await http.get(
         Uri.parse('$myAPILink/api/PoleDetails/search?feederLineId=$feederId'));
@@ -151,10 +153,11 @@ class CallApi {
     final Uri uri = Uri.parse(
       feederLineId != 0
           ? '$apiUrl/search${feederLineId != null ? '?substationId=$substation&feederLineId=$feederLineId' : ''}'
+          //? '$apiUrl/search${feederLineId != null ? '?feederLineId=$feederLineId' : ''}'
           : '$apiUrl/search${substation != null ? '?substationId=$substation' : ''}',
     );
 
-    //print('Constructed URI: $uri');
+    //debugPrint('$uri');
 
     try {
       final response = await http.get(uri);

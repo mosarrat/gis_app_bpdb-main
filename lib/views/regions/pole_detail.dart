@@ -403,7 +403,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                       margin: const EdgeInsets.only(right: 5, bottom: 5,),
                       child: 
                         TextButton(
-                          child: const Text('Cancel', 
+                          child: const Text('Close', 
                           style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                           ),
                           onPressed: () {

@@ -85,13 +85,26 @@ class CallApi {
     }
   }
 
-  Future<List<Circle>> fetchCircleInfo(int zoneId) async {
+
+  Future<List<Zone>> fetchZoneDetailsInfo(int zoneId) async {
+    final response = await http.get(
+        Uri.parse('$myAPILink/api/ZoneInfoes/$zoneId'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map<Zone>((json) => Zone.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load Zone info');
+    }
+  }
+
+  Future<List<Circles>> fetchCircleInfo(int zoneId) async {
     final response = await http
         .get(Uri.parse('$myAPILink/api/CircleInfoes/search?zoneId=$zoneId'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map<Circle>((json) => Circle.fromJson(json)).toList();
+      return data.map<Circles>((json) => Circles.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load circle info');
     }
@@ -296,6 +309,8 @@ class CallApi {
       throw Exception('Failed to load hill cutting points!');
     }
   }
+
+  //fetchZoneDetailsInfo(int i) {}
 
   //Future<List<TransformerDetails>> fetchDT({required int substation, required int feederLineId}) {}
 

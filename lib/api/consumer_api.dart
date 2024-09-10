@@ -247,8 +247,8 @@ class CallConsumerApi {
     final Uri uri = Uri.parse(
       consumerNo != null && consumerNo.isNotEmpty
           ? '$apiUrl/$consumerNo'
-          : '$apiUrl/search${feederLineId != null ? '?feederLineId=$feederLineId' : ''}',
-          // : '$apiUrl/searchByfeederLineId${feederLineId != null ? '?id=$feederLineId' : ''}',
+          // : '$apiUrl/search${feederLineId != null ? '?feederLineId=$feederLineId' : ''}',
+          : '$apiUrl/searchByfeederLineId${feederLineId != null ? '?id=$feederLineId' : ''}',
     );
 
     // print('Constructed URI: $uri');

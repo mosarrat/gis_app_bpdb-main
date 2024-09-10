@@ -1,30 +1,23 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, deprecated_member_use
 
 import 'dart:io';
-
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import 'package:gis_app_bpdb/views/map/arc_gis_map.dart';
 import 'package:gis_app_bpdb/views/map/arc_gis_map_filter.dart';
-
 import 'package:gis_app_bpdb/widgets/chart/bar_chart_view.dart';
-
 import 'api/api.dart';
 import 'main.dart';
 import 'views/consumers/filter_consumers.dart';
-// import 'views/consumers/new_consumer.dart';
-//import 'widgets/chart/bar_chart_view.dart';
 import 'views/consumers/new_consumer_exp.dart';
 import 'views/consumers/view_tariff_sub_category.dart';
 import 'views/dt/filter_dt.dart';
 import 'views/feederline/new_feeder_ex.dart';
-// import 'views/feederline/new_feederline.dart';
 import 'views/feederline/view_feederline.dart';
 import 'views/feederline/view_table.dart';
 import 'views/profile/profile_page.dart';
-// import 'views/profile/view_profile.dart';
 import 'views/regions/circle_view.dart';
 import 'views/regions/esu_view.dart';
 import 'views/regions/filter_pole_detail.dart';
@@ -33,12 +26,10 @@ import 'views/regions/substation_view.dart';
 import 'views/regions/zone_view.dart';
 import 'widgets/chart/pie_chart_view.dart';
 import 'widgets/login/signin.dart';
-// import 'widgets/login/signin_control.dart';
 import 'widgets/menu/bottom_menu_bar.dart';
 import 'models/Login/login.dart';
 import 'constants/constant.dart';
 import 'package:intl/intl.dart';
-
 import 'widgets/widgets/fieldset_legend.dart';
 
 class Dashboard extends StatefulWidget {
@@ -190,6 +181,24 @@ class _DashboardState extends State<Dashboard> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     User? user = globalUser;
+    double pieheight;
+    double barheight;
+    double regionheight;
+    double feederlineheight;
+    double consumerheight;
+    if (height > 600) {
+      pieheight = height * 0.45;
+      barheight = height * 0.45;
+      regionheight = height * 0.25;
+      feederlineheight = height * 0.1;
+      consumerheight = height * 0.1;
+    } else {
+      pieheight = height * 0.54;
+      barheight = height * 0.89;
+      regionheight = height * 0.40;
+      feederlineheight = height * 0.14;
+      consumerheight = height * 0.14;
+    }
     //print(selectedData);
     return Scaffold(
       key: _scaffoldKey,
@@ -245,7 +254,9 @@ class _DashboardState extends State<Dashboard> {
                           AssetImage('assets/images/bpdb_logo.png'),
                       radius: 35,
                     ),
-                    SizedBox(width: 15), // Adds some spacing between the avatar and text
+                    SizedBox(
+                        width:
+                            15), // Adds some spacing between the avatar and text
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -318,12 +329,12 @@ class _DashboardState extends State<Dashboard> {
                 title: const Text('Regions'),
                 children: [
                   Container(
-                    height: height*0.27,
+                    height: regionheight,
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0),
+                          padding: const EdgeInsets.only(left: 30.0, top: 5),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -335,22 +346,26 @@ class _DashboardState extends State<Dashboard> {
                             },
                             child: Row(
                               children: [
-                                Image.asset('assets/map_legend/zone.png',
+                                Image.asset(
+                                  'assets/map_legend/zone.png',
                                   width: 24,
                                   height: 24,
                                   colorBlendMode: BlendMode.multiply,
                                 ),
-                                SizedBox(width: 8), 
+                                SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('Zones', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'Zones',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          padding: const EdgeInsets.only(left: 30.0, top: 20),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -362,7 +377,8 @@ class _DashboardState extends State<Dashboard> {
                             },
                             child: Row(
                               children: [
-                                Image.asset('assets/map_legend/circle.png',
+                                Image.asset(
+                                  'assets/map_legend/circle.png',
                                   width: 24,
                                   height: 24,
                                   colorBlendMode: BlendMode.multiply,
@@ -370,14 +386,17 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('Circles', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'Circles',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          padding: const EdgeInsets.only(left: 30.0, top: 20),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -389,7 +408,8 @@ class _DashboardState extends State<Dashboard> {
                             },
                             child: Row(
                               children: [
-                                Image.asset('assets/map_legend/snd.png',
+                                Image.asset(
+                                  'assets/map_legend/snd.png',
                                   width: 24,
                                   height: 24,
                                   colorBlendMode: BlendMode.multiply,
@@ -397,14 +417,17 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('SnD', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'SnD',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          padding: const EdgeInsets.only(left: 30.0, top: 20),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -416,7 +439,8 @@ class _DashboardState extends State<Dashboard> {
                             },
                             child: Row(
                               children: [
-                                Image.asset('assets/map_legend/esu.png',
+                                Image.asset(
+                                  'assets/map_legend/esu.png',
                                   width: 24,
                                   height: 24,
                                   colorBlendMode: BlendMode.multiply,
@@ -424,14 +448,17 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('Esu', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'Esu',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 14),
+                          padding: const EdgeInsets.only(left: 30.0, top: 20),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -443,14 +470,18 @@ class _DashboardState extends State<Dashboard> {
                             },
                             child: Row(
                               children: [
-                                Image.asset('assets/map_legend/substation_map.png',
+                                Image.asset(
+                                  'assets/map_legend/substation_map.png',
                                   width: 24,
                                   height: 24,
                                 ),
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('Substation', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'Substation',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                                 // Text('Substation', style: TextStyle(fontSize: 16),),
                               ],
@@ -492,7 +523,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Container(
                     //height: 120,
-                    height: height * 0.12,
+                    height: feederlineheight,
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -516,7 +547,10 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('New Feeder Line', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'New Feeder Line',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
@@ -542,13 +576,16 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('View Feeder Line', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'View Feeder Line',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        
+
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
                         //   child: ListTile(
@@ -717,7 +754,7 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Container(
                     //height: 144,
-                    height: height * 0.13,
+                    height: consumerheight,
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -741,7 +778,10 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('New Consumer', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'New Consumer',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
@@ -768,13 +808,16 @@ class _DashboardState extends State<Dashboard> {
                                 SizedBox(width: 8),
                                 Container(
                                   width: width * 0.5,
-                                  child: Text('View Consumers', style: TextStyle(fontSize: 16),),
+                                  child: Text(
+                                    'View Consumers',
+                                    style: TextStyle(fontSize: 16),
+                                  ),
                                 ),
                               ],
                             ),
                           ),
                         ),
-                        
+
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
                         //   child: ListTile(
@@ -830,19 +873,19 @@ class _DashboardState extends State<Dashboard> {
               onTap: () {
                 Navigator.push(
                   context,
-                    MaterialPageRoute(
-                      builder: (context) => ArcGISMapViewer(
-                        title: 'Map Viewer',
-                        mapUrl: "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer", 
-                        zoneId: 0,
-                        circleId: 0,
-                        sndId: 0,
-                        substationId: 0,
-                        feederlineId: 0,
-                        centerLatitude: 23.7817257,
-                        centerLongitude: 90.3455213,
-                        defaultZoomLevel: 7, 
-
+                  MaterialPageRoute(
+                    builder: (context) => ArcGISMapViewer(
+                      title: 'Map Viewer',
+                      mapUrl:
+                          "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer",
+                      zoneId: 0,
+                      circleId: 0,
+                      sndId: 0,
+                      substationId: 0,
+                      feederlineId: 0,
+                      centerLatitude: 23.7817257,
+                      centerLongitude: 90.3455213,
+                      defaultZoomLevel: 7,
                     ),
                   ),
                 );
@@ -1024,7 +1067,7 @@ class _DashboardState extends State<Dashboard> {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 8),
+                                    SizedBox(height: height * 0.005),
                                     Text(
                                       item['title']!,
                                       style: const TextStyle(
@@ -1044,7 +1087,7 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   SizedBox(
-                    height: height / 10,
+                    height: height / 8.5,
                     child: CarouselSlider.builder(
                       itemCount: _textCarouselItems.length,
                       options: CarouselOptions(
@@ -1088,7 +1131,7 @@ class _DashboardState extends State<Dashboard> {
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 5),
+                                  SizedBox(height: height * 0.02),
                                   Expanded(
                                     child: Center(
                                       child: Text(
@@ -1117,7 +1160,7 @@ class _DashboardState extends State<Dashboard> {
                         EdgeInsets.only(top: 8, bottom: 0, left: 8, right: 8),
                     width: MediaQuery.of(context).size.width,
                     //height: 273,
-                    height: height * 0.45,
+                    height: pieheight,
                     decoration: BoxDecoration(
                       border:
                           Border.all(color: Color.fromARGB(255, 220, 240, 243)),
@@ -1171,7 +1214,7 @@ class _DashboardState extends State<Dashboard> {
                         EdgeInsets.only(top: 8, bottom: 2, left: 8, right: 8),
                     width: MediaQuery.of(context).size.width,
                     //height: 273,
-                    height: height * 0.5,
+                    height: barheight,
                     decoration: BoxDecoration(
                       border:
                           Border.all(color: Color.fromARGB(255, 220, 240, 243)),

@@ -574,12 +574,12 @@ class _DashboardState extends State<Dashboard> {
               ),
               title: const Text('ArcGIS Map'),
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => ArcGISMapViewer(title: 'ArcGIS Map'),
-                  ),
-                );
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => ArcGISMapViewer(title: 'ArcGIS Map'),
+                //   ),
+                // );
               },
             ),
 

@@ -102,31 +102,28 @@ class _ViewFeederlinesState extends State<ViewFeederlines> {
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Tooltip(
-                          message: 'Edit',
-                          child: Container(
-                            height: 27,
-                            width: 27,
-                            decoration: const BoxDecoration(
-                              color: Colors.blue,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              iconSize: 12,
-                              icon: const Icon(
-                                Icons.edit_square,
-                                color: Colors.white,
-                              ),
-                              onPressed: () {
-                                // _showEditDialog(item);
-                                // showEditDialog(
-                                //     context, apiService, item, _loadData);
-                                showEditForm(
-                                     context, apiService, item, _loadData);
-                              },
-                            ),
-                          ),
-                        ),
+                        // Tooltip(
+                        //   message: 'Edit',
+                        //   child: Container(
+                        //     height: 27,
+                        //     width: 27,
+                        //     decoration: const BoxDecoration(
+                        //       color: Colors.blue,
+                        //       shape: BoxShape.circle,
+                        //     ),
+                        //     child: IconButton(
+                        //       iconSize: 12,
+                        //       icon: const Icon(
+                        //         Icons.edit_square,
+                        //         color: Colors.white,
+                        //       ),
+                        //       onPressed: () {
+                        //         showEditForm(
+                        //              context, apiService, item, _loadData);
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                         //const SizedBox(height: 2),
                         const SizedBox(width: 2),
                         Tooltip(
@@ -153,64 +150,64 @@ class _ViewFeederlinesState extends State<ViewFeederlines> {
                         //////
                         //const SizedBox(height: 2),
                         const SizedBox(width: 2),
-                        if(user?.GroupId == 1)
-                        Tooltip(
-                          message: 'Delete Data',
-                          child: Container(
-                            height: 27,
-                            width: 27,
-                            decoration: const BoxDecoration(
-                              color: Colors.red,
-                              shape: BoxShape.circle,
-                            ),
-                            child: IconButton(
-                              iconSize: 12,
-                              icon: const Icon(
-                                Icons.delete,
-                                color: Colors.white,
-                              ),
-                              onPressed: () async {
-                                if (item.feederLineId != null) {
-                                  final shouldDelete =
-                                      await showDeleteConfirmationDialog(
-                                          context);
-                                  if (shouldDelete == true) {
-                                    try {
-                                      await apiService
-                                          .deleteData(item.feederLineId!);
-                                      _loadData();
+                        // if(user?.GroupId == 1)
+                        // Tooltip(
+                        //   message: 'Delete Data',
+                        //   child: Container(
+                        //     height: 27,
+                        //     width: 27,
+                        //     decoration: const BoxDecoration(
+                        //       color: Colors.red,
+                        //       shape: BoxShape.circle,
+                        //     ),
+                        //     child: IconButton(
+                        //       iconSize: 12,
+                        //       icon: const Icon(
+                        //         Icons.delete,
+                        //         color: Colors.white,
+                        //       ),
+                        //       onPressed: () async {
+                        //         if (item.feederLineId != null) {
+                        //           final shouldDelete =
+                        //               await showDeleteConfirmationDialog(
+                        //                   context);
+                        //           if (shouldDelete == true) {
+                        //             try {
+                        //               await apiService
+                        //                   .deleteData(item.feederLineId!);
+                        //               _loadData();
 
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Feeder Line Info Deleted Successfully'),
-                                            backgroundColor: Colors.green),
-                                      );
-                                    } catch (error) {
-                                      print(
-                                          'Error deleting Feeder Line: $error');
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Failed to delete Feeder Line: $error')),
-                                      );
-                                    }
-                                  }
-                                } else {
-                                  print(
-                                      'Feeder Line Id is null, cannot delete.');
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            'Cannot delete: Feeder Line Id is null')),
-                                  );
-                                }
-                              },
-                            ),
-                          ),
-                        ),
+                        //               ScaffoldMessenger.of(context)
+                        //                   .showSnackBar(
+                        //                 const SnackBar(
+                        //                     content: Text(
+                        //                         'Feeder Line Info Deleted Successfully'),
+                        //                     backgroundColor: Colors.green),
+                        //               );
+                        //             } catch (error) {
+                        //               print(
+                        //                   'Error deleting Feeder Line: $error');
+                        //               ScaffoldMessenger.of(context)
+                        //                   .showSnackBar(
+                        //                 SnackBar(
+                        //                     content: Text(
+                        //                         'Failed to delete Feeder Line: $error')),
+                        //               );
+                        //             }
+                        //           }
+                        //         } else {
+                        //           print(
+                        //               'Feeder Line Id is null, cannot delete.');
+                        //           ScaffoldMessenger.of(context).showSnackBar(
+                        //             const SnackBar(
+                        //                 content: Text(
+                        //                     'Cannot delete: Feeder Line Id is null')),
+                        //           );
+                        //         }
+                        //       },
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                     onTap: () {},

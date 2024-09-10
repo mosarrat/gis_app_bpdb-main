@@ -183,37 +183,37 @@ class FeederLinesDataSource extends DataTableSource {
                   },
                 ),
                 const SizedBox(height: 4),
-                _buildActionIcon(
-                  icon: Icons.delete,
-                  color: Colors.red,
-                  tooltip: 'Delete Data',
-                  onPressed: () async {
-                      if (feederLine.feederLineId != null) {
-                      final shouldDelete = await showDeleteConfirmationDialog(context);
-                      if (shouldDelete == true) {
-                        try {
-                          await apiService.deleteData(feederLine.feederLineId!);
-                          _loadData();
+                // _buildActionIcon(
+                //   icon: Icons.delete,
+                //   color: Colors.red,
+                //   tooltip: 'Delete Data',
+                //   onPressed: () async {
+                //       if (feederLine.feederLineId != null) {
+                //       final shouldDelete = await showDeleteConfirmationDialog(context);
+                //       if (shouldDelete == true) {
+                //         try {
+                //           await apiService.deleteData(feederLine.feederLineId!);
+                //           _loadData();
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Feeder Line Info Deleted Successfully'),
-                            backgroundColor: Colors.green),
-                          );
-                        } catch (error) {
-                          print('Error deleting Feeder Line: $error');
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Failed to delete Feeder Line: $error')),
-                          );
-                        }
-                      }
-                    } else {
-                      print('Feeder Line Id is null, cannot delete.');
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Cannot delete: Feeder Line Id is null')),
-                      );
-                    }
-                  },
-                ),
+                //           ScaffoldMessenger.of(context).showSnackBar(
+                //             const SnackBar(content: Text('Feeder Line Info Deleted Successfully'),
+                //             backgroundColor: Colors.green),
+                //           );
+                //         } catch (error) {
+                //           print('Error deleting Feeder Line: $error');
+                //           ScaffoldMessenger.of(context).showSnackBar(
+                //             SnackBar(content: Text('Failed to delete Feeder Line: $error')),
+                //           );
+                //         }
+                //       }
+                //     } else {
+                //       print('Feeder Line Id is null, cannot delete.');
+                //       ScaffoldMessenger.of(context).showSnackBar(
+                //         const SnackBar(content: Text('Cannot delete: Feeder Line Id is null')),
+                //       );
+                //     }
+                //   },
+                // ),
               ],
             ),
           ),

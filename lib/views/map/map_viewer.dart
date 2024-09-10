@@ -5,20 +5,23 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_geojson/flutter_map_geojson.dart';
 import 'package:latlong2/latlong.dart';
 
+import '../../dashboard.dart';
+
 class MapViewer extends StatefulWidget {
-  
   const MapViewer({
     super.key,
     required this.title,
     this.lat,
     this.long,
     this.properties,
+    this.defaultZoomLevel,
   });
 
   final String title;
   final double? lat;
   final double? long;
   final String? properties;
+  final double? defaultZoomLevel;
 
   @override
   State<MapViewer> createState() => _MapViewerState();
@@ -52,85 +55,235 @@ class _MapViewerState extends State<MapViewer> {
         return DefaultTabController(
           length: 2,
           child: AlertDialog(
-            title: const Text('Consumer'),
+            title: SizedBox(
+            width: MediaQuery.of(context).size.width,
+            child: const Column(
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Consumer",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                SizedBox(height: 15),
+              ],
+            ),
+          ),
+            shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(3))),
+            contentPadding: const EdgeInsets.all(0),
+            insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+            backgroundColor: const Color.fromARGB(255, 5, 161, 182),
             content: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.6,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  const TabBar(
-                    tabs: [
-                      Tab(text: 'Details'),
-                      Tab(text: 'Attachments'),
+              child: Card(
+                shadowColor: Colors.transparent,
+                  shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2),)),
+                  color: Colors.white,
+                  margin: const EdgeInsets.all(0),
+                  child: Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const TabBar(
+                        tabs: [
+                          Tab(text: 'Details'),
+                          Tab(text: 'Attachments'),
+                        ],
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            SingleChildScrollView(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 10),
+                                    const Divider(
+                                      height:0,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      color: const Color.fromARGB(255, 223, 240, 243),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: _buildDetailItem(
+                                        'Consumer No.',
+                                        mapData['Consumer']
+                                            .toString()
+                                            .split('#')[0]),
+                                        ),
+                                    ),
+                                    const Divider(
+                                      height:0,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      color: const Color.fromARGB(255, 241, 245, 245),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: _buildDetailItem(
+                                        'Consumer',
+                                        mapData['Consumer']
+                                            .toString()
+                                            .split('#')[1]),
+                                        ),
+                                    ),
+                                    const Divider(
+                                      height:0,
+                                    ),
+
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      color: const Color.fromARGB(255, 223, 240, 243),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: _buildDetailItem(
+                                          'Meter No.',
+                                          mapData['Consumer']
+                                            .toString()
+                                            .split('#')[2]),
+                                        ),
+                                    ),
+                                    const Divider(
+                                      height:0,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      color: const Color.fromARGB(255, 241, 245, 245),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: _buildDetailItem(
+                                          'Zone',
+                                          mapData['Consumer']
+                                            .toString()
+                                            .split('#')[3]),
+                                        ),
+                                    ),
+                                    const Divider(
+                                      height:0,
+                                    ),
+
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      color: const Color.fromARGB(255, 223, 240, 243),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: _buildDetailItem(
+                                          'Circle',
+                                          mapData['Consumer']
+                                            .toString()
+                                            .split('#')[4]),
+                                        ),
+                                    ),
+                                    const Divider(
+                                      height:0,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 50,
+                                      color: const Color.fromARGB(255, 241, 245, 245),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: _buildDetailItem(
+                                          'SnD',
+                                          mapData['Consumer']
+                                            .toString()
+                                            .split('#')[5]),
+                                        ),
+                                    ),
+                                    const Divider(
+                                      height:0,
+                                    ),
+                                    // _buildDetailItem(
+                                    //     'Consumer No.',
+                                    //     mapData['Consumer']
+                                    //         .toString()
+                                    //         .split('#')[0]),
+                                    // _buildDetailItem(
+                                    //     'Consumer',
+                                    //     mapData['Consumer']
+                                    //         .toString()
+                                    //         .split('#')[1]),
+                                    // _buildDetailItem(
+                                    //     'Meter No.',
+                                    //     mapData['Consumer']
+                                    //         .toString()
+                                    //         .split('#')[2]),
+                                    // _buildDetailItem(
+                                    //     'Zone',
+                                    //     mapData['Consumer']
+                                    //         .toString()
+                                    //         .split('#')[3]),
+                                    // _buildDetailItem(
+                                    //     'Circle',
+                                    //     mapData['Consumer']
+                                    //         .toString()
+                                    //         .split('#')[4]),
+                                    // _buildDetailItem(
+                                    //     'SnD',
+                                    //     mapData['Consumer']
+                                    //         .toString()
+                                    //         .split('#')[5]),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox( height: 20,),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Card(
+                            color: const Color.fromARGB(255, 5, 161, 182),
+                            child: 
+                              TextButton(
+                                child: const Text('Close', 
+                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            
+                          ),
+                        ),
                     ],
                   ),
-                  Expanded(
-                    child: TabBarView(
-                      children: [
-                        SingleChildScrollView(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 10.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 10),
-                                _buildDetailItem(
-                                    'Consumer No.',
-                                    mapData['Consumer']
-                                        .toString()
-                                        .split('#')[0]),
-                                _buildDetailItem(
-                                    'Consumer',
-                                    mapData['Consumer']
-                                        .toString()
-                                        .split('#')[1]),
-                                _buildDetailItem(
-                                    'Meter No.',
-                                    mapData['Consumer']
-                                        .toString()
-                                        .split('#')[2]),
-                                _buildDetailItem(
-                                    'Zone',
-                                    mapData['Consumer']
-                                        .toString()
-                                        .split('#')[3]),
-                                _buildDetailItem(
-                                    'Circle',
-                                    mapData['Consumer']
-                                        .toString()
-                                        .split('#')[4]),
-                                _buildDetailItem(
-                                    'SnD',
-                                    mapData['Consumer']
-                                        .toString()
-                                        .split('#')[5]),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisSize: MainAxisSize.min,
-                            children: [],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Close'),
-              ),
-            ],
+            // actions: <Widget>[
+            //   TextButton(
+            //     onPressed: () {
+            //       Navigator.of(context).pop();
+            //     },
+            //     child: const Text('Close'),
+            //   ),
+            // ],
           ),
         );
       },
@@ -172,24 +325,24 @@ class _MapViewerState extends State<MapViewer> {
     Stopwatch stopwatch2 = Stopwatch()..start();
 
     _generateGeoJson().then((_) {
-      print(testGeoJson);
+      // print(testGeoJson);
 
       Future.delayed(const Duration(seconds: 3), () {
         processData().then((_) {
-          print("GeoJSON parsed: ${geoJsonParser.markers.length} markers");
+          //print("GeoJSON parsed: ${geoJsonParser.markers.length} markers");
 
           setState(() {
             loadingData = false;
           });
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('GeoJson Processing time: ${stopwatch2.elapsed}'),
-              duration: const Duration(milliseconds: 5000),
-              behavior: SnackBarBehavior.floating,
-              backgroundColor: Colors.green,
-            ),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(
+          //     content: Text('GeoJson Processing time: ${stopwatch2.elapsed}'),
+          //     duration: const Duration(milliseconds: 5000),
+          //     behavior: SnackBarBehavior.floating,
+          //     backgroundColor: Colors.green,
+          //   ),
+          // );
         });
       });
     });
@@ -205,12 +358,34 @@ class _MapViewerState extends State<MapViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(70),
+          child: AppBar(
+            iconTheme: const IconThemeData(
+              color: Colors.white,
+            ),
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                Navigator.pop(context); 
+              },
+            ),
+            title: Text(widget.title,
+              style: const TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            // backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            backgroundColor: const Color.fromARGB(255, 3, 89, 100),
+          ),
+        ),
       body: FlutterMap(
         mapController: MapController(),
-        options: const MapOptions(
-          initialCenter: LatLng(23.506657, 90.3443647),
-          initialZoom: 7,
+        options: MapOptions(
+          initialCenter: LatLng(widget.lat!, widget.long!),
+          initialZoom: widget.defaultZoomLevel!,
         ),
         children: [
           TileLayer(

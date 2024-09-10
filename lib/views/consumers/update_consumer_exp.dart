@@ -1792,42 +1792,43 @@ class _EditDialogState extends State<EditDialog> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Card(
-                            color: const Color.fromARGB(255, 5, 161, 182),
-                            margin: const EdgeInsets.only(right: 10, bottom: 10,),
-                            child: TextButton(
-                              child: const Text(
-                                'Open Map View',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              onPressed: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => MapViewer(
-                                      title: 'Map View',
-                                      lat: widget.consumer.latitude,
-                                      long: widget.consumer.longitude,
-                                    //   properties:
-                                    //       '${consumer.consumerNo}#${consumer.customerName}#${consumer.meterNumber}#${consumer.zoneName}#${consumer.circleName}#${consumer.sndName}',
-                                    // properties:
-                                    //       '${widget.consumer.consumerNo}#${ widget.consumer.customerName}#${ widget.consumer.meterNumber}#
-                                    //   ${widget.consumer.ZoneName}#${ widget.consumer.circleName}#${ widget.consumer.sndName}',
+                          // Card(
+                          //   color: const Color.fromARGB(255, 5, 161, 182),
+                          //   margin: const EdgeInsets.only(right: 10, bottom: 10,),
+                          //   child: TextButton(
+                          //     child: const Text(
+                          //       'Open Map View',
+                          //       style: TextStyle(
+                          //           color: Colors.white,
+                          //           fontWeight: FontWeight.bold),
+                          //     ),
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => MapViewer(
+                          //             title: 'Map View',
+                          //             lat: widget.consumer.latitude,
+                          //             long: widget.consumer.longitude,
+                          //             defaultZoomLevel: 20,
+                          //           //   properties:
+                          //           //       '${consumer.consumerNo}#${consumer.customerName}#${consumer.meterNumber}#${consumer.zoneName}#${consumer.circleName}#${consumer.sndName}',
+                          //           // properties:
+                          //           //       '${widget.consumer.consumerNo}#${ widget.consumer.customerName}#${ widget.consumer.meterNumber}#
+                          //           //   ${widget.consumer.ZoneName}#${ widget.consumer.circleName}#${ widget.consumer.sndName}',
                                     
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
+                          //           ),
+                          //         ),
+                          //       );
+                          //     },
+                          //   ),
+                          // ),
                           Card(
                             color: const Color.fromARGB(255, 5, 161, 182),
                             margin: const EdgeInsets.only(right: 10, bottom: 10,),
                             child: TextButton(
                               child: const Text(
-                                'Cancel',
+                                'Close',
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),

@@ -39,7 +39,8 @@ class _PieChartViewState extends State<PieChartView> {
     });
   }
 
-  List<PieChartSectionData> getPieChartData(List<ZoneData> zones) {
+  List<PieChartSectionData> getPieChartData(
+      List<ZoneData> zones, double height) {
     List<Color> colors = [
       Colors.green,
       Colors.blue,
@@ -56,9 +57,19 @@ class _PieChartViewState extends State<PieChartView> {
     return zones.asMap().entries.map((entry) {
       int index = entry.key;
       ZoneData zoneInfo = entry.value;
+      double unhover_radius;
+      double hover_radius;
+      if (height < 600) {
+        unhover_radius = 85;
+        hover_radius = 93;
+      }
+      else{
+        unhover_radius = 120;
+        hover_radius = 135;
+      }
       final isTouched = index == touchedIndex;
       final double fontSize = isTouched ? 18 : 14;
-      final double radius = isTouched ? 93 : 85;
+      final double radius = isTouched ? hover_radius : unhover_radius;
       var formatter = NumberFormat('#,##,000');
       final val = formatter.format(zoneInfo.count);
       final String titelVal = isTouched ? '$val' : '${zoneInfo.percentage}%';
@@ -102,7 +113,7 @@ class _PieChartViewState extends State<PieChartView> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     return FutureBuilder<List<ZoneData>>(
       future: _futureZones,
@@ -115,17 +126,18 @@ class _PieChartViewState extends State<PieChartView> {
           return const Center(child: Text('No data available!'));
         } else {
           List<ZoneData> zones = snapshot.data!;
-          List<PieChartSectionData> pieSections = getPieChartData(zones);
+          List<PieChartSectionData> pieSections =
+              getPieChartData(zones, height);
           List<LegendItem> legends = getLegends(zones);
           return Card(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(20.0),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(width: width * 0.1),
                   SizedBox(
-                    height: height * 0.4,
+                    height: height * 0.28,
                     width: width / 3,
                     child: PieChart(
                       PieChartData(
@@ -156,7 +168,7 @@ class _PieChartViewState extends State<PieChartView> {
                       ),
                     ),
                   ),
-                  SizedBox(width: width *0.12),
+                  SizedBox(width: width * 0.12),
                   Expanded(
                     flex: 1,
                     child: ListView.builder(
@@ -166,7 +178,8 @@ class _PieChartViewState extends State<PieChartView> {
                         final legend = legends[index];
                         return Container(
                           //margin: EdgeInsets.only(top:8),
-                          padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 8.0),
                           child: Row(
                             children: [
                               Container(

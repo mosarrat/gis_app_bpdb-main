@@ -313,7 +313,7 @@ class _MapFilterState extends State<MapFilter> {
                       ),
                     ),
                   ),
-                  const SizedBox(width: 14),
+                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
                   Expanded(child: Container()),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),

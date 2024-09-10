@@ -44,125 +44,127 @@ class _SigninControlerState extends State<SigninControler> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(30),
-      child: Column(
-        children: <Widget>[
-          _buildTextField(
-            controller: Username,
-            hintText: "User Name",
-            icon: const Icon(
-              Icons.person,
-              color: Colors.green,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          children: <Widget>[
+            _buildTextField(
+              controller: Username,
+              hintText: "User Name",
+              icon: const Icon(
+                Icons.person,
+                color: Colors.green,
+              ),
             ),
-          ),
-          _buildPasswordField(
-            controller: Password,
-            hintText: "Password",
-            obscureText: _obscureText,
-          ),
-          Container(
-            padding: const EdgeInsets.all(0),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: _isValidPhoneNumber
-                      ? const Color.fromARGB(255, 238, 238, 238)
-                      : Colors.red,
+            _buildPasswordField(
+              controller: Password,
+              hintText: "Password",
+              obscureText: _obscureText,
+            ),
+            Container(
+              padding: const EdgeInsets.all(0),
+              decoration: BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: _isValidPhoneNumber
+                        ? const Color.fromARGB(255, 238, 238, 238)
+                        : Colors.red,
+                  ),
                 ),
               ),
             ),
-          ),
-          // const SizedBox(height: 20),
-          CheckboxListTile(
-            contentPadding: EdgeInsets.zero,
-            title: const Text("Remember Me"),
-            value: _rememberMe,
-            onChanged: (bool? value) {
-              setState(() {
-                _rememberMe = value ?? false;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          ),
-          const SizedBox(height: 8),
-          Align(
-            alignment: Alignment.center,
-            child: SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: () async {
-                  try {
-                    final loginResponse = await CallLoginApi().loginApi(Login(
-                      Username: Username.text,
-                      Password: Password.text,
-                    ));
+            // const SizedBox(height: 20),
+            CheckboxListTile(
+              contentPadding: EdgeInsets.zero,
+              title: const Text("Remember Me"),
+              value: _rememberMe,
+              onChanged: (bool? value) {
+                setState(() {
+                  _rememberMe = value ?? false;
+                });
+              },
+              controlAffinity: ListTileControlAffinity.leading,
+            ),
+            const SizedBox(height: 8),
+            Align(
+              alignment: Alignment.center,
+              child: SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () async {
+                    try {
+                      final loginResponse = await CallLoginApi().loginApi(Login(
+                        Username: Username.text,
+                        Password: Password.text,
+                      ));
 
-                    if (loginResponse != null) {
-                      globalUser = loginResponse.user;
-                      var now = DateTime.now().toUtc().add(const Duration(hours: 6));
-                      var f = DateFormat('E, d MMM yyyy HH:mm:ss');
-                      LoginTime = f.format(now) + " BST";
+                      if (loginResponse != null) {
+                        globalUser = loginResponse.user;
+                        var now = DateTime.now().toUtc().add(const Duration(hours: 6));
+                        var f = DateFormat('E, d MMM yyyy HH:mm:ss');
+                        LoginTime = f.format(now) + " BST";
 
-                      // Save credentials if "Remember Me" is checked
-                      if (_rememberMe) {
-                        _storage.write('username', Username.text);
-                        _storage.write('password', Password.text);
-                        _storage.write('rememberMe', true);
+                        // Save credentials if "Remember Me" is checked
+                        if (_rememberMe) {
+                          _storage.write('username', Username.text);
+                          _storage.write('password', Password.text);
+                          _storage.write('rememberMe', true);
+                        } else {
+                          _storage.remove('username');
+                          _storage.remove('password');
+                          _storage.write('rememberMe', false);
+                        }
+
+                        // Navigate to the Dashboard
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const Dashboard(),
+                          ),
+                        );
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Login Successfully'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
                       } else {
-                        _storage.remove('username');
-                        _storage.remove('password');
-                        _storage.write('rememberMe', false);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Login failed: Invalid response'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
-
-                      // Navigate to the Dashboard
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const Dashboard(),
-                        ),
-                      );
-
+                    } catch (error) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Login Successfully'),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Login failed: Invalid response'),
+                        SnackBar(
+                          content: Text('$error'),
                           backgroundColor: Colors.red,
                         ),
                       );
                     }
-                  } catch (error) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text('$error'),
-                        backgroundColor: Colors.red,
-                      ),
-                    );
-                  }
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                    const Color.fromARGB(255, 5, 192, 192),
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 5, 192, 192),
+                    ),
                   ),
-                ),
-                child: const Text(
-                  'Login',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                  child: const Text(
+                    'Login',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

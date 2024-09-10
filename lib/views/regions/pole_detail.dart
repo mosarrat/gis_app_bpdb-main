@@ -26,6 +26,8 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   late Future<List<PoleDetails>> _futurePolesByDetailsId;
   late Future<List<PoleDetailByID>> _futurePolesById;
   late Future<List<PoleImage>> _futurePoleImg;
+  late double latitude;
+  late double longitude;
 
   @override
   void initState() {
@@ -51,31 +53,30 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(3))),
+          borderRadius: BorderRadius.all(Radius.circular(3))),
       contentPadding: const EdgeInsets.all(0),
       insetPadding: const EdgeInsets.symmetric(horizontal: 10),
       // title: const Text('FeederLine Details'),
       backgroundColor: const Color.fromARGB(255, 5, 161, 182),
-        title: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            height: 50,
-            child: const Column(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Pole Details",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                //SizedBox(height: 10),
-              ],
+      title: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        height: 50,
+        child: const Column(
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Pole Details",
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-          ),
-      content: 
-      SingleChildScrollView(
+            //SizedBox(height: 10),
+          ],
+        ),
+      ),
+      content: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -83,7 +84,10 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
               shadowColor: Colors.transparent,
               // width: MediaQuery.of(context).size.width,
               shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2),)),
+                  borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(2),
+                topRight: Radius.circular(2),
+              )),
               //color: const Color.fromARGB(255, 206, 242, 248),
               color: Colors.white,
               margin: const EdgeInsets.all(0),
@@ -108,23 +112,29 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                 Theme(
                                   data: ThemeData().copyWith(
                                     //dividerColor: Colors.transparent,
-                                    iconTheme: const IconThemeData(color: Colors.white),
-                                  ), 
-                                child: ExpansionTile(
-                                  title: const Text('Region Information'),
-                                      // tilePadding: EdgeInsets.zero, 
-                                      childrenPadding: EdgeInsets.zero, 
-                                      //minTileHeight: 25,
-                                      collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
-                                      // trailing: const SizedBox(),
-                                      textColor: const Color.fromARGB(255, 5, 161, 182),
-                                  children: [
+                                    iconTheme: const IconThemeData(
+                                        color: Colors.white),
+                                  ),
+                                  child: ExpansionTile(
+                                    title: const Text('Region Information'),
+                                    // tilePadding: EdgeInsets.zero,
+                                    childrenPadding: EdgeInsets.zero,
+                                    //minTileHeight: 25,
+                                    collapsedBackgroundColor:
+                                        const Color.fromARGB(
+                                            255, 223, 240, 243),
+                                    // trailing: const SizedBox(),
+                                    textColor:
+                                        const Color.fromARGB(255, 5, 161, 182),
+                                    children: [
                                       Container(
                                         margin: const EdgeInsets.only(left: 20),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
-                                            Text('Zone Info: ${poleDetail.zoneId}: (${poleDetail.zoneName ?? ""})'),
+                                            Text(
+                                                'Zone Info: ${poleDetail.zoneId}: (${poleDetail.zoneName ?? ""})'),
                                             const Divider(),
                                             Text(
                                                 'Circle Info: ${poleDetail.circleId}: (${poleDetail.circleName ?? ""})'),
@@ -140,7 +150,9 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             const Divider(),
                                             Text(
                                                 'Feeder Line Info: ${poleDetail.feederLineId}: (${poleDetail.feederlineName ?? ""})'),
-                                          const Divider(color: Colors.transparent,),
+                                            const Divider(
+                                              color: Colors.transparent,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -149,23 +161,29 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                 ),
                                 ////////////////////////////////// -------- Region Information -------- ///////////////////////////////
                                 ////////////////////////////////// -------- Feeder Wise Pole Information -------- ///////////////////////////////
-                                Theme(data: ThemeData().copyWith(
-                                  // dividerColor: Colors.transparent
-                                  iconTheme: const IconThemeData(color: Colors.white),
-                                ), 
-                                child: ExpansionTile(
-                                  title: const Text('Feeder Wise Pole Information'),
-                                  childrenPadding: EdgeInsets.zero, 
-                                  //minTileHeight: 25,
-                                  collapsedBackgroundColor:
-                                  const Color.fromARGB(255, 241, 245, 245),
-                                  // trailing: const SizedBox(),
-                                  textColor: const Color.fromARGB(255, 5, 161, 182),
-                                  children: [
+                                Theme(
+                                  data: ThemeData().copyWith(
+                                    // dividerColor: Colors.transparent
+                                    iconTheme: const IconThemeData(
+                                        color: Colors.white),
+                                  ),
+                                  child: ExpansionTile(
+                                    title: const Text(
+                                        'Feeder Wise Pole Information'),
+                                    childrenPadding: EdgeInsets.zero,
+                                    //minTileHeight: 25,
+                                    collapsedBackgroundColor:
+                                        const Color.fromARGB(
+                                            255, 241, 245, 245),
+                                    // trailing: const SizedBox(),
+                                    textColor:
+                                        const Color.fromARGB(255, 5, 161, 182),
+                                    children: [
                                       Container(
                                         margin: const EdgeInsets.only(left: 20),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'Pole Detail Id: ${poleDetail.poleDetailsId.toString()}',
@@ -176,7 +194,8 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             const Divider(),
                                             Text('Name: ${poleDetail.name}'),
                                             const Divider(),
-                                            Text('Pole Code: ${poleDetail.poleCode}'),
+                                            Text(
+                                                'Pole Code: ${poleDetail.poleCode}'),
                                             const Divider(),
                                             Text(
                                                 'Pole Unique Code: ${poleDetail.poleUniqueCode ?? 'N/A'}'),
@@ -184,7 +203,8 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             Text(
                                                 'Feeder Wise Serial No. : ${poleDetail.feederWiseSerialNo}'),
                                             const Divider(),
-                                            Text('Pole No. : ${poleDetail.poleNo}'),
+                                            Text(
+                                                'Pole No. : ${poleDetail.poleNo}'),
                                             const Divider(),
                                             Text(
                                                 'Previous Pole No. : ${poleDetail.previousPoleNo ?? 'N/A'}'),
@@ -192,27 +212,37 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             Text(
                                                 'Line Type Info: ${poleDetail.lineTypeId} (${poleDetail.lineTypeName ?? ""})'),
                                             const Divider(),
-                                            Text('Type of Wire Id: ${poleDetail.typeOfWireId}'),
+                                            Text(
+                                                'Type of Wire Id: ${poleDetail.typeOfWireId}'),
                                             const Divider(),
-                                            Text('Wire Length: ${poleDetail.wireLength}'),
+                                            Text(
+                                                'Wire Length: ${poleDetail.wireLength}'),
                                             const Divider(),
                                             Text(
                                                 'Wire Condition Id: ${poleDetail.wireConditionId}'),
                                             const Divider(),
-                                            Text('Back Span: ${poleDetail.backSpan}'),
+                                            Text(
+                                                'Back Span: ${poleDetail.backSpan}'),
                                             const Divider(),
-                                            Text('Phase A Id: ${poleDetail.phaseAId}'),
+                                            Text(
+                                                'Phase A Id: ${poleDetail.phaseAId}'),
                                             const Divider(),
-                                            Text('Phase B Id: ${poleDetail.phaseBId}'),
+                                            Text(
+                                                'Phase B Id: ${poleDetail.phaseBId}'),
                                             const Divider(),
-                                            Text('Phase C Id: ${poleDetail.phaseCId}'),
+                                            Text(
+                                                'Phase C Id: ${poleDetail.phaseCId}'),
                                             const Divider(),
-                                            Text('Neutral: ${poleDetail.neutral}'),
+                                            Text(
+                                                'Neutral: ${poleDetail.neutral}'),
                                             const Divider(),
-                                            Text('Is Right Pole: ${poleDetail.isRightPole}'),
-                                            const Divider(color: Colors.transparent,),
+                                            Text(
+                                                'Is Right Pole: ${poleDetail.isRightPole}'),
+                                            const Divider(
+                                              color: Colors.transparent,
+                                            ),
                                           ],
-                                        ), 
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -227,7 +257,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                       }
                     },
                   ),
-                  
+
                   FutureBuilder<List<PoleDetailByID>>(
                     future: _futurePolesById,
                     builder: (context, snapshot) {
@@ -237,6 +267,11 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData && snapshot.data != null) {
                         final poles = snapshot.data!;
+                        if (poles.isNotEmpty) {
+                          // Update global variables with the first pole's latitude and longitude
+                          latitude = poles.first.latitude;
+                          longitude = poles.first.longitude;
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: poles.map((pole) {
@@ -244,22 +279,29 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ////////////////////////////////// -------- Pole Unique Information -------- ///////////////////////////////
-                                Theme(data: ThemeData().copyWith(
-                                  //dividerColor: Colors.transparent
-                                  iconTheme: const IconThemeData(color: Colors.white),
-                                ), 
-                                child: ExpansionTile(
-                                  title: const Text('Pole Unique Information '),
-                                  childrenPadding: EdgeInsets.zero, 
-                                  //minTileHeight: 25,
-                                  collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
-                                  // trailing: const SizedBox(),
-                                  textColor: const Color.fromARGB(255, 5, 161, 182),
-                                  children: [
+                                Theme(
+                                  data: ThemeData().copyWith(
+                                    //dividerColor: Colors.transparent
+                                    iconTheme: const IconThemeData(
+                                        color: Colors.white),
+                                  ),
+                                  child: ExpansionTile(
+                                    title:
+                                        const Text('Pole Unique Information '),
+                                    childrenPadding: EdgeInsets.zero,
+                                    //minTileHeight: 25,
+                                    collapsedBackgroundColor:
+                                        const Color.fromARGB(
+                                            255, 223, 240, 243),
+                                    // trailing: const SizedBox(),
+                                    textColor:
+                                        const Color.fromARGB(255, 5, 161, 182),
+                                    children: [
                                       Container(
                                         margin: const EdgeInsets.only(left: 20),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                               'Pole Id: ${pole.poleId.toString()}',
@@ -274,7 +316,8 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             Text(
                                                 'Pole condition: ${pole.poleConditionId} (${pole.conditionName ?? ""})'),
                                             const Divider(),
-                                            Text('Surveyor Name: ${pole.surveyorName}'),
+                                            Text(
+                                                'Surveyor Name: ${pole.surveyorName}'),
                                             const Divider(),
                                             Text(
                                               'Survey Date: ${pole.surveyDate != null ? DateFormat('dd-MMM-yyyy').format(pole.surveyDate!) : 'N/A'}',
@@ -282,36 +325,50 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                             const Divider(),
                                             Text('Latitude: ${pole.latitude}'),
                                             const Divider(),
-                                            Text('Longitude: ${pole.longitude}'),
+                                            Text(
+                                                'Longitude: ${pole.longitude}'),
                                             const Divider(),
-                                            Text('No of Whire Ht: ${pole.noOfWireHt}'),
+                                            Text(
+                                                'No of Whire Ht: ${pole.noOfWireHt}'),
                                             const Divider(),
-                                            Text('No of Wire Lt: ${pole.noOfWireLt}'),
+                                            Text(
+                                                'No of Wire Lt: ${pole.noOfWireLt}'),
                                             const Divider(),
                                             Text('Msj No. : ${pole.msjNo}'),
                                             const Divider(),
-                                            Text('Sleeve No. : ${pole.sleeveNo}'),
+                                            Text(
+                                                'Sleeve No. : ${pole.sleeveNo}'),
                                             const Divider(),
                                             Text('Twist No. : ${pole.twistNo}'),
                                             const Divider(),
-                                            Text('Street Light: ${pole.streetLight}'),
+                                            Text(
+                                                'Street Light: ${pole.streetLight}'),
                                             const Divider(),
-                                            Text('Transformer Exist: ${pole.transformerExist}'),
+                                            Text(
+                                                'Transformer Exist: ${pole.transformerExist}'),
                                             const Divider(),
-                                            Text('Common Pole: ${pole.commonPole}'),
+                                            Text(
+                                                'Common Pole: ${pole.commonPole}'),
                                             const Divider(),
                                             Text('Tap: ${pole.tap}'),
                                             const Divider(),
-                                            Text('pole Number: ${pole.poleNumber ?? "Not Given"}'),
+                                            Text(
+                                                'pole Number: ${pole.poleNumber ?? "Not Given"}'),
                                             const Divider(),
-                                            Text('Pole Height: ${pole.poleHeight ?? "Not Given"}'),
+                                            Text(
+                                                'Pole Height: ${pole.poleHeight ?? "Not Given"}'),
                                             const Divider(),
-                                            Text('No of Line 11Kv: ${pole.noOfLine11Kv ?? "Not Given"}'),
+                                            Text(
+                                                'No of Line 11Kv: ${pole.noOfLine11Kv ?? "Not Given"}'),
                                             const Divider(),
-                                            Text('No of Line P4Kv: ${pole.noOfLineP4Kv ?? "Not Given"}'),
+                                            Text(
+                                                'No of Line P4Kv: ${pole.noOfLineP4Kv ?? "Not Given"}'),
                                             const Divider(),
-                                            Text('No of Line 33Kv: ${pole.noOfLine33Kv ?? "Not Given"}'),
-                                            const Divider(color: Colors.transparent,),
+                                            Text(
+                                                'No of Line 33Kv: ${pole.noOfLine33Kv ?? "Not Given"}'),
+                                            const Divider(
+                                              color: Colors.transparent,
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -319,7 +376,9 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                   ),
                                 ),
                                 ////////////////////////////////// -------- Pole Unique Information  -------- ///////////////////////////////
-                                const SizedBox(height: 5,),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                                 Container(
                                   margin: const EdgeInsets.only(left: 20),
                                   child: const Text(
@@ -331,7 +390,9 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                   ),
                                 ),
                                 const Divider(),
-                                const SizedBox(height: 5,),
+                                const SizedBox(
+                                  height: 5,
+                                ),
                               ],
                             );
                           }).toList(),
@@ -358,29 +419,30 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                         }
                         return SizedBox(
                           height: MediaQuery.of(context).size.height / 2,
-                          width: MediaQuery.of(context).size.width, 
+                          width: MediaQuery.of(context).size.width,
                           child: CarouselSlider(
                             options: CarouselOptions(
                               height: MediaQuery.of(context).size.height / 2,
                               enlargeCenterPage: true,
                               autoPlay: true,
                               aspectRatio: 16 / 9,
-                              autoPlayAnimationDuration: const Duration(milliseconds: 800),
+                              autoPlayAnimationDuration:
+                                  const Duration(milliseconds: 800),
                               scrollDirection: Axis.horizontal,
                             ),
                             items: poles.map((poleImg) {
                               // print('Image URL: $poleImgPath/${poleImg.pictureName}');
-                              final imageUrl = '$poleImgPath/${poleImg.pictureName}';
+                              final imageUrl =
+                                  '$poleImgPath/${poleImg.pictureName}';
                               return Builder(
                                 builder: (BuildContext context) {
                                   return ClipRRect(
-                                    borderRadius:
-                                      BorderRadius.circular(10.0),
+                                    borderRadius: BorderRadius.circular(10.0),
                                     child: SizedBox(
-                                      width: MediaQuery.of(context).size.width, 
+                                      width: MediaQuery.of(context).size.width,
                                       child: Image.network(
                                         imageUrl,
-                                        fit: BoxFit.cover, 
+                                        fit: BoxFit.cover,
                                       ),
                                     ),
                                   );
@@ -395,27 +457,60 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                     },
                   ),
                   ////////////////////////////Image Handeling/////////////////////////////
-                  const SizedBox( height: 10,),
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: Card(
-                      color: const Color.fromARGB(255, 5, 161, 182),
-                      margin: const EdgeInsets.only(right: 5, bottom: 5,),
-                      child: 
-                        TextButton(
-                          child: const Text('Close', 
-                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      
+                  const SizedBox(
+                      height: 15,
                     ),
-                  ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Card(
+                            color: const Color.fromARGB(255, 5, 161, 182),
+                            margin: const EdgeInsets.only(right: 10, bottom: 10,),
+                            child: TextButton(
+                              child: const Text(
+                                'Open Map View',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MapViewer(
+                                      title: 'Map View',
+                                      lat: latitude,
+                                      long: longitude,
+                                      defaultZoomLevel: 20,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Card(
+                            color: const Color.fromARGB(255, 5, 161, 182),
+                            margin: const EdgeInsets.only(right: 10, bottom: 10,),
+                            child: TextButton(
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ), 
                 ],
               ),
-            ), 
+            ),
           ],
         ),
       ),
@@ -430,4 +525,3 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
     );
   }
 }
- 

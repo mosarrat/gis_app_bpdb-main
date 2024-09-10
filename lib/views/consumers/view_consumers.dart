@@ -350,6 +350,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                                         title: 'Map View',
                                         lat: consumer.latitude,
                                         long: consumer.longitude,
+                                        defaultZoomLevel: 20,
                                         properties:
                                             '${consumer.consumerNo}#${consumer.customerName}#${consumer.meterNumber}#${consumer.zoneName}#${consumer.circleName}#${consumer.sndName}',
                                       ),
@@ -363,7 +364,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                               margin: const EdgeInsets.only(right: 10, bottom: 10,),
                               child: TextButton(
                                 child: const Text(
-                                  'Cancel',
+                                  'Close',
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold),
@@ -467,64 +468,38 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                             vertical: 5, horizontal: 10),
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(10),
-                          title: Text(
-                            consumer.customerName,
+                          title: Text("Consumer Name: ${consumer.customerName}",
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            'Consumer #${consumer.consumerNo}\r\nMeter #${consumer.meterNumber}',
+                            'Consumer No: ${consumer.consumerNo}\r\nMeter Number: ${consumer.meterNumber}',
                             style: const TextStyle(height: 1.5),
                           ),
-                          // trailing: Row(
-                          //   mainAxisSize: MainAxisSize.min,
-                          //   children: [
-                          //     Tooltip(
-                          //       message: 'View Detail',
-                          //       child: Container(
-                          //         decoration: const BoxDecoration(
-                          //           color: Colors.green,
-                          //           shape: BoxShape.circle,
-                          //         ),
-                          //         child: IconButton(
-                          //           icon: const Icon(
-                          //             Icons.remove_red_eye,
-                          //             color: Colors.white,
-                          //           ),
-                          //           onPressed: () {
-                          //             _showConsumerDetails(consumer.consumerNo);
-                          //             //_showDetailsDialog(consumer);
-                          //           },
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
+                          
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Tooltip(
-                                message: 'Edit',
-                                child: Container(
-                                  height: 27,
-                                  width: 27,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.blue,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    iconSize: 12,
-                                    icon: const Icon(
-                                      Icons.edit_square,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () {
-                                      // _showEditDialog(item);
-                                      //showEditDialog(context, apiCall, consumer);
-                                      showEditForm(context, apiCall, consumer);
-                                    },
-                                  ),
-                                ),
-                              ),
+                              // Tooltip(
+                              //   message: 'Edit',
+                              //   child: Container(
+                              //     height: 27,
+                              //     width: 27,
+                              //     decoration: const BoxDecoration(
+                              //       color: Colors.blue,
+                              //       shape: BoxShape.circle,
+                              //     ),
+                              //     child: IconButton(
+                              //       iconSize: 12,
+                              //       icon: const Icon(
+                              //         Icons.edit_square,
+                              //         color: Colors.white,
+                              //       ),
+                              //       onPressed: () {
+                              //         showEditForm(context, apiCall, consumer);
+                              //       },
+                              //     ),
+                              //   ),
+                              // ),
                               //const SizedBox(height: 2),
                               const SizedBox(width: 2),
                               Tooltip(
@@ -550,69 +525,69 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                               ),
                               //////
                               //const SizedBox(height: 2),
-                              const SizedBox(width: 2),
-                              if(user?.GroupId == 1)
-                              Tooltip(
-                                message: 'Delete Data',
-                                child: Container(
-                                  height: 27,
-                                  width: 27,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.red,
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: IconButton(
-                                    iconSize: 12,
-                                    icon: const Icon(
-                                      Icons.delete,
-                                      color: Colors.white,
-                                    ),
-                                    onPressed: () async {
-                                      if (consumer.consumerNo != null) {
-                                        final shouldDelete =
-                                            await showDeleteConfirmationDialog(
-                                                context);
-                                        if (shouldDelete == true) {
-                                          try {
-                                            await apiCall
-                                                .deleteData(consumer.consumerNo!);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => const FilterConsumers()),
-                                            );
+                              // const SizedBox(width: 2),
+                              // if(user?.GroupId == 1)
+                              // Tooltip(
+                              //   message: 'Delete Data',
+                              //   child: Container(
+                              //     height: 27,
+                              //     width: 27,
+                              //     decoration: const BoxDecoration(
+                              //       color: Colors.red,
+                              //       shape: BoxShape.circle,
+                              //     ),
+                              //     child: IconButton(
+                              //       iconSize: 12,
+                              //       icon: const Icon(
+                              //         Icons.delete,
+                              //         color: Colors.white,
+                              //       ),
+                              //       onPressed: () async {
+                              //         if (consumer.consumerNo != null) {
+                              //           final shouldDelete =
+                              //               await showDeleteConfirmationDialog(
+                              //                   context);
+                              //           if (shouldDelete == true) {
+                              //             try {
+                              //               await apiCall
+                              //                   .deleteData(consumer.consumerNo!);
+                              //               Navigator.push(
+                              //                 context,
+                              //                 MaterialPageRoute(
+                              //                     builder: (context) => const FilterConsumers()),
+                              //               );
 
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                  content: Text(
-                                                      'Consumer Info Deleted Successfully'),
-                                                  backgroundColor: Colors.green),
-                                            );
-                                          } catch (error) {
-                                            print(
-                                                'Error deleting Consumer: $error');
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              SnackBar(
-                                                  content: Text(
-                                                      'Failed to delete Consumer: $error')),
-                                            );
-                                          }
-                                        }
-                                      } else {
-                                        print(
-                                            'Consumer No is null, cannot delete.');
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(
-                                              content: Text(
-                                                  'Cannot delete: Consumer No Id is null')),
-                                        );
-                                      }
-                                    },
-                                  ),
-                                ),
-                              ),
+                              //               ScaffoldMessenger.of(context)
+                              //                   .showSnackBar(
+                              //                 const SnackBar(
+                              //                     content: Text(
+                              //                         'Consumer Info Deleted Successfully'),
+                              //                     backgroundColor: Colors.green),
+                              //               );
+                              //             } catch (error) {
+                              //               print(
+                              //                   'Error deleting Consumer: $error');
+                              //               ScaffoldMessenger.of(context)
+                              //                   .showSnackBar(
+                              //                 SnackBar(
+                              //                     content: Text(
+                              //                         'Failed to delete Consumer: $error')),
+                              //               );
+                              //             }
+                              //           }
+                              //         } else {
+                              //           print(
+                              //               'Consumer No is null, cannot delete.');
+                              //           ScaffoldMessenger.of(context).showSnackBar(
+                              //             const SnackBar(
+                              //                 content: Text(
+                              //                     'Cannot delete: Consumer No Id is null')),
+                              //           );
+                              //         }
+                              //       },
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                           onTap: () {

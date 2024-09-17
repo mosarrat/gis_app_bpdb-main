@@ -88,14 +88,13 @@ class _DTListViewState extends State<DTListView> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      dtInfo.id.toString(),
+                    title: Text("Distribution Transformer Id: ${dtInfo.id.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Code #${dtInfo.distributionTransformerCode ?? 'N/A'}\n'
-                      'Pole Detail Left Id #${dtInfo.poleDetailsLeftId?.toString() ?? 'N/A'}\n'
-                      'Pole Detail Right Id #${dtInfo.poleDetailsRightId?.toString() ?? 'N/A'}',
+                      'Distribution Transformer Code: ${dtInfo.distributionTransformerCode ?? 'N/A'}\n'
+                      'Pole Detail Left Id: ${dtInfo.poleDetailsLeftId?.toString() ?? 'N/A'}\n'
+                      'Pole Detail Right Id: ${dtInfo.poleDetailsRightId?.toString() ?? 'N/A'}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

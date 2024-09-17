@@ -14,7 +14,7 @@ class ViewSubstation extends StatefulWidget {
 
 class _ViewSubstationState extends State<ViewSubstation> {
   final CallApi api = CallApi();
-  late Future<List<Substation>> _futureSubstations;
+  late Future<List<Substations>> _futureSubstations;
   bool isLoading = false;
 
   String _textValue = 'Initial Value';
@@ -25,7 +25,7 @@ class _ViewSubstationState extends State<ViewSubstation> {
     _futureSubstations = _fetchSubstations();
   }
 
-  Future<List<Substation>> _fetchSubstations() async {
+  Future<List<Substations>> _fetchSubstations() async {
     return CallApi().fetchSubstationInfo();
   }
 
@@ -37,7 +37,7 @@ class _ViewSubstationState extends State<ViewSubstation> {
     }
   }
 /////////////////////////////////////////////////////////////////////////
-  void showDetailDialog(Substation substationInfo)  {
+  void showDetailDialog(Substations substationInfo)  {
     showDialog(
       context: context,
       builder: (context) {
@@ -394,7 +394,7 @@ class _ViewSubstationState extends State<ViewSubstation> {
       ),
       backgroundColor: const Color.fromARGB(255, 5, 161, 182),
       ),
-      body: FutureBuilder<List<Substation>>(
+      body: FutureBuilder<List<Substations>>(
         future: _futureSubstations,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -407,23 +407,22 @@ class _ViewSubstationState extends State<ViewSubstation> {
           } else {
             // Filter the list based on search query
 
-            List<Substation> substations = snapshot.data!;
+            List<Substations> substations = snapshot.data!;
 
             return ListView.builder(
               itemCount: substations.length,
               itemBuilder: (context, index) {
-                Substation substationInfo = substations[index];
+                Substations substationInfo = substations[index];
                 return Card(
                   margin:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      substationInfo.substationId.toString(),
+                    title: Text("Substation Id: ${substationInfo.substationId.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Substation Name #${substationInfo.substationName}\r\nCode #${substationInfo.substationCode}',
+                      'Substation Name: ${substationInfo.substationName}\r\nCode: ${substationInfo.substationCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

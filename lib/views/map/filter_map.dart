@@ -16,6 +16,7 @@ class MapFilter extends StatefulWidget {
     super.key,
     required this.isVisible,
     required this.onClose,
+    this.mapcode,
     this.zoneId,
     this.circleId,
     this.sndId,
@@ -29,6 +30,7 @@ class MapFilter extends StatefulWidget {
 
   final bool isVisible;
   final VoidCallback onClose;
+  final int? mapcode;
   final int? zoneId;
   final int? circleId;
   final int? sndId;
@@ -70,7 +72,7 @@ class _MapFilterState extends State<MapFilter> {
       selectedZoneId = widget.zoneId;
       circles = CallApi().fetchCircleInfo(widget.zoneId!);
     }
-    
+
     if (widget.circleId != null && widget.circleId != 0) {
       selectedCircleId = widget.circleId;
       snds = CallApi().fetchSnDInfo(widget.circleId!);
@@ -91,7 +93,6 @@ class _MapFilterState extends State<MapFilter> {
     }
   }
 
-
   void setLoading(bool loading) {
     if (isLoading != loading) {
       setState(() {
@@ -99,65 +100,68 @@ class _MapFilterState extends State<MapFilter> {
       });
     }
   }
+
   void onZoneChanged(int? value) async {
-  setLoading(true);
-  selectedZoneId = value;
-  selectedCircleId = null;
-  selectedSnDId = null;
-  selectedSubstationId = null;
-  selectedFeederLineId = null;
+    setLoading(true);
+    selectedZoneId = value;
+    selectedCircleId = null;
+    selectedSnDId = null;
+    selectedSubstationId = null;
+    selectedFeederLineId = null;
 
-  circles = CallApi().fetchCircleInfo(value!).whenComplete(() {
-    setLoading(false);
-  });
+    circles = CallApi().fetchCircleInfo(value!).whenComplete(() {
+      setLoading(false);
+    });
 
-  snds = Future.value([]);
-  substations = Future.value([]);
-  feederLines = Future.value([]);
+    snds = Future.value([]);
+    substations = Future.value([]);
+    feederLines = Future.value([]);
 
-  try {
-    // Fetch and set zone details information
-    await CallApi().fetchZoneDetailsInfo(value!);
+    try {
+      // Fetch and set zone details information
+      await CallApi().fetchZoneDetailsInfo(value!);
 
-    // Ensure global variables are updated before navigating
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArcGISMapViewer(
-          title: 'Map Viewer',
-          mapUrl: "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/15",
-          zoneId: value,
-          centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
-          centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
-          defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
+      // Ensure global variables are updated before navigating
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArcGISMapViewer(
+            title: 'Map Viewer',
+            mapUrl:
+                "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/15",
+            mapcode: 15,
+            zoneId: value,
+            centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
+            centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
+            defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
+          ),
         ),
-      ),
-    );
+      );
 
-    // Fluttertoast.showToast(
-    //   msg: (GlobalVariables.defaultZoomLevel ?? 0).toString(),
-    //   toastLength: Toast.LENGTH_LONG,
-    //   gravity: ToastGravity.CENTER,
-    //   timeInSecForIosWeb: 1,
-    //   backgroundColor: Colors.red,
-    //   textColor: Colors.white,
-    //   fontSize: 16.0,
-    // );
-  } catch (e) {
-    print('Error: $e');
-    Fluttertoast.showToast(
-      msg: 'Failed to load Zone info',
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  } finally {
-    setLoading(false);
+      // Fluttertoast.showToast(
+      //   msg: (GlobalVariables.defaultZoomLevel ?? 0).toString(),
+      //   toastLength: Toast.LENGTH_LONG,
+      //   gravity: ToastGravity.CENTER,
+      //   timeInSecForIosWeb: 1,
+      //   backgroundColor: Colors.red,
+      //   textColor: Colors.white,
+      //   fontSize: 16.0,
+      // );
+    } catch (e) {
+      //print('Error: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to load Zone info',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
   void onCircleChanged(int? value) async {
     setLoading(true);
@@ -171,44 +175,44 @@ class _MapFilterState extends State<MapFilter> {
     substations = Future.value([]);
     feederLines = Future.value([]);
 
-  try {
-    // Fetch and set zone details information
-    await CallApi().fetchCircleDetailsInfo(value!);
+    try {
+      // Fetch and set zone details information
+      await CallApi().fetchCircleDetailsInfo(value!);
 
-    // Ensure global variables are updated before navigating
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArcGISMapViewer(
-          title: 'Map Viewer',
-          mapUrl:
-              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/14",
-          zoneId: selectedZoneId,
-          circleId: selectedCircleId,
-          centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
-          centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
-          defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
+      // Ensure global variables are updated before navigating
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArcGISMapViewer(
+            title: 'Map Viewer',
+            mapUrl:
+                "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/14",
+            mapcode: 14,
+            zoneId: selectedZoneId,
+            circleId: selectedCircleId,
+            centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
+            centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
+            defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
+          ),
         ),
-      ),
-    );
-
-  } catch (e) {
-    print('Error: $e');
-    Fluttertoast.showToast(
-      msg: 'Failed to load Circle info',
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.CENTER,
-      timeInSecForIosWeb: 1,
-      backgroundColor: Colors.red,
-      textColor: Colors.white,
-      fontSize: 16.0,
-    );
-  } finally {
-    setLoading(false);
+      );
+    } catch (e) {
+      //print('Error: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to load Circle info',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      setLoading(false);
+    }
   }
-}
 
-  void onSnDChanged(int? value) {
+  Future<void> onSnDChanged(int? value) async {
     setLoading(true);
     selectedSnDId = value;
     selectedSubstationId = null;
@@ -217,44 +221,89 @@ class _MapFilterState extends State<MapFilter> {
       setLoading(false);
     });
     feederLines = Future.value([]);
+    try {
+      // Fetch and set zone details information
+      await CallApi().fetchSndDetailsInfo(value!);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArcGISMapViewer(
-          title: 'Map Viewer',
-          mapUrl:
-              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/13",
-          sndId: value,
-          centerLatitude: widget.centerLatitude,
-          centerLongitude: widget.centerLongitude,
-          defaultZoomLevel: widget.defaultZoomLevel,
+      // Ensure global variables are updated before navigating
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArcGISMapViewer(
+            title: 'Map Viewer',
+            mapUrl:
+                "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/13",
+            mapcode: 13,
+            zoneId: selectedZoneId,
+            circleId: selectedCircleId,
+            sndId: value,
+            centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
+            centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
+            defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      //print('Error: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to load Snd info',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
-  void onSubstationChanged(int? value) {
+  Future<void> onSubstationChanged(int? value) async {
     setLoading(true);
     selectedSubstationId = value;
     selectedFeederLineId = null;
     feederLines = CallApi().fetchFeederLineInfo(value!).whenComplete(() {
       setLoading(false);
     });
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ArcGISMapViewer(
-          title: 'Map Viewer',
-          mapUrl:
-              "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/10",
-          substationId: value,
-          centerLatitude: widget.centerLatitude,
-          centerLongitude: widget.centerLongitude,
-          defaultZoomLevel: widget.defaultZoomLevel,
+
+    try {
+      // Fetch and set zone details information
+      await CallApi().fetchSubstationDetailsInfo(value!);
+
+      // Ensure global variables are updated before navigating
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ArcGISMapViewer(
+            title: 'Map Viewer',
+            mapUrl:
+                "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/10",
+            mapcode: 10,
+            zoneId: selectedZoneId,
+            circleId: selectedCircleId,
+            sndId: selectedSnDId,
+            substationId: value,
+            centerLatitude: GlobalVariables.centerLatitude ?? 0.0,
+            centerLongitude: GlobalVariables.centerLongitude ?? 0.0,
+            defaultZoomLevel: GlobalVariables.defaultZoomLevel ?? 0,
+          ),
         ),
-      ),
-    );
+      );
+    } catch (e) {
+      //print('Error: $e');
+      Fluttertoast.showToast(
+        msg: 'Failed to load Snd info',
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      setLoading(false);
+    }
   }
 
   void onFeederlineChange(int? value) {
@@ -265,6 +314,7 @@ class _MapFilterState extends State<MapFilter> {
           title: 'Map Viewer',
           mapUrl:
               "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/9",
+          mapcode: 9,
           feederlineId: value,
           centerLatitude: widget.centerLatitude,
           centerLongitude: widget.centerLongitude,
@@ -276,11 +326,62 @@ class _MapFilterState extends State<MapFilter> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    //print(width);
+    double popupHeight;
+    double topbarWidth;
+    double topspaceWidth;
+    double dropdownWidth;
+
+    if (height < 1300 && height > 900) {
+      //print("1");
+      popupHeight = height * 0.3;
+    } else if (height < 900 && height > 600) {
+      //print("2");
+      popupHeight = height * 0.3;
+    } else if (height < 600 && height > 400) {
+      //print("3");
+      popupHeight = height * 0.48;
+    } else if (height < 400 && height > 200) {
+      //print("4");
+      popupHeight = height * 0.5;
+    } else {
+      //print("5");
+      popupHeight = height * 0.3;
+    }
+
+    if (width < 1300 && width > 900) {
+      //print("1");
+      topbarWidth = width * 0.1;
+      topspaceWidth = width * 0.03;
+      dropdownWidth = width * 0.6;
+    } else if (width < 900 && width > 600) {
+      //print("2");
+      topbarWidth = width / 8;
+      topspaceWidth = width / 14;
+      dropdownWidth = width * 0.6;
+    } else if (width < 600 && width > 400) {
+      //print("3");
+      topbarWidth = width * 0.26;
+      topspaceWidth = width * 0.03;
+      dropdownWidth = width * 0.6;
+    } else if (width < 400 && width > 200) {
+      //print("4");
+      topbarWidth = width * 0.26;
+      topspaceWidth = width *0.03;
+      dropdownWidth = width * 0.6;
+    } else {
+      //print("5");
+      topbarWidth = width * 0.2;
+      topspaceWidth = width * 0.002;
+      dropdownWidth = width * 0.6;
+    }
     return Visibility(
       visible: widget.isVisible,
       child: Container(
         //width: 200,
-        height: MediaQuery.of(context).size.height * 0.3,
+        height: popupHeight,
         color: Colors.white,
         child: Column(
           children: [
@@ -296,7 +397,7 @@ class _MapFilterState extends State<MapFilter> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: topbarWidth,
                     height: 40,
                     child: const Padding(
                       padding: EdgeInsets.only(left: 12),
@@ -305,7 +406,7 @@ class _MapFilterState extends State<MapFilter> {
                         child: Text(
                           "Filter Map",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15.5,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -313,7 +414,7 @@ class _MapFilterState extends State<MapFilter> {
                       ),
                     ),
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                  SizedBox(width: topspaceWidth),
                   Expanded(child: Container()),
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
@@ -344,7 +445,7 @@ class _MapFilterState extends State<MapFilter> {
 
                           if (snapshot.hasError) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: const InputDecoration(
@@ -369,7 +470,7 @@ class _MapFilterState extends State<MapFilter> {
                             );
                           } else if (snapshot.hasData) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -425,7 +526,7 @@ class _MapFilterState extends State<MapFilter> {
 
                           if (snapshot.hasError) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: const InputDecoration(
@@ -450,7 +551,7 @@ class _MapFilterState extends State<MapFilter> {
                             );
                           } else if (snapshot.hasData) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -506,7 +607,7 @@ class _MapFilterState extends State<MapFilter> {
 
                           if (snapshot.hasError) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.8,
+                              width: dropdownWidth,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -530,7 +631,7 @@ class _MapFilterState extends State<MapFilter> {
                             );
                           } else if (snapshot.hasData) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -586,7 +687,7 @@ class _MapFilterState extends State<MapFilter> {
 
                           if (snapshot.hasError) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -612,7 +713,7 @@ class _MapFilterState extends State<MapFilter> {
                             );
                           } else if (snapshot.hasData) {
                             return Container(
-                              width: MediaQuery.of(context).size.width * 0.6,
+                              width: dropdownWidth,
                               height: 42,
                               child: DropdownButtonFormField<int>(
                                 isExpanded: true,

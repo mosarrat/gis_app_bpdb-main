@@ -322,12 +322,11 @@ class _ViewZoneState extends State<ViewZone> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      zoneInfo.zoneId.toString(),
+                    title: Text("Zone Id: ${zoneInfo.zoneId.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Zone Name #${zoneInfo.zoneName}\r\nCode #${zoneInfo.zoneCode}',
+                      'Zone Name: ${zoneInfo.zoneName}\r\nZone Code: ${zoneInfo.zoneCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

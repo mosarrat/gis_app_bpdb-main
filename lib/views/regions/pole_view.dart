@@ -78,12 +78,11 @@ class _PoleListViewState extends State<PoleListView> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      poleInfo.poleDetailsId.toString(),
+                    title: Text("Pole Id: ${poleInfo.poleDetailsId.toString()}" ,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Pole Code #${poleInfo.poleCode}\r\nPole Unique Code #${poleInfo.poleUniqueCode}',
+                      'Pole Code: ${poleInfo.poleCode}\r\nPole Unique Code: ${poleInfo.poleUniqueCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

@@ -7,8 +7,8 @@ import 'package:latlong2/latlong.dart';
 
 import '../../dashboard.dart';
 
-class MapViewer extends StatefulWidget {
-  const MapViewer({
+class DTMapViewer extends StatefulWidget {
+  const DTMapViewer({
     super.key,
     required this.title,
     this.lat,
@@ -24,10 +24,10 @@ class MapViewer extends StatefulWidget {
   final double? defaultZoomLevel;
 
   @override
-  State<MapViewer> createState() => _MapViewerState();
+  State<DTMapViewer> createState() => _DTMapViewerState();
 }
 
-class _MapViewerState extends State<MapViewer> {
+class _DTMapViewerState extends State<DTMapViewer> {
   late String testGeoJson;
   bool loadingData = false;
   late double height;
@@ -37,7 +37,7 @@ class _MapViewerState extends State<MapViewer> {
   // Instantiate parser, use the defaults
   GeoJsonParser geoJsonParser = GeoJsonParser(
     defaultMarkerColor: Colors.orange[900],
-    defaultMarkerIcon: Icons.home,
+    defaultMarkerIcon: Icons.electric_meter,
     defaultPolygonBorderColor: Colors.red,
     defaultPolygonFillColor: Colors.red.withOpacity(0.1),
     defaultCircleMarkerColor: Colors.red.withOpacity(0.25),
@@ -57,6 +57,7 @@ class _MapViewerState extends State<MapViewer> {
     } else {
       boxheight = 50;
     }
+    //print(mapData);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -69,7 +70,7 @@ class _MapViewerState extends State<MapViewer> {
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Consumer",
+                    "Distribution Transformer",
                     style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -130,8 +131,8 @@ class _MapViewerState extends State<MapViewer> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
-                                            'Consumer No.',
-                                            mapData['Consumer']
+                                            'Distribution Transformer Id.',
+                                            mapData['DT']
                                                 .toString()
                                                 .split('#')[0]),
                                       ),
@@ -147,28 +148,8 @@ class _MapViewerState extends State<MapViewer> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
-                                            'Consumer',
-                                            mapData['Consumer']
-                                                .toString()
-                                                .split('#')[1]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
-                                            'Meter No.',
-                                            mapData['Consumer']
-                                                .toString()
-                                                .split('#')[2]),
+                                            'Distribution Transformer Code',
+                                            mapData['DT'].split('#')[1]),
                                       ),
                                     ),
                                     const Divider(
@@ -182,16 +163,55 @@ class _MapViewerState extends State<MapViewer> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
-                                            'Zone',
-                                            mapData['Consumer']
-                                                .toString()
-                                                .split('#')[3]),
+                                            'Distribution Transformer Location',
+                                            mapData['DT'].split('#')[1]),
                                       ),
                                     ),
                                     const Divider(
                                       height: 0,
                                     ),
-
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: boxheight,
+                                      color: const Color.fromARGB(
+                                          255, 223, 240, 243),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: _buildDetailItem('Zone Name.',
+                                            mapData['DT'].split('#')[2]),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 0,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: boxheight,
+                                      color: const Color.fromARGB(
+                                          255, 241, 245, 245),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: _buildDetailItem('Circle Name',
+                                            mapData['DT'].split('#')[3]),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 0,
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: boxheight,
+                                      color: const Color.fromARGB(
+                                          255, 223, 240, 243),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: _buildDetailItem('SnD Name',
+                                            mapData['DT'].split('#')[4]),
+                                      ),
+                                    ),
+                                    const Divider(
+                                      height: 0,
+                                    ),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
@@ -200,10 +220,8 @@ class _MapViewerState extends State<MapViewer> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
-                                            'Circle',
-                                            mapData['Consumer']
-                                                .toString()
-                                                .split('#')[4]),
+                                            'Substation Name',
+                                            mapData['DT'].split('#')[5]),
                                       ),
                                     ),
                                     const Divider(
@@ -217,45 +235,13 @@ class _MapViewerState extends State<MapViewer> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
-                                            'SnD',
-                                            mapData['Consumer']
-                                                .toString()
-                                                .split('#')[5]),
+                                            'Feeder Line Name',
+                                            mapData['DT'].split('#')[6]),
                                       ),
                                     ),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    // _buildDetailItem(
-                                    //     'Consumer No.',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[0]),
-                                    // _buildDetailItem(
-                                    //     'Consumer',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[1]),
-                                    // _buildDetailItem(
-                                    //     'Meter No.',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[2]),
-                                    // _buildDetailItem(
-                                    //     'Zone',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[3]),
-                                    // _buildDetailItem(
-                                    //     'Circle',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[4]),
-                                    // _buildDetailItem(
-                                    //     'SnD',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[5]),
                                   ],
                                 ),
                               ),
@@ -324,7 +310,7 @@ class _MapViewerState extends State<MapViewer> {
                     ]
                 },
                 "properties": {
-                    "Consumer": "${widget.properties}"
+                    "DT": "${widget.properties}"
                 }
             }
         ]
@@ -484,7 +470,7 @@ class _MapViewerState extends State<MapViewer> {
     //     crossAxisAlignment: CrossAxisAlignment.start,
     //     children: [
     //       SizedBox(
-    //         width: 150,
+    //         width: 200,
     //         child: Text(
     //           label,
     //           style: const TextStyle(

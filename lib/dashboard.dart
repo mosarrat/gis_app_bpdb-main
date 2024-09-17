@@ -103,6 +103,7 @@ class _DashboardState extends State<Dashboard> {
     getDashboardCounting();
     _buttonStates = List.generate(5, (index) => false);
     _pieController.text = pieDropdown.first['value'].toString();
+    _barController.text = barDropdown.first['value'].toString();
     selectedData = pieDropdown[0]["value"];
     selectedBarData = barDropdown[0]["value"];
   }
@@ -144,6 +145,7 @@ class _DashboardState extends State<Dashboard> {
   String heading = "Zone Wise Consumer Count";
   String BarChartHeading = "Zone Wise Consumer Info Report";
   final _pieController = TextEditingController();
+  final _barController = TextEditingController();
   final List<Map<String, dynamic>> pieDropdown = [
     {"value": "1", "text": "Consumer"},
     {"value": "2", "text": "Pole"},
@@ -155,13 +157,9 @@ class _DashboardState extends State<Dashboard> {
   void _onDropdownChanged(String? newValue) {
     setState(() {
       selectedData = newValue;
-      selectedBarData = newValue;
       heading = selectedData == "1"
           ? "Zone Wise Consumer Count"
           : "Zone Wise Pole Count";
-      BarChartHeading = selectedBarData == "1"
-          ? "Zone Wise Consumer Info Report"
-          : "Zone Wise Pole Info Report";
     });
   }
 
@@ -181,23 +179,81 @@ class _DashboardState extends State<Dashboard> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     User? user = globalUser;
+    double carouselheight;
+    double imgheight;
     double pieheight;
     double barheight;
     double regionheight;
     double feederlineheight;
     double consumerheight;
-    if (height > 600) {
-      pieheight = height * 0.45;
-      barheight = height * 0.45;
-      regionheight = height * 0.25;
-      feederlineheight = height * 0.1;
+    double countboxheight;
+    double sliderheight;
+    double carouselContainerHeight;
+    if (height < 1300 && height > 900) {
+      // print(height);
+      //print("1");
+      pieheight = height / 2.6;
+      barheight = height / 2.5;
+      regionheight = height * 0.24;
+      feederlineheight = height * 0.05;
       consumerheight = height * 0.1;
+      carouselheight = height / 3;
+      carouselContainerHeight = height / 2.9;
+      imgheight = height / 4;
+      countboxheight = height / 9.5;
+      sliderheight = height / 3.9;
+    } else if (height < 900 && height > 600) {
+      // print(height);
+      //print("2");
+      pieheight = height * 0.48;
+      barheight = height * 0.55;
+      regionheight = height * 0.28;
+      feederlineheight = height / 16;
+      consumerheight = height * 0.12;
+      carouselheight = height / 3;
+      carouselContainerHeight = height / 2.5;
+      imgheight = height / 3.5;
+      countboxheight = height / 8.5;
+      sliderheight = height / 7;
+    } else if (height < 600 && height > 400) {
+      // print(height);
+      //print("3");
+      pieheight = height * 0.6;
+      barheight = height * 0.7;
+      regionheight = height * 0.39;
+      feederlineheight = height * 0.09;
+      consumerheight = height * 0.15;
+      carouselheight = height / 3;
+      carouselContainerHeight = height / 2.5;
+      imgheight = height / 3.5;
+      countboxheight = height / 8.5;
+      sliderheight = height / 7;
+    } else if (height < 400 && height > 200) {
+      // print(height);
+      //print("4");
+      pieheight = height * 0.9;
+      barheight = height * 0.99;
+      regionheight = height * 0.58;
+      feederlineheight = height / 8;
+      consumerheight = height * 0.2;
+      carouselheight = height / 2.8;
+      carouselContainerHeight = height / 2.5;
+      imgheight = height / 3.8;
+      countboxheight = height / 5;
+      sliderheight = height / 4;
     } else {
+      // print(height);
+      //print("5");
       pieheight = height * 0.54;
       barheight = height * 0.89;
       regionheight = height * 0.40;
       feederlineheight = height * 0.14;
       consumerheight = height * 0.14;
+      carouselheight = height / 3;
+      carouselContainerHeight = height / 2.5;
+      imgheight = height / 3.5;
+      countboxheight = height / 8.5;
+      sliderheight = height / 7;
     }
     //print(selectedData);
     return Scaffold(
@@ -235,7 +291,7 @@ class _DashboardState extends State<Dashboard> {
       ),
       //////////////////////////////////////////////////////////////////////////////////////
       endDrawer: Drawer(
-        width: MediaQuery.of(context).size.width * 0.7,
+        width: MediaQuery.of(context).size.width * 0.78,
         backgroundColor: Colors.white,
         child: ListView(
           padding: EdgeInsets.zero,
@@ -527,35 +583,35 @@ class _DashboardState extends State<Dashboard> {
                     //child: SingleChildScrollView(
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 8),
-                          child: GestureDetector(
-                            onTap: () async {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => NewFedderLineExp(),
-                                ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  color: Color.fromARGB(255, 7, 105, 185),
-                                ),
-                                SizedBox(width: 8),
-                                Container(
-                                  width: width * 0.5,
-                                  child: Text(
-                                    'New Feeder Line',
-                                    style: TextStyle(fontSize: 16),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: const EdgeInsets.only(left: 30.0, top: 8),
+                        //   child: GestureDetector(
+                        //     onTap: () async {
+                        //       Navigator.push(
+                        //         context,
+                        //         MaterialPageRoute(
+                        //           builder: (context) => NewFedderLineExp(),
+                        //         ),
+                        //       );
+                        //     },
+                        //     child: Row(
+                        //       children: [
+                        //         Icon(
+                        //           Icons.add,
+                        //           color: Color.fromARGB(255, 7, 105, 185),
+                        //         ),
+                        //         SizedBox(width: 8),
+                        //         Container(
+                        //           width: width * 0.5,
+                        //           child: Text(
+                        //             'New Feeder Line',
+                        //             style: TextStyle(fontSize: 16),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         Padding(
                           padding: const EdgeInsets.only(left: 30.0, top: 18),
                           child: GestureDetector(
@@ -878,6 +934,7 @@ class _DashboardState extends State<Dashboard> {
                       title: 'Map Viewer',
                       mapUrl:
                           "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer",
+                      mapcode: 0,
                       zoneId: 0,
                       circleId: 0,
                       sndId: 0,
@@ -1017,8 +1074,9 @@ class _DashboardState extends State<Dashboard> {
                 children: [
                   Container(
                     width: width,
-                    height: height / 2.8,
+                    height: carouselContainerHeight,
                     decoration: const BoxDecoration(
+                      // color: Colors.white,
                       color: Colors.white,
                     ),
                     child: Padding(
@@ -1032,7 +1090,7 @@ class _DashboardState extends State<Dashboard> {
                             CarouselSlider.builder(
                               itemCount: _carouselItems.length,
                               options: CarouselOptions(
-                                height: height / 3,
+                                height: carouselheight,
                                 enlargeCenterPage: false,
                                 autoPlay: true,
                                 aspectRatio: 16 / 9,
@@ -1063,7 +1121,7 @@ class _DashboardState extends State<Dashboard> {
                                         child: Image.asset(
                                           item['imagePath']!,
                                           fit: BoxFit.cover,
-                                          height: height / 3.5,
+                                          height: imgheight,
                                         ),
                                       ),
                                     ),
@@ -1087,11 +1145,11 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ),
                   SizedBox(
-                    height: height / 8.5,
+                    height: countboxheight,
                     child: CarouselSlider.builder(
                       itemCount: _textCarouselItems.length,
                       options: CarouselOptions(
-                        height: height / 7,
+                        height: sliderheight,
                         enlargeCenterPage: false,
                         autoPlay: true,
                         aspectRatio: 16 / 9,

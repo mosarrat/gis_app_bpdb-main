@@ -16,6 +16,7 @@ class ArcGISMapViewer extends StatefulWidget {
     super.key,
     required this.title,
     required this.mapUrl,
+    this.mapcode,
     this.zoneId,
     this.circleId,
     this.sndId,
@@ -23,11 +24,12 @@ class ArcGISMapViewer extends StatefulWidget {
     this.feederlineId,
     this.centerLatitude,
     this.centerLongitude,
-    this.defaultZoomLevel, 
+    this.defaultZoomLevel,
   });
 
   final String title;
   final String mapUrl;
+  final int? mapcode;
   final int? zoneId;
   final int? circleId;
   final int? sndId;
@@ -46,6 +48,42 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
   bool _showMapLegends = false;
   String? mapurl;
   int? zoneId;
+
+  Color getBorderColor() {
+    if (widget.mapcode == null) {
+      return Colors.transparent; 
+    } else if (widget.mapcode! == 15) {
+      return const Color.fromARGB(255, 75, 109, 76);
+    } else if (widget.mapcode! == 14) {
+      return const Color.fromARGB(255, 253, 233, 50);
+    } else if (widget.mapcode! == 13) {
+      return Colors.green;
+    } else if (widget.mapcode! == 10) {
+      return const Color.fromARGB(255, 255, 82, 59);
+    } else if (widget.mapcode! == 9) {
+      return Colors.orange;
+    } else {
+      return Colors.transparent; 
+    }
+  }
+
+    Color getFillerColor() {
+    if (widget.mapcode == null) {
+      return Colors.transparent; 
+    } else if (widget.mapcode! == 15) {
+      return Color.fromARGB(255, 212, 245, 213).withOpacity(0.5);
+    } else if (widget.mapcode! == 14) {
+      return Color.fromARGB(255, 247, 240, 179).withOpacity(0.5);
+    } else if (widget.mapcode! == 13) {
+      return const Color.fromARGB(255, 183, 235, 184).withOpacity(0.5);
+    } else if (widget.mapcode! == 10) {
+      return const Color.fromARGB(255, 248, 241, 182).withOpacity(0.5);
+    } else if (widget.mapcode! == 9) {
+      return const Color.fromARGB(255, 248, 211, 155).withOpacity(0.5);
+    } else {
+      return Colors.transparent; 
+    }
+  }
 
   void _toggleMapFilter() {
     setState(() {
@@ -67,6 +105,25 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
 
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    double ContainerWidth;
+    //print(width);
+    if (width < 1300 && width > 900) {
+      ContainerWidth = 650;
+      //print("1");
+    } else if (width < 900 && width > 600) {
+      ContainerWidth = 550;
+      //print("2");
+    } else if (width < 600 && width > 400) {
+      ContainerWidth = width * 0.26;
+      //print("3");
+    } else if (width < 400 && width > 200) {
+      ContainerWidth = 200;
+      //print("4");
+    } else {
+      ContainerWidth = 380;
+      //print("5");
+    }
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -101,16 +158,15 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
             backgroundColor: Color.fromARGB(255, 3, 89, 100),
           ),
         ),
-        
         body: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Stack(
             children: [
-              
               Flexible(
                 child: FlutterMap(
                   options: MapOptions(
-                    center: LatLng(widget.centerLatitude!, widget.centerLongitude!),
+                    center:
+                        LatLng(widget.centerLatitude!, widget.centerLongitude!),
                     zoom: widget.defaultZoomLevel,
                   ),
                   children: [
@@ -127,15 +183,17 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                           print(attributes);
                         },
                         render: (dynamic attributes) {
-                          return const PolygonOptions(
-                              borderColor: Colors.red,
-                              color: Colors.black45,
-                              borderStrokeWidth: 2,
-                              isFilled: false);
+                          return PolygonOptions(
+                              //borderColor: Colors.red,
+                              borderColor: getBorderColor(),
+                              color: getFillerColor(),
+                              //color: Colors.black45,
+                              borderStrokeWidth: 3,
+                              isFilled: false
+                          );
                         },
                       ),
                     ),
-
                     FeatureLayer(FeatureLayerOptions(
                       "https://www.arcgisbd.com/server/rest/services/bpdb/consumers/MapServer/2",
                       "polyline",
@@ -184,8 +242,6 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                   ],
                 ),
               ),
-
-              
               Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -235,13 +291,14 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                 child: Positioned(
                   top: 5,
                   right: 5,
-                  left: 200,
+                  left: ContainerWidth,
                   child: Container(
                     padding: EdgeInsets.all(0),
                     color: Colors.white,
                     child: MapFilter(
                       isVisible: _showMapFilter,
                       onClose: _toggleMapFilter,
+                      mapcode: widget.mapcode,
                       zoneId: widget.zoneId,
                       circleId: widget.circleId,
                       sndId: widget.sndId,
@@ -259,7 +316,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                 child: Positioned(
                   bottom: 5,
                   right: 5,
-                  left: 200,
+                  left: ContainerWidth,
                   child: Container(
                     padding: EdgeInsets.all(0),
                     color: Colors.white,

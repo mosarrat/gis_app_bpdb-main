@@ -27,6 +27,14 @@ class Signin extends StatelessWidget {
   Widget build(BuildContext context) {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
     double height = MediaQuery.of(context).size.height;
+    double topheight;
+    if (height > 800) {
+      topheight = height * 0.05;
+    } else if (height < 400) {
+      topheight = height * 0.001;
+    } else {
+      topheight = height * 0.005;
+    }
 
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
     //   await FlutterDownloader.initialize(debug: true);
@@ -66,13 +74,15 @@ class Signin extends StatelessWidget {
             height: height,
             child: Column(
               mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
+              children: [
                 SizedBox(
-                  height: height * 0.05,
+                  height: topheight,
                 ),
                 const Header(),
                 Flexible(
                   child: Container(
+                    height: height - (height * 0.05),
+                    padding: const EdgeInsets.only(bottom: 0),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
@@ -100,7 +110,28 @@ class Header extends StatelessWidget {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-
+    double textsize;
+    if (height < 1300 && height > 900) {
+      // print(height);
+      // print("1");
+      textsize = width * 0.05;
+    } else if (height < 900 && height > 600) {
+      // print(height);
+      // print("2");
+      textsize = width * 0.05;
+    } else if (height < 600 && height > 400) {
+      // print(height);
+      // print("3");
+      textsize = width * 0.03;
+    } else if (height < 400 && height > 200) {
+      // print(height);
+      // print("4");
+      textsize = width * 0.03;
+    } else {
+      // print(height);
+      // print("5");
+      textsize = width * 0.5;
+    }
     return Padding(
       padding: const EdgeInsets.all(10),
       child: Column(
@@ -119,7 +150,7 @@ class Header extends StatelessWidget {
               "BPDB GIS APP",
               style: TextStyle(
                 color: Colors.white,
-                fontSize: width * 0.05,
+                fontSize: textsize,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -130,4 +161,3 @@ class Header extends StatelessWidget {
     );
   }
 }
-

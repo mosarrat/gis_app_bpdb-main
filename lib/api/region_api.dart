@@ -81,12 +81,12 @@ class CallApi {
     }
   }
 
-  Future<List<Substation>> fetchSubstationInfo() async {
+  Future<List<Substations>> fetchSubstationInfo() async {
     final response = await http.get(Uri.parse('$myAPILink/api/Substations'));
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
-      return data.map<Substation>((json) => Substation.fromJson(json)).toList();
+      return data.map<Substations>((json) => Substations.fromJson(json)).toList();
     } else {
       throw Exception('Failed to load Substation info');
     }

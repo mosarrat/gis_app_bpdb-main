@@ -8,6 +8,7 @@ import '../../models/region_delails_lookup/poleDetailsId.dart';
 import '../../models/region_delails_lookup/poleId.dart';
 import '../../models/region_delails_lookup/pole_image.dart';
 import '../../constants/constant.dart';
+import '../map/dt_map_viewer.dart';
 
 class ShowDetailDialog extends StatefulWidget {
   final int id;
@@ -23,6 +24,16 @@ class ShowDetailDialog extends StatefulWidget {
 
 class _ShowDetailDialogState extends State<ShowDetailDialog> {
   late Future<List<Transformer>> _futureDTByDetailsId;
+  late double latitude;
+  late double longitude;
+  late int DTId;
+  late String dtCode;
+  late String dtLocation;
+  late String zone;
+  late String circle;
+  late String snd;
+  late String substation;
+  late String feederline;
 
   @override
   void initState() {
@@ -87,6 +98,18 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData && snapshot.data != null) {
                         final dtDetails = snapshot.data!;
+                        if (dtDetails.isNotEmpty) {
+                          latitude = dtDetails.first.latitude;
+                          longitude = dtDetails.first.longitude;
+                          DTId = dtDetails.first.id;
+                          dtCode = dtDetails.first.distributionTransformerCode!;
+                          dtLocation = dtDetails.first.dtLocationName!;
+                          zone = dtDetails.first.zoneName;
+                          circle = dtDetails.first.circleName;
+                          snd = dtDetails.first.snDName;
+                          substation = dtDetails.first.substationName;
+                          feederline = dtDetails.first.feederlineName;
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: dtDetails.map((transformer) {
@@ -108,7 +131,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                          'Id: ${transformer.id.toString()}',
+                                          'Distribution Transformer Id: ${transformer.id.toString()}',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                           ),
@@ -344,24 +367,56 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    Align(
+                                    Container(
                                       alignment: Alignment.centerRight,
-                                      child: Card(
-                                        color: const Color.fromARGB(
-                                            255, 5, 161, 182),
-                                        child: TextButton(
-                                          child: const Text(
-                                            'Close',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Card(
+                                            color: const Color.fromARGB(255, 5, 161, 182),
+                                            margin: const EdgeInsets.only(right: 10, bottom: 10,),
+                                            child: TextButton(
+                                              child: const Text(
+                                                'Open Map View',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => DTMapViewer(
+                                                      title: 'Map View',
+                                                      lat: latitude,
+                                                      long: longitude,
+                                                      defaultZoomLevel: 20,
+                                                      properties:
+                                                        '$DTId#$dtCode#$dtLocation#$zone#$circle#$snd#$substation#$feederline',
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
+                                          Card(
+                                            color: const Color.fromARGB(255, 5, 161, 182),
+                                            margin: const EdgeInsets.only(right: 10, bottom: 10,),
+                                            child: TextButton(
+                                              child: const Text(
+                                                'Close',
+                                                style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
+                                    ), 
                                   ],
                                 ),
                               ),

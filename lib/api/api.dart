@@ -13,6 +13,8 @@ import '../models/app_config.dart';
 import '../models/consumer_lookup/tariff_sub_category,dart';
 import '../models/consumer_lookup/single_consumers.dart';
 import '../models/region_delails_lookup/circle.dart';
+import '../models/region_delails_lookup/snd.dart';
+import '../models/region_delails_lookup/substation.dart';
 import '../models/regions/distribution_transformer.dart';
 // import '../models/regions/esu_info.dart';
 import '../models/regions/feeder_line.dart';
@@ -109,6 +111,36 @@ class CallApi {
     final circle = Circle.fromJson(data);
     GlobalVariables.centerLatitude = circle.centerLatitude;
     GlobalVariables.centerLongitude = circle.centerLongitude;
+    GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
+  } else {
+    throw Exception('Failed to load Zone info');
+  }
+}
+
+  Future<void> fetchSndDetailsInfo(int sndId) async {
+  final response = await http.get(Uri.parse('$myAPILink/api/SndInfoes/$sndId'));
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    final snd = Snd.fromJson(data);
+    GlobalVariables.centerLatitude = snd.centerLatitude;
+    GlobalVariables.centerLongitude = snd.centerLongitude;
+    GlobalVariables.defaultZoomLevel = snd.defaultZoomLevel?.toDouble();
+  } else {
+    throw Exception('Failed to load Zone info');
+  }
+}
+
+  Future<void> fetchSubstationDetailsInfo(int substationId) async {
+  final response = await http.get(Uri.parse('$myAPILink/api/Substations/$substationId'));
+
+  if (response.statusCode == 200) {
+    final Map<String, dynamic> data = jsonDecode(response.body);
+
+    final circle = Substations.fromJson(data);
+    GlobalVariables.centerLatitude = circle.latitude;
+    GlobalVariables.centerLongitude = circle.longitude;
     GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
   } else {
     throw Exception('Failed to load Zone info');

@@ -282,12 +282,11 @@ class _ViewEsuState extends State<ViewEsu> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      esuInfo.esuId.toString(),
+                    title: Text("Esu Id: ${esuInfo.esuId.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Esu Name #${esuInfo.esuName}\r\nCode #${esuInfo.esuCode}',
+                      'Esu Name: ${esuInfo.esuName}\r\nCode: ${esuInfo.esuCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

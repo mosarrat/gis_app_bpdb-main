@@ -465,6 +465,8 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
                 const Center(
                   child: CircularProgressIndicator(),
                 ),
+
+                const SizedBox(height: 16.0),
             ],
           ))),
     );

@@ -62,8 +62,10 @@ class _PieChartViewState extends State<PieChartView> {
       if (height < 600) {
         unhover_radius = 85;
         hover_radius = 93;
-      }
-      else{
+      } else if (height > 500) {
+        unhover_radius = 85;
+        hover_radius = 110;
+      } else {
         unhover_radius = 120;
         hover_radius = 135;
       }
@@ -113,8 +115,30 @@ class _PieChartViewState extends State<PieChartView> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    double pieheight;
+    if (height < 1300 && height > 900) {
+      // print(height);
+      // print("1");
+      pieheight = height * 0.19; 
+    } else if (height < 900 && height > 600) {
+      // print(height);
+      // print("2");
+      pieheight = height * 0.27; 
+    } else if (height < 600 && height > 400) {
+      // print(height);
+      // print("3");
+      pieheight = height * 0.3; 
+    } else if (height < 400 && height > 200) {
+      // print(height);
+      // print("4");
+      pieheight = height * 0.4;
+    } else {
+      // print(height);
+      // print("5");
+      pieheight = height * 0.27;
+    }
     return FutureBuilder<List<ZoneData>>(
       future: _futureZones,
       builder: (context, snapshot) {
@@ -129,15 +153,17 @@ class _PieChartViewState extends State<PieChartView> {
           List<PieChartSectionData> pieSections =
               getPieChartData(zones, height);
           List<LegendItem> legends = getLegends(zones);
+          
           return Card(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(bottom:16.0, left: 12.0, right:16.0, top: 24),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  //Text(height.toString()),
                   SizedBox(width: width * 0.1),
                   SizedBox(
-                    height: height * 0.28,
+                    height: pieheight,
                     width: width / 3,
                     child: PieChart(
                       PieChartData(
@@ -168,7 +194,7 @@ class _PieChartViewState extends State<PieChartView> {
                       ),
                     ),
                   ),
-                  SizedBox(width: width * 0.12),
+                  SizedBox(width: width * 0.1),
                   Expanded(
                     flex: 1,
                     child: ListView.builder(

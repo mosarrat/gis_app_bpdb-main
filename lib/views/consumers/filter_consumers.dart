@@ -489,6 +489,8 @@ class _FilterConsumersState extends State<FilterConsumers> {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 16.0),
                   ],
                 ),
               ),

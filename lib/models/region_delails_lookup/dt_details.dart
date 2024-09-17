@@ -93,6 +93,8 @@ class Transformer {
   final String feederlineName;
   final String poleLeftCode;
   final String? poleRightCode;
+  final double latitude;
+  final double longitude;
   final double? transformerKvaRating;
   final String? contractNo;
   final double? ratedHtVoltage;
@@ -112,6 +114,8 @@ class Transformer {
     required this.feederlineName,
     required this.poleLeftCode,
     this.poleRightCode,
+    required this.latitude,
+    required this.longitude,
     this.transformerKvaRating,
     this.contractNo,
     this.ratedHtVoltage,
@@ -123,7 +127,8 @@ class Transformer {
   factory Transformer.fromJson(Map<String, dynamic> json) {
     return Transformer(
       id: json['id'] as int,
-      distributionTransformerCode: json['distributionTransformerCode'] as String?,
+      distributionTransformerCode:
+          json['distributionTransformerCode'] as String?,
       dtLocationName: json['dtLocationName'] as String?,
       zoneName: json['zoneName'] as String,
       circleName: json['circleName'] as String,
@@ -133,6 +138,8 @@ class Transformer {
       feederlineName: json['feederlineName'] as String,
       poleLeftCode: json['poleLeftCode'] as String,
       poleRightCode: json['poleRightCode'] as String?,
+      latitude: json['latitude'],
+      longitude: json['longitude'],
       transformerKvaRating: (json['transformerKvaRating'] as num?)?.toDouble(),
       contractNo: json['contractNo'] as String?,
       ratedHtVoltage: (json['ratedHtVoltage'] as num?)?.toDouble(),
@@ -155,6 +162,8 @@ class Transformer {
       'feederlineName': feederlineName,
       'poleLeftCode': poleLeftCode,
       'poleRightCode': poleRightCode,
+      'latitude': latitude,
+      'longitude': longitude,
       'transformerKvaRating': transformerKvaRating,
       'contractNo': contractNo,
       'ratedHtVoltage': ratedHtVoltage,
@@ -164,4 +173,3 @@ class Transformer {
     };
   }
 }
-

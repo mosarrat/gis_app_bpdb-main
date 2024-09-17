@@ -13,10 +13,44 @@ class MapLegends extends StatefulWidget {
 class _MapLegendsState extends State<MapLegends> {
   @override
   Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    double popupHeight;
+    double topbarWidth;
+    double topspaceWidth;
+
+    if (height < 1300 && height > 900) {
+      popupHeight = height * 0.3;
+    } else if (height < 900 && height > 600) {
+      popupHeight = height * 0.28;
+    } else if (height < 600 && height > 400) {
+      popupHeight = height * 0.48;
+    } else if (height < 400 && height > 200) {
+      popupHeight = height * 0.5;
+    } else {
+      popupHeight = height * 0.28;
+    }
+
+    if (width < 1300 && width > 900) {
+      topbarWidth = width * 0.2;
+      topspaceWidth = width * 0.03;
+    } else if (width < 900 && width > 600) {
+      topbarWidth = width / 7.5;
+      topspaceWidth = width / 14;
+    } else if (width < 600 && width > 400) {
+      topbarWidth = width * 0.26;
+      topspaceWidth = width * 0.03;
+    } else if (width < 400 && width > 200) {
+      topbarWidth = width * 0.26;
+      topspaceWidth = width *0.03;
+    } else {
+      topbarWidth = width * 0.2;
+      topspaceWidth = width * 0.002;
+    }
     return Visibility(
       visible: widget.isVisible,
       child: Container( 
-        height: MediaQuery.of(context).size.height * 0.28, 
+        height: popupHeight, 
         color: Colors.grey[300],
         child: Column(
           children: [
@@ -32,7 +66,7 @@ class _MapLegendsState extends State<MapLegends> {
               child: Row(
                 children: [
                   SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.3,
+                    width: topbarWidth,
                     height: 40,
                     child: const Padding(
                       padding: EdgeInsets.only(left: 12),
@@ -41,7 +75,7 @@ class _MapLegendsState extends State<MapLegends> {
                         child: Text(
                           "Map Legend",
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: 15.2,
                             fontWeight: FontWeight.bold,
                             color: Colors.white,
                           ),
@@ -49,7 +83,7 @@ class _MapLegendsState extends State<MapLegends> {
                       ),
                     ),
                   ),
-                  SizedBox(width: MediaQuery.of(context).size.width * 0.04),
+                  SizedBox(width: topspaceWidth),
                   Expanded(child: Container()), 
                   IconButton(
                     icon: const Icon(Icons.close, color: Colors.white),
@@ -116,15 +150,22 @@ class _MapLegendsState extends State<MapLegends> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      labelText: title,
-                      labelStyle: const TextStyle(fontSize: 10.5),
-                      border: InputBorder.none,
-                      contentPadding: const EdgeInsets.symmetric(vertical: 1),
-                      isDense: true, 
+                  child: Text(title,
+                    style: const TextStyle(
+                      fontSize: 12,  
                     ),
                   ),
+                  // TextField(
+                  //   readOnly: true,
+                  //   decoration: InputDecoration(
+                      
+                  //     labelText: title,
+                  //     labelStyle: const TextStyle(fontSize: 10.5),
+                  //     border: InputBorder.none,
+                  //     contentPadding: const EdgeInsets.symmetric(vertical: 1),
+                  //     isDense: true, 
+                  //   ),
+                  // ),
                 ),
               ],
             ),

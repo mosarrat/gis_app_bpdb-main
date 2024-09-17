@@ -59,14 +59,15 @@ class _ViewFeederlinesState extends State<ViewFeederlines> {
         iconTheme: const IconThemeData(
           color: Colors.white, //change your color here
         ),
-        title: const Text('Feeder Line Info',
-        style: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+        title: const Text(
+          'Feeder Line Info',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-      ),
-      backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+        backgroundColor: const Color.fromARGB(255, 5, 161, 182),
       ),
       body: FutureBuilder<List<FeederLines>>(
         future: _futureFeederLines,
@@ -92,11 +93,11 @@ class _ViewFeederlinesState extends State<ViewFeederlines> {
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
                     title: Text(
-                      item.feederLineId.toString(),
+                      "Feeder Line Id: ${item.feederLineId.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Feeder Line Name #${item.feederlineName}\r\nCode #${item.feederLineCode}',
+                      'Feeder Line Name: ${item.feederlineName}\r\nCode: ${item.feederLineCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

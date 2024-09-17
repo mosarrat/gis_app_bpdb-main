@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:intl/intl.dart';
 import '../../api/region_api.dart';
@@ -7,6 +6,7 @@ import '../../models/region_delails_lookup/poleDetailsId.dart';
 import '../../models/region_delails_lookup/poleId.dart';
 import '../../models/region_delails_lookup/pole_image.dart';
 import '../../constants/constant.dart';
+import '../map/pole_map_viewer.dart';
 
 class ShowDetailDialog extends StatefulWidget {
   final int poleId;
@@ -28,6 +28,13 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   late Future<List<PoleImage>> _futurePoleImg;
   late double latitude;
   late double longitude;
+  late int poleDetailsId;
+  late String poleCode;
+  late String zone;
+  late String circle;
+  late String snd;
+  late String substation;
+  late String feederline;
 
   @override
   void initState() {
@@ -102,6 +109,16 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                         return Text('Error: ${snapshot.error}');
                       } else if (snapshot.hasData && snapshot.data != null) {
                         final poleDetails = snapshot.data!;
+                        if (poleDetails.isNotEmpty) {
+                          // Update global variables with the first pole's latitude and longitude
+                          poleDetailsId = poleDetails.first.poleDetailsId;
+                          poleCode = poleDetails.first.poleCode;
+                          zone = poleDetails.first.zoneName;
+                          circle = poleDetails.first.circleName;
+                          snd = poleDetails.first.snDName;
+                          substation = poleDetails.first.substationName;
+                          feederline = poleDetails.first.feederlineName;
+                        }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: poleDetails.map((poleDetail) {
@@ -134,22 +151,22 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                                'Zone Info: ${poleDetail.zoneId}: (${poleDetail.zoneName ?? ""})'),
+                                                'Zone Info: ${poleDetail.zoneName ?? ""}'),
                                             const Divider(),
                                             Text(
-                                                'Circle Info: ${poleDetail.circleId}: (${poleDetail.circleName ?? ""})'),
+                                                'Circle Info: ${poleDetail.circleName ?? ""}'),
                                             const Divider(),
                                             Text(
-                                                'SnD Info: ${poleDetail.sndId}: (${poleDetail.snDName ?? ""})'),
+                                                'SnD Info: ${poleDetail.snDName ?? ""}'),
                                             const Divider(),
                                             Text(
-                                                'Esu Info: ${poleDetail.esuId ?? ""}: (${poleDetail.esuName ?? ""})'),
+                                                'Esu Info: ${poleDetail.esuName ?? ""}'),
                                             const Divider(),
                                             Text(
-                                                'Substation Info: ${poleDetail.substationId}: (${poleDetail.substationName ?? ""})'),
+                                                'Substation Info: ${poleDetail.substationName ?? ""}'),
                                             const Divider(),
                                             Text(
-                                                'Feeder Line Info: ${poleDetail.feederLineId}: (${poleDetail.feederlineName ?? ""})'),
+                                                'Feeder Line Info: ${poleDetail.feederlineName ?? ""}'),
                                             const Divider(
                                               color: Colors.transparent,
                                             ),
@@ -479,11 +496,13 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MapViewer(
+                                    builder: (context) => PoleMapViewer(
                                       title: 'Map View',
                                       lat: latitude,
                                       long: longitude,
                                       defaultZoomLevel: 20,
+                                      properties:
+                                        '$poleDetailsId#$poleCode#$zone#$circle#$snd#$substation#$feederline',
                                     ),
                                   ),
                                 );

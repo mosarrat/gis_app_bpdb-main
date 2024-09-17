@@ -331,12 +331,11 @@ class _ViewSndState extends State<ViewSnd> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      sndInfo.sndId.toString(),
+                    title: Text("SnD Id: ${sndInfo.sndId.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'SnD Name #${sndInfo.snDName}\r\nCode #${sndInfo.sndCode}',
+                      'SnD Name: ${sndInfo.snDName}\r\nCode: ${sndInfo.sndCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

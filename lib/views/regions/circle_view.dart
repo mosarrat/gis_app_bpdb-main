@@ -260,12 +260,11 @@ class _ViewCirclesState extends State<ViewCircles> {
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text(
-                      circlesInfo.circleId.toString(),
+                    title: Text("Circle Id: ${circlesInfo.circleId.toString()}",
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Circle Name #${circlesInfo.circleName}\r\nCode #${circlesInfo.circleCode}',
+                      'Circle Name: ${circlesInfo.circleName}\r\nCode: ${circlesInfo.circleCode}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(

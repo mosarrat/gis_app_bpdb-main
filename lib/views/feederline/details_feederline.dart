@@ -135,8 +135,7 @@ Future<void> showDetailDialog(BuildContext context, CallApiService apiService,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   // "feederLineId"
-                                  Text(
-                                    detailedFeederLine.feederLineId.toString(),
+                                  Text("Feeder Line Id: ${detailedFeederLine.feederLineId.toString()}",
                                     style: const TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),

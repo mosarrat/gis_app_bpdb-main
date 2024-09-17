@@ -1,4 +1,4 @@
-class Substation {
+class Substations {
   int? substationId;
   int? zoneId;
   String? zoneInfo;
@@ -36,7 +36,7 @@ class Substation {
   bool? isEditAvailable;
   Capacity? totalCapacity;
 
-  Substation({
+  Substations({
     this.substationId,
     this.zoneId,
     this.zoneInfo,
@@ -75,8 +75,8 @@ class Substation {
     this.totalCapacity,
   });
 
-  factory Substation.fromJson(Map<String, dynamic> json) {
-    return Substation(
+  factory Substations.fromJson(Map<String, dynamic> json) {
+    return Substations(
       substationId: json['substationId'],
       zoneId: json['zoneId'],
       zoneInfo: json['zoneInfo'],

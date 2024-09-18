@@ -4,8 +4,8 @@
 // String removeAudioPath = 'sounds/remove.mp3';
 import '../models/Login/login.dart';
 
-String myAPILink = "http://10.55.5.19/bpdb-app"; //http://10.55.5.19/bpdb-app
-//String myAPILink = "https://ims.cegisbd.com/bpdb"; //online
+//String myAPILink = "http://10.55.5.19/bpdb-app"; //http://10.55.5.19/bpdb-app
+String myAPILink = "https://ims.cegisbd.com/bpdb"; //online
 // //String myAPILink = "https://ims.cegisbd.com/rhd005"; //live
 String timeAPILink = "https://worldtimeapi.org/api/timezone/Asia/Dhaka";
 String onlineTime = "00:00:00";

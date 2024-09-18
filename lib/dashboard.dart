@@ -188,10 +188,11 @@ class _DashboardState extends State<Dashboard> {
     double consumerheight;
     double countboxheight;
     double sliderheight;
+    double topperHeight;
     double carouselContainerHeight;
     if (height < 1300 && height > 900) {
-      // print(height);
-      //print("1");
+      print(height);
+      print("1");
       pieheight = height / 2.6;
       barheight = height / 2.5;
       regionheight = height * 0.24;
@@ -202,9 +203,11 @@ class _DashboardState extends State<Dashboard> {
       imgheight = height / 4;
       countboxheight = height / 9.5;
       sliderheight = height / 3.9;
+      topperHeight=height/4.5;
     } else if (height < 900 && height > 600) {
-      // print(height);
-      //print("2");
+      print(height);
+      print("2");
+      topperHeight=height/4.5;
       pieheight = height * 0.48;
       barheight = height * 0.55;
       regionheight = height * 0.28;
@@ -216,8 +219,8 @@ class _DashboardState extends State<Dashboard> {
       countboxheight = height / 8.5;
       sliderheight = height / 7;
     } else if (height < 600 && height > 400) {
-      // print(height);
-      //print("3");
+      print(height);
+      print("3");
       pieheight = height * 0.6;
       barheight = height * 0.7;
       regionheight = height * 0.39;
@@ -228,9 +231,10 @@ class _DashboardState extends State<Dashboard> {
       imgheight = height / 3.5;
       countboxheight = height / 8.5;
       sliderheight = height / 7;
+      topperHeight=height/4.5;
     } else if (height < 400 && height > 200) {
-      // print(height);
-      //print("4");
+      print(height);
+      print("4");
       pieheight = height * 0.9;
       barheight = height * 0.99;
       regionheight = height * 0.58;
@@ -241,9 +245,11 @@ class _DashboardState extends State<Dashboard> {
       imgheight = height / 3.8;
       countboxheight = height / 5;
       sliderheight = height / 4;
+      topperHeight=height/4.5;
     } else {
-      // print(height);
-      //print("5");
+      print(height);
+      print("5");
+      topperHeight=height/4.5;
       pieheight = height * 0.54;
       barheight = height * 0.89;
       regionheight = height * 0.40;
@@ -297,7 +303,7 @@ class _DashboardState extends State<Dashboard> {
           padding: EdgeInsets.zero,
           children: [
             SizedBox(
-              height: 145,
+              height: topperHeight,
               child: DrawerHeader(
                 decoration: BoxDecoration(
                   color: Color.fromARGB(255, 3, 89, 100),

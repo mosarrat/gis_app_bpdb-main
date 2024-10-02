@@ -376,6 +376,9 @@ class _MapViewerState extends State<MapViewer> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    //print(width);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -421,9 +424,7 @@ class _MapViewerState extends State<MapViewer> {
   }
 
   Widget _buildDetailItem(String label, String value) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
-    //print(width);
+
     if (width < 400 && width > 200) {
       return Padding(
         padding: EdgeInsets.all(2.0),

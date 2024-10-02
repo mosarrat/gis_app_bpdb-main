@@ -42,7 +42,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   }
 
   Future<List<Transformer>> _fetchDTByDetailsId() async {
-    return CallApi().fetchDTByDetailsId(widget.id);
+    return CallRegionApi().fetchDTByDetailsId(widget.id);
   }
 
   @override

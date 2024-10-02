@@ -18,7 +18,7 @@ class ViewZone extends StatefulWidget {
 }
 
 class _ViewZoneState extends State<ViewZone> {
-  final CallApi api = CallApi();
+  final CallRegionApi api = CallRegionApi();
   late Future<List<Zone>> _futureZones;
   bool isLoading = false;
 
@@ -31,7 +31,7 @@ class _ViewZoneState extends State<ViewZone> {
   }
 
   Future<List<Zone>> _fetchZones() async {
-    return CallApi().fetchZoneInfo();
+    return CallRegionApi().fetchZoneInfo();
   }
 
   void setLoading(bool loading) {
@@ -160,124 +160,115 @@ class _ViewZoneState extends State<ViewZone> {
   //   );
   // }
 
-  void showDetailDialog(Zone zoneInfo) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(3))),
-          contentPadding: const EdgeInsets.all(0),
-          insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-          backgroundColor: const Color.fromARGB(255, 5, 161, 182),
-          title: SizedBox(
-            width: MediaQuery.of(context).size.width,
-            child: const Column(
-              //crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Zone Information",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+void showDetailDialog(Zone zoneInfo) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(3)),
+        ),
+        contentPadding: const EdgeInsets.all(0),
+        insetPadding: const EdgeInsets.symmetric(horizontal: 16),
+        backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+        title: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: const Column(
+            children: [
+              Text(
+                "Zone Information",
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              SizedBox(height: 15),
+            ],
+          ),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Card(
+                shadowColor: Colors.transparent,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(2),
+                    topRight: Radius.circular(2),
                   ),
                 ),
-                SizedBox(height: 15),
-              ],
-            ),
-          ),
-          
-          content: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Card(
-                  shadowColor: Colors.transparent,
-                  // width: MediaQuery.of(context).size.width,
-                  shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2),)),
-                  //color: const Color.fromARGB(255, 206, 242, 248),
-                  color: Colors.white,
-                  margin: const EdgeInsets.all(0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(25),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Divider(
-                          height:0,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          color: const Color.fromARGB(255, 223, 240, 243),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Zone Id: ${zoneInfo.zoneId.toString()}',
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
+                color: Colors.white,
+                margin: const EdgeInsets.all(0),
+                child: Padding(
+                  padding: const EdgeInsets.all(25),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Divider(height: 0),
+                      detailContainer(
+                          label: 'Zone Id', value: zoneInfo.zoneId.toString(), isAlternate: true),
+                      const Divider(height: 0),
+                      detailContainer(
+                          label: 'Zone Name', value: zoneInfo.zoneName, isAlternate: false),
+                      const Divider(height: 0),
+                      detailContainer(
+                          label: 'Zone Code',
+                          value: zoneInfo.zoneCode ?? 'N/A',
+                          isAlternate: true),
+                      const Divider(height: 0),
+                      const SizedBox(height: 20),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: Card(
+                          color: const Color.fromARGB(255, 5, 161, 182),
+                          child: TextButton(
+                            child: const Text(
+                              'Close',
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
                             ),
-                        ),
-                        const Divider(
-                          height:0,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          color: const Color.fromARGB(255, 241, 245, 245),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Zone Name: ${zoneInfo.zoneName}'),
-                            ),
-                        ),
-                        const Divider(
-                          height:0,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width,
-                          height: 40,
-                          color: const Color.fromARGB(255, 223, 240, 243),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text('Zone Code: ${zoneInfo.zoneCode ?? 'N/A'}'),
-                            ),
-                        ),
-                        const Divider(
-                          height:0,
-                        ),
-                        const SizedBox( height: 20,),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: Card(
-                            color: const Color.fromARGB(255, 5, 161, 182),
-                            child: 
-                              TextButton(
-                                child: const Text('Close', 
-                                style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                                ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
+
+Widget detailContainer({required String label, required String value, bool isAlternate = false}) {
+  return Container(
+    width: double.infinity,
+    height: 40,
+    color: isAlternate
+        ? const Color.fromARGB(255, 223, 240, 243)
+        : const Color.fromARGB(255, 241, 245, 245),
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        '$label: $value',
+        // style: const TextStyle(
+        //   fontWeight: FontWeight.bold,
+        // ),
+      ),
+    ),
+  );
+}
+
 //////////////////////////////////////////////////////////////////////////
   @override
   Widget build(BuildContext context) {

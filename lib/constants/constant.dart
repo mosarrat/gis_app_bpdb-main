@@ -18,13 +18,7 @@ String poleImgPath =
 // String userId = 'app_user';
 // int userLevelId = 0;
 String LoginTime = '';
-// double? centerLatitude;
-// double? centerLongitude;
-// double? defaultZoomLevel;
 User? globalUser;
-// Example usage:
-//User? user = globalUser;
-// print(user?.userName);
 
 class GlobalVariables {
   static double? centerLatitude;

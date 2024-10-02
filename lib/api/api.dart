@@ -13,6 +13,8 @@ import '../models/app_config.dart';
 import '../models/consumer_lookup/tariff_sub_category,dart';
 import '../models/consumer_lookup/single_consumers.dart';
 import '../models/region_delails_lookup/circle.dart';
+import '../models/region_delails_lookup/pole_condition.dart';
+import '../models/region_delails_lookup/pole_type.dart';
 import '../models/region_delails_lookup/snd.dart';
 import '../models/region_delails_lookup/substation.dart';
 import '../models/regions/distribution_transformer.dart';
@@ -516,4 +518,5 @@ class CallApi {
   // }
 
   // // #endregion
+
 }

@@ -13,7 +13,7 @@ class ViewSubstation extends StatefulWidget {
 }
 
 class _ViewSubstationState extends State<ViewSubstation> {
-  final CallApi api = CallApi();
+  final CallRegionApi api = CallRegionApi();
   late Future<List<Substations>> _futureSubstations;
   bool isLoading = false;
 
@@ -26,7 +26,7 @@ class _ViewSubstationState extends State<ViewSubstation> {
   }
 
   Future<List<Substations>> _fetchSubstations() async {
-    return CallApi().fetchSubstationInfo();
+    return CallRegionApi().fetchSubstationInfo();
   }
 
   void setLoading(bool loading) {

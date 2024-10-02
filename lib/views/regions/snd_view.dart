@@ -12,7 +12,7 @@ class ViewSnd extends StatefulWidget {
 }
 
 class _ViewSndState extends State<ViewSnd> {
-  final CallApi api = CallApi();
+  final CallRegionApi api = CallRegionApi();
   late Future<List<Snd>> _futureSnds;
   bool isLoading = false;
 
@@ -25,7 +25,7 @@ class _ViewSndState extends State<ViewSnd> {
   }
 
   Future<List<Snd>> _fetchSnds() async {
-    return CallApi().fetchSndInfo();
+    return CallRegionApi().fetchSndInfo();
   }
 
   void setLoading(bool loading) {

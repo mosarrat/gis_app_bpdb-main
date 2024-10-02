@@ -25,7 +25,7 @@ class _ViewEsuState extends State<ViewEsu> {
   }
 
   Future<List<Esu>> _fetchEsus() async {
-    return CallApi().fetchEsuInfo();
+    return CallRegionApi().fetchEsuInfo();
   }
 
   void setLoading(bool loading) {

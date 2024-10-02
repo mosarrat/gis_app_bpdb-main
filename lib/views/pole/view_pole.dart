@@ -1,40 +1,36 @@
 import 'package:flutter/material.dart';
-import 'package:gis_app_bpdb/views/map/map_viewer.dart';
-import 'package:intl/intl.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import '../../api/region_api.dart';
-import '../../models/consumer_lookup/consumers.dart';
-import '../../models/consumer_lookup/single_consumers.dart';
-import '../../models/regions/pole.dart';
-import 'pole_detail.dart';
+import '../../models/region_delails_lookup/pole_list.dart';
+import 'create_poledetail.dart';
+import 'pole_details.dart';
 
+class ViewPoles extends StatefulWidget {
+  final int sndId;
 
-class PoleListView extends StatefulWidget {
-  final int feederLineId;
-
-  const PoleListView({
+  const ViewPoles({
     super.key,
-    required this.feederLineId, 
+    required this.sndId, 
   });
 
   @override
-  _PoleListViewState createState() => _PoleListViewState();
+  _ViewPolesState createState() => _ViewPolesState();
 }
 
-class _PoleListViewState extends State<PoleListView> {
+class _ViewPolesState extends State<ViewPoles> {
   final CallRegionApi api = CallRegionApi();
-  late Future<List<Pole>> _futurePoles;
+  late Future<List<PoleList>> _futurePoles;
 
   @override
   void initState() {
     super.initState();
-    _futurePoles = _fetchPoles();
+    _futurePoles = _fetchPolesInfo();
   }
 
-  Future<List<Pole>> _fetchPoles() async {
-    return CallRegionApi().fetchPoleInfo(widget.feederLineId,);
+  Future<List<PoleList>> _fetchPolesInfo() async {
+    return CallRegionApi().fetchPolesInfo(widget.sndId,);
   }
 
-////////////////////--------View Details Comsumer Pop-up----------////////////////////////
   @override
   Widget build(BuildContext context) {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
@@ -55,7 +51,7 @@ class _PoleListViewState extends State<PoleListView> {
       ),
       backgroundColor: const Color.fromARGB(255, 5, 161, 182),
       ),
-      body: FutureBuilder<List<Pole>>(
+      body: FutureBuilder<List<PoleList>>(
         future: _futurePoles,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -67,27 +63,60 @@ class _PoleListViewState extends State<PoleListView> {
           } else {
             // Filter the list based on search query
 
-            List<Pole> Poles = snapshot.data!;
+            List<PoleList> poles = snapshot.data!;
 
             return ListView.builder(
-              itemCount: Poles.length,
+              itemCount: poles.length,
               itemBuilder: (context, index) {
-                Pole poleInfo = Poles[index];
+                PoleList poleInfo = poles[index];
                 return Card(
                   margin:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                   child: ListTile(
                     contentPadding: const EdgeInsets.all(15),
-                    title: Text("Pole Id: ${poleInfo.poleDetailsId.toString()}" ,
+                    title: Text("Pole Id: ${poleInfo.poleId.toString()}" ,
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      'Pole Code: ${poleInfo.poleCode}\r\nPole Unique Code: ${poleInfo.poleUniqueCode}',
+                      'Pole Type: ${poleInfo.poleTypeName}\r\nPole Condition: ${poleInfo.conditionName}\r\nPole Height: ${poleInfo.poleHeight ?? ''}',
                       style: const TextStyle(height: 1.5),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
+                        Tooltip(
+                        message: 'Add Pole Details',
+                        child: Container(
+                          height: 27,
+                          width: 27,
+                          decoration: const BoxDecoration(
+                            color: Colors.blue,
+                            shape: BoxShape.circle,
+                          ),
+                          child: IconButton(
+                            iconSize: 12,
+                            icon: const Icon(
+                              Icons.add_box_rounded,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => AddPoleDetails(
+                                    zoneId: poleInfo.zoneId,
+                                    circleId: poleInfo.circleId,
+                                    sndId: poleInfo.sndId,
+                                    esuId: poleInfo.esuId ?? 0,
+                                    poleId: poleInfo.poleId,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 3),
                         Tooltip(
                           message: 'View Details',
                           child: Container(
@@ -109,7 +138,6 @@ class _PoleListViewState extends State<PoleListView> {
                                   builder: (context) {
                                     return ShowDetailDialog(
                                       poleId: poleInfo.poleId,
-                                      poleDetailsId: poleInfo.poleDetailsId,
                                     );
                                   },
                                 );
@@ -119,7 +147,6 @@ class _PoleListViewState extends State<PoleListView> {
                         ),
                       ],
                     ),
-
                     onTap: () {},
                   ),
                 );

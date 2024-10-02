@@ -37,7 +37,7 @@ dependencies:
   flutter_async_autocomplete: ^0.1.1
   connectivity: ^3.0.6
   #geolocator: ^12.0.0
-  fluttertoast: ^8.2.5
+  fluttertoast: ^8.2.8
   carousel_slider: ^5.0.0
   flutter_map: any
   latlong2: ^0.9.1
@@ -51,6 +51,9 @@ dependencies:
   pie_chart: ^5.4.0
   get_storage: ^2.0.3
   flutter_launcher_icons: "^0.13.1"
+  
+  permission_handler: ^10.0.0
+  geolocator: ^8.0.0
 
 dev_dependencies:
   flutter_test:
@@ -131,6 +134,13 @@ flutter:
     - assets/map_legend/common_pole.png
     - assets/map_legend/lt_pole.png
     - assets/map_legend/service_point.png
+    - assets/images/new_icons/new_drawer.png
+    - assets/images/new_icons/transmission-tower.png
+    - assets/images/new_icons/new_consumer.png
+    - assets/images/new_icons/new_substation.png
+    - assets/images/new_icons/down_arrow.png
+    - assets/images/new_icons/up_arrow.png
+    - assets/images/new_icons/zone-removebg.png
 
     
   fonts:

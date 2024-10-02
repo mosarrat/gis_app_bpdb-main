@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, deprecated_member_use
 
 import 'dart:io';
-import 'dart:math';
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,9 +11,6 @@ import 'package:gis_app_bpdb/widgets/chart/bar_chart_view.dart';
 import 'api/api.dart';
 import 'main.dart';
 import 'menu.dart';
-import 'menu_land.dart';
-import 'menu_tab.dart';
-import 'menu_tab_land.dart';
 import 'views/consumers/filter_consumers.dart';
 import 'views/consumers/new_consumer_exp.dart';
 import 'views/consumers/view_tariff_sub_category.dart';
@@ -22,7 +18,6 @@ import 'views/dt/filter_dt.dart';
 import 'views/feederline/new_feeder_ex.dart';
 import 'views/feederline/view_feederline.dart';
 import 'views/feederline/view_table.dart';
-import 'views/pole/polebysnd_filter.dart';
 import 'views/profile/profile_page.dart';
 import 'views/regions/circle_view.dart';
 import 'views/regions/esu_view.dart';
@@ -177,13 +172,15 @@ class _DashboardState extends State<Dashboard> {
           : "Zone Wise Pole Info Report";
     });
   }
+
+  bool _isRow3Visible = false; 
+  double _containerHeight = 280;
 //////////////////// -----Chart ----- /////////////////////
   @override
   Widget build(BuildContext context) {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    //print(height);
     User? user = globalUser;
     double carouselheight;
     double imgheight;
@@ -196,7 +193,6 @@ class _DashboardState extends State<Dashboard> {
     double sliderheight;
     double topperheight;
     double carouselContainerHeight;
-    int expandRange;
     if (height < 1300 && height > 900) {
       // print(height);
       //print("1");
@@ -271,20 +267,7 @@ class _DashboardState extends State<Dashboard> {
       sliderheight = height / 7;
       topperheight = height / 4.5;
     }
-    //print(width);
-    if (width >= 900) {
-      expandRange = 6;
-    } 
-    else if(width >= 700){
-      expandRange = 5;
-    }
-    else if(width >=600){
-      expandRange = 4;
-    }
-    else {
-      expandRange = 3;
-    }
-
+    //print(selectedData);
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -301,7 +284,14 @@ class _DashboardState extends State<Dashboard> {
             ),
           ],
         ),
-        automaticallyImplyLeading: false, // Disable the default leading icon
+        leading: GestureDetector(
+          onTap: () {
+            if (kDebugMode) {
+              print('ok');
+            }
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
         title: Text(
           "BPDB GIS APP",
           style: TextStyle(
@@ -310,27 +300,8 @@ class _DashboardState extends State<Dashboard> {
             fontSize: deviceFontSize + 6,
           ),
         ),
-        actions: [
-          GestureDetector(
-            onTap: () {
-              // if (kDebugMode) {
-              //   print('EndDrawer icon tapped');
-              // }
-              _scaffoldKey.currentState?.openEndDrawer();
-            },
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                'assets/images/new_icons/new_drawer.png',
-                fit: BoxFit.contain,
-                height: 30,
-                width: 30,
-              ),
-            ),
-          ),
-        ],
       ),
-
+      //////////////////////////////////////////////////////////////////////////////////////
       endDrawer: Drawer(
         width: MediaQuery.of(context).size.width * 0.78,
         backgroundColor: Colors.white,
@@ -351,12 +322,15 @@ class _DashboardState extends State<Dashboard> {
                           AssetImage('assets/images/bpdb_logo.png'),
                       radius: 35,
                     ),
-                    SizedBox(width: 15),
+                    SizedBox(
+                        width:
+                            15), // Adds some spacing between the avatar and text
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
+                          //"BPDB GIS App",
                           "User Name: ${user?.UserName}",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -379,8 +353,10 @@ class _DashboardState extends State<Dashboard> {
               ),
             ),
             ListTile(
+              //minTileHeight: 40,
               leading: Icon(
                 Icons.home,
+                // color: const Color.fromARGB(255, 40, 138, 196),
                 color: Color.fromARGB(255, 3, 89, 100),
               ),
               title: const Text('Dashboard'),
@@ -388,11 +364,14 @@ class _DashboardState extends State<Dashboard> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Dashboard(),
+                    builder: (context) =>
+                        Dashboard(), // Intangible(id: 0, isLocal: true),
                   ),
                 );
               },
             ),
+            //Divider(),
+
             ///////////////-----Regions Menu-----////////////////
             Theme(
               data: ThemeData().copyWith(dividerColor: Colors.transparent),
@@ -752,28 +731,6 @@ class _DashboardState extends State<Dashboard> {
                               },
                             ),
                           ),
-
-                          //Pole List//
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16.0),
-                            child: ListTile(
-                              //minTileHeight: 40,
-                              leading: const Icon(
-                                Icons.view_stream,
-                                color: Color.fromARGB(255, 35, 216, 35),
-                              ),
-                              title: const Text('View Poles'),
-                              onTap: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => FilterPoleBySnd(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        //Pole List//
                         ],
                       ),
                     ),
@@ -1073,12 +1030,12 @@ class _DashboardState extends State<Dashboard> {
                         //     ),
                         //     title: const Text('Manage Profile'),
                         //     onTap: () async {
-                        //       Navigator.push(
-                        //         context,
-                        //         MaterialPageRoute(
-                        //           builder: (context) => ManageProfile(),
-                        //         ),
-                        //       );
+                        //       // Navigator.push(
+                        //       //   context,
+                        //       //   MaterialPageRoute(
+                        //       //     builder: (context) => ManageProfile(),
+                        //       //   ),
+                        //       // );
                         //     },
                         //   ),
                         // ),
@@ -1119,7 +1076,7 @@ class _DashboardState extends State<Dashboard> {
           ],
         ),
       ),
-      ///////////////////////////////////////////////////////////////////////////////////////////////
+      /////////////////////////////////////////////////////////////////////////////////////
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -1127,50 +1084,16 @@ class _DashboardState extends State<Dashboard> {
               width: width,
               child: Column(
                 children: [
-                  if (expandRange == 3)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: 0.02, bottom: 4, left: 8, right: 8),
-                      child: Card(
-                        //color: Colors.teal,
-                        child: ToggleRowVisibility(),
-                      ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 0.02, bottom: 0, left: 8, right: 8),
+                    child: Card(
+                    //color: Colors.teal,
+                    child: ToggleRowVisibility(),
                     ),
-
-                  if (expandRange == 4)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: 0.02, bottom: 4, left: 8, right: 8),
-                      child: Card(
-                        //color: Colors.teal,
-                        child: ToggleRowVisibilityTab(),
-                      ),
-                    ),
-
-                    if (expandRange == 5)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: 0.02, bottom: 4, left: 8, right: 8),
-                      child: Card(
-                        //color: Colors.teal,
-                        child: ToggleRowVisibility_land(),
-                      ),
-                    ),
-
-                    if (expandRange == 6)
-                    Padding(
-                      padding: EdgeInsets.only(
-                          top: 0.02, bottom: 4, left: 8, right: 8),
-                      child: Card(
-                        //color: Colors.teal,
-                        child: ToggleRowVisibilityTab_land(),
-                      ),
-                    ),
-
-                  //ToggleRowVisibility(),
-                  const SizedBox(
-                    height: 5,
                   ),
+                  
+                  //ToggleRowVisibility(),
+                  const SizedBox(height: 5,),
                   Container(
                     width: width,
                     height: carouselContainerHeight,

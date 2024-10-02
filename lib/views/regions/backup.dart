@@ -36,15 +36,15 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   }
 
   Future<List<PoleDetails>> _fetchPolesByDetailsId() async {
-    return CallApi().fetchPolesByDetailsId(widget.poleDetailsId);
+    return CallRegionApi().fetchPolesByDetailsId(widget.poleDetailsId);
   }
 
   Future<List<PoleDetailByID>> _fetchPolesById() async {
-    return CallApi().fetchPolesById(widget.poleId);
+    return CallRegionApi().fetchPolesById(widget.poleId);
   }
 
   Future<List<PoleImage>> _fetchPoleImage() async {
-    return CallApi().fetchPoleImage(widget.poleId);
+    return CallRegionApi().fetchPoleImage(widget.poleId);
   }
 
   @override

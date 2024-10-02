@@ -13,7 +13,7 @@ class ViewCircles extends StatefulWidget {
 }
 
 class _ViewCirclesState extends State<ViewCircles> {
-  final CallApi api = CallApi();
+  final CallRegionApi api = CallRegionApi();
   late Future<List<Circle>> _futureCircles;
   bool isLoading = false;
 
@@ -26,7 +26,7 @@ class _ViewCirclesState extends State<ViewCircles> {
   }
 
   Future<List<Circle>> _fetchCircles() async {
-    return CallApi().fetchCircleInfo();
+    return CallRegionApi().fetchCircleInfo();
   }
 
   void setLoading(bool loading) {

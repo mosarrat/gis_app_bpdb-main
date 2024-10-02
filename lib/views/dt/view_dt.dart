@@ -21,7 +21,7 @@ class DTListView extends StatefulWidget {
 }
 
 class _DTListViewState extends State<DTListView> {
-  final CallApi apiCall = CallApi();
+  final CallRegionApi apiCall = CallRegionApi();
   late Future<List<TransformerDetails>> _futureDT;
 
   @override
@@ -40,7 +40,7 @@ class _DTListViewState extends State<DTListView> {
   }
 
   Future<List<TransformerDetails>> _fetchDT() async {
-    return CallApi().fetchDT(
+    return CallRegionApi().fetchDT(
       substation: widget.substation,
       feederLineId: widget.feederLineId,
     );

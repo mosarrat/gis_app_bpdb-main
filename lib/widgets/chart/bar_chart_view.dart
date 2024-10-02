@@ -181,7 +181,7 @@ class _BarChartViewState extends State<BarChartView> {
 
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     double barheight;
   
@@ -192,7 +192,7 @@ class _BarChartViewState extends State<BarChartView> {
     } else if (height < 900 && height > 600) {
       // print(height);
       // print("2");
-      barheight = height / 4.8; 
+      barheight = height / 4.6; 
     } else if (height < 600 && height > 400) {
       // print(height);
       // print("3");

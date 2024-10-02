@@ -48,10 +48,9 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
   bool _showMapLegends = false;
   String? mapurl;
   int? zoneId;
-
   Color getBorderColor() {
     if (widget.mapcode == null) {
-      return Colors.transparent; 
+      return Colors.transparent;
     } else if (widget.mapcode! == 15) {
       return const Color.fromARGB(255, 75, 109, 76);
     } else if (widget.mapcode! == 14) {
@@ -63,13 +62,13 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
     } else if (widget.mapcode! == 9) {
       return Colors.orange;
     } else {
-      return Colors.transparent; 
+      return Colors.transparent;
     }
   }
 
-    Color getFillerColor() {
+  Color getFillerColor() {
     if (widget.mapcode == null) {
-      return Colors.transparent; 
+      return Colors.transparent;
     } else if (widget.mapcode! == 15) {
       return Color.fromARGB(255, 212, 245, 213).withOpacity(0.5);
     } else if (widget.mapcode! == 14) {
@@ -81,7 +80,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
     } else if (widget.mapcode! == 9) {
       return const Color.fromARGB(255, 248, 211, 155).withOpacity(0.5);
     } else {
-      return Colors.transparent; 
+      return Colors.transparent;
     }
   }
 
@@ -100,7 +99,6 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
   @override
   void initState() {
     super.initState();
-    //print(widget.zoneId);
   }
 
   @override
@@ -189,8 +187,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                               color: getFillerColor(),
                               //color: Colors.black45,
                               borderStrokeWidth: 3,
-                              isFilled: false
-                          );
+                              isFilled: false);
                         },
                       ),
                     ),
@@ -214,7 +211,11 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                         return const PointOptions(
                           width: 30.0,
                           height: 30.0,
-                          builder: Icon(Icons.pin_drop),
+                          // builder: Icon(Icons.pin_drop),
+                          builder: Icon(
+                            Icons.home,
+                            color: Colors.green,
+                          ),
                         );
                       },
                       onTap: (attributes, LatLng location) {
@@ -302,7 +303,7 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       zoneId: widget.zoneId,
                       circleId: widget.circleId,
                       sndId: widget.sndId,
-                      substaionId: widget.substationId,
+                      substationId: widget.substationId,
                       feederlineId: widget.feederlineId,
                       centerLatitude: widget.centerLatitude,
                       centerLongitude: widget.centerLongitude,

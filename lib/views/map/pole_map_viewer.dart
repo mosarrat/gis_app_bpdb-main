@@ -199,7 +199,7 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
                                       color: const Color.fromARGB(
-                                          255, 223, 240, 243),
+                                          255, 241, 245, 245),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
@@ -214,7 +214,7 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
                                       color: const Color.fromARGB(
-                                          255, 241, 245, 245),
+                                          255, 223, 240, 243),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
@@ -264,14 +264,6 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                 ),
               ),
             ),
-            // actions: <Widget>[
-            //   TextButton(
-            //     onPressed: () {
-            //       Navigator.of(context).pop();
-            //     },
-            //     child: const Text('Close'),
-            //   ),
-            // ],
           ),
         );
       },
@@ -345,6 +337,9 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    //print(width);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -390,9 +385,6 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
   }
 
   Widget _buildDetailItem(String label, String value) {
-        width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
-    //print(width);
     if (width < 400 && width > 200) {
       return Padding(
         padding: EdgeInsets.all(2.0),
@@ -447,33 +439,5 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
         ),
       );
     }
-    // return Padding(
-    //   padding: const EdgeInsets.only(bottom: 12.0),
-    //   child: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       SizedBox(
-    //         width: 150,
-    //         child: Text(
-    //           label,
-    //           style: const TextStyle(
-    //             fontWeight: FontWeight.bold,
-    //             color: Colors.black87,
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(width: 10),
-    //       Expanded(
-    //         child: Text(
-    //           ': $value',
-    //           style: const TextStyle(
-    //             fontSize: 16,
-    //             color: Colors.black87,
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
   }
 }

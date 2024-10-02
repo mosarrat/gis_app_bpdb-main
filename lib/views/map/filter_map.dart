@@ -25,7 +25,7 @@ class MapFilter extends StatefulWidget {
     this.centerLatitude,
     this.centerLongitude,
     this.defaultZoomLevel,
-    int? substaionId,
+    //int? substaionId,
   });
 
   final bool isVisible;
@@ -64,9 +64,7 @@ class _MapFilterState extends State<MapFilter> {
   @override
   void initState() {
     super.initState();
-
     zones = CallApi().fetchZoneInfo();
-
     // Initialize other futures based on the widget properties
     if (widget.zoneId != null && widget.zoneId != 0) {
       selectedZoneId = widget.zoneId;
@@ -315,6 +313,10 @@ class _MapFilterState extends State<MapFilter> {
           mapUrl:
               "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer/9",
           mapcode: 9,
+          zoneId: selectedZoneId,
+          circleId: selectedCircleId,
+          sndId: selectedSnDId,
+          substationId: selectedSubstationId,
           feederlineId: value,
           centerLatitude: widget.centerLatitude,
           centerLongitude: widget.centerLongitude,
@@ -369,7 +371,7 @@ class _MapFilterState extends State<MapFilter> {
     } else if (width < 400 && width > 200) {
       //print("4");
       topbarWidth = width * 0.26;
-      topspaceWidth = width *0.03;
+      topspaceWidth = width * 0.03;
       dropdownWidth = width * 0.6;
     } else {
       //print("5");

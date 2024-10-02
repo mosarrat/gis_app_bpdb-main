@@ -159,7 +159,7 @@ class _DTMapViewerState extends State<DTMapViewer> {
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
                                       color: const Color.fromARGB(
-                                          255, 241, 245, 245),
+                                          255, 223, 240, 243),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem(
@@ -174,7 +174,7 @@ class _DTMapViewerState extends State<DTMapViewer> {
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
                                       color: const Color.fromARGB(
-                                          255, 223, 240, 243),
+                                          255, 241, 245, 245),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem('Zone Name.',
@@ -188,7 +188,7 @@ class _DTMapViewerState extends State<DTMapViewer> {
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
                                       color: const Color.fromARGB(
-                                          255, 241, 245, 245),
+                                          255, 223, 240, 243),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem('Circle Name',
@@ -202,7 +202,7 @@ class _DTMapViewerState extends State<DTMapViewer> {
                                       width: MediaQuery.of(context).size.width,
                                       height: boxheight,
                                       color: const Color.fromARGB(
-                                          255, 223, 240, 243),
+                                          255, 241, 245, 245),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: _buildDetailItem('SnD Name',
@@ -362,6 +362,9 @@ class _DTMapViewerState extends State<DTMapViewer> {
 
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
+    height = MediaQuery.of(context).size.height;
+    //print(width);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -407,9 +410,7 @@ class _DTMapViewerState extends State<DTMapViewer> {
   }
 
   Widget _buildDetailItem(String label, String value) {
-    width = MediaQuery.of(context).size.width;
-    height = MediaQuery.of(context).size.height;
-    //print(width);
+
     if (width < 400 && width > 200) {
       return Padding(
         padding: EdgeInsets.all(2.0),

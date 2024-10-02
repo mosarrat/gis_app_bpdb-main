@@ -10,7 +10,7 @@ import 'package:gis_app_bpdb/views/map/arc_gis_map_filter.dart';
 import 'package:gis_app_bpdb/widgets/chart/bar_chart_view.dart';
 import 'api/api.dart';
 import 'main.dart';
-import 'menu.dart';
+import 'quick_access/menu.dart';
 import 'views/consumers/filter_consumers.dart';
 import 'views/consumers/new_consumer_exp.dart';
 import 'views/consumers/view_tariff_sub_category.dart';

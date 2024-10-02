@@ -1,34 +1,35 @@
 import 'package:flutter/material.dart';
 
-import 'views/consumers/filter_consumers.dart';
-import 'views/consumers/new_consumer_exp.dart';
-import 'views/dt/add_dt.dart';
-import 'views/dt/filter_dt.dart';
-import 'views/feederline/view_feederline.dart';
-import 'views/pole/create_pole.dart';
-import 'views/regions/circle_view.dart';
-import 'views/regions/esu_view.dart';
-import 'views/regions/filter_pole_detail.dart';
-import 'views/regions/snd_view.dart';
-import 'views/regions/substation_view.dart';
-import 'views/regions/zone_view.dart';
+import '../views/consumers/filter_consumers.dart';
+import '../views/consumers/new_consumer_exp.dart';
+import '../views/dt/add_dt.dart';
+import '../views/dt/filter_dt.dart';
+import '../views/feederline/view_feederline.dart';
+import '../views/regions/circle_view.dart';
+import '../views/regions/esu_view.dart';
+import '../views/regions/filter_pole_detail.dart';
+import '../views/regions/snd_view.dart';
+import '../views/regions/substation_view.dart';
+import '../views/regions/zone_view.dart';
 
-class ToggleRowVisibility extends StatefulWidget {
-  const ToggleRowVisibility({Key? key}) : super(key: key);
+class ToggleRowVisibility_land extends StatefulWidget {
+  const ToggleRowVisibility_land({Key? key}) : super(key: key);
 
   @override
-  State<ToggleRowVisibility> createState() => _ToggleRowVisibilityState();
+  State<ToggleRowVisibility_land> createState() =>
+      _ToggleRowVisibility_landState();
 }
 
-class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
+class _ToggleRowVisibility_landState extends State<ToggleRowVisibility_land> {
   bool _isRegionClicked = false; // Track if Region is clicked
   bool _isViewMoreClicked = false; // Track if View More is clicked
-  double _containerHeight = 225; // Default container height
+  double _containerHeight = 150; // Default container height
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    //print(height);
     return SingleChildScrollView(
       child: Stack(
         children: [
@@ -38,7 +39,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
             width: double.infinity,
             height: _containerHeight, // Dynamically adjust container height
             child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
+              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 12),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -46,7 +47,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: width / 13),
+                      SizedBox(width: width / 13.5),
                       buildClickableIconWithText(
                         'assets/icons/worldwide.png',
                         'Region',
@@ -57,11 +58,11 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                             _isViewMoreClicked =
                                 false; // Close View More row when Region is clicked
                             _containerHeight =
-                                _isRegionClicked ? 310 : 238; // Adjust height
+                                _isRegionClicked ? 240 : 158; // Adjust height
                           });
                         },
                       ),
-                      SizedBox(width: width / 7.5),
+                      SizedBox(width: width / 11.5),
                       buildClickableIconWithText(
                         'assets/images/new_icons/new_substation.png',
                         'Substation',
@@ -74,7 +75,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           );
                         },
                       ),
-                      SizedBox(width: width / 7.5),
+                      SizedBox(width: width / 11.5),
                       buildClickableIconWithText(
                         'assets/icons/feederline_2.png',
                         'Feeder Line',
@@ -87,15 +88,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           );
                         },
                       ),
-                    ],
-                  ),
-                  SizedBox(height: height / 37.5),
-
-                  // ----- Row-2 ----- //
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: width / 13),
+                      SizedBox(width: width / 11.5),
                       buildClickableIconWithText(
                         'assets/icons/power-line.png',
                         'Pole',
@@ -108,7 +101,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           );
                         },
                       ),
-                      SizedBox(width: width / 6.1),
+                      SizedBox(width: width / 11.5),
                       buildClickableIconWithText(
                         'assets/icons/transformer.png',
                         'DT',
@@ -121,22 +114,10 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           );
                         },
                       ),
-                      SizedBox(width: width / 5.9),
-                      buildClickableIconWithText(
-                        'assets/images/new_icons/new_consumer.png',
-                        'Consumer',
-                        () async {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const FilterConsumers(),
-                            ),
-                          );
-                        },
-                      ),
+                      SizedBox(width: width / 11.5),
                     ],
                   ),
-                  SizedBox(height: height / 37.5),
+                  SizedBox(height: height / 55),
 
                   // ----- Row for "Region" (Zone, Circle, SND, ESU) ----- //
                   if (_isRegionClicked)
@@ -148,7 +129,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(width: width / 13),
+                              SizedBox(width: width / 13.5),
                               buildClickableIconWithText(
                                 'assets/map_legend/zone.png',
                                 'Zones',
@@ -161,7 +142,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                                   );
                                 },
                               ),
-                              SizedBox(width: width / 9.4),
+                              SizedBox(width: width / 11),
                               buildClickableIconWithText(
                                 'assets/map_legend/circle.png',
                                 'Circles',
@@ -174,7 +155,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                                   );
                                 },
                               ),
-                              SizedBox(width: width / 9.4),
+                              SizedBox(width: width / 9.5),
                               buildClickableIconWithText(
                                 'assets/map_legend/snd.png',
                                 'SnD',
@@ -187,7 +168,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                                   );
                                 },
                               ),
-                              SizedBox(width: width / 9.4),
+                              SizedBox(width: width / 10),
                               buildClickableIconWithText(
                                 'assets/map_legend/esu.png',
                                 'Esu',
@@ -219,20 +200,27 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              SizedBox(width: width / 14.5),
-                              buildClickableIconWithTextUsingIcon(
-                                Icons.add,
-                                'Add Pole',
+                              SizedBox(width: width / 13.5),
+                              buildClickableIconWithText(
+                                'assets/images/new_icons/new_consumer.png',
+                                'Consumer',
                                 () async {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                      builder: (context) => const AddPoleInfo(),
+                                      builder: (context) =>
+                                          const FilterConsumers(),
                                     ),
                                   );
                                 },
                               ),
-                              SizedBox(width: width / 7),
+                              SizedBox(width: width / 11.5),
+                              buildClickableIconWithTextUsingIcon(
+                                Icons.add,
+                                'Add Pole',
+                                () => _showMessage(context, 'Add Pole clicked'),
+                              ),
+                              SizedBox(width: width / 11.5),
                               buildClickableIconWithTextUsingIcon(
                                 Icons.add,
                                 'Add DT',
@@ -245,7 +233,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                                   );
                                 },
                               ),
-                              SizedBox(width: width / 7.5),
+                              SizedBox(width: width / 11.5),
                               buildClickableIconWithTextUsingIcon(
                                 Icons.add_home,
                                 'Add Consumer',
@@ -259,6 +247,7 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                                   );
                                 },
                               ),
+                              SizedBox(width: width / 19.2),
                             ],
                           ),
                         ],
@@ -268,26 +257,26 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                           : CrossFadeState.showFirst,
                     ),
 
-                  SizedBox(height: height / 38),
-
+                  SizedBox(height: height / 690),
                 ],
               ),
             ),
           ),
           Positioned(
             //top: buttonpos,
-            bottom: -10, 
+            bottom: -10,
             left: 115,
             right: 115,
             child: ElevatedButton(
               onPressed: () {
                 setState(() {
                   _isViewMoreClicked = !_isViewMoreClicked;
-                  _containerHeight = _isViewMoreClicked ? 310 : 225;
+                  _containerHeight = _isViewMoreClicked ? 250 : 150;
                   _isRegionClicked = false;
                 });
               },
               style: ElevatedButton.styleFrom(
+                //backgroundColor: Colors.white,
                 elevation: 0,
                 side: BorderSide.none,
                 padding: EdgeInsets.zero,
@@ -310,10 +299,9 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
                     _isViewMoreClicked
                         ? Icons.arrow_drop_up_sharp
                         : Icons.arrow_drop_down_sharp,
-                    color: Color.fromARGB(255, 3, 89, 100),
+                    color: const Color.fromARGB(255, 3, 89, 100),
                     size: 25,
                   ),
-                  
                 ],
               ),
             ),
@@ -331,12 +319,12 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
       child: Column(
         children: [
           Container(
-            width: 45,
-            height: 45,
+            width: 60,
+            height: 60,
             child: Image.asset(
               assetPath,
-              width: 24,
-              height: 24,
+              width: 50,
+              height: 50,
             ),
           ),
           const SizedBox(height: 5),
@@ -354,11 +342,11 @@ class _ToggleRowVisibilityState extends State<ToggleRowVisibility> {
       child: Column(
         children: [
           Container(
-            width: 45,
-            height: 45,
+            width: 60,
+            height: 60,
             child: Icon(
               iconData,
-              size: 28,
+              size: 40,
               color: const Color.fromARGB(255, 3, 89, 100),
             ),
           ),

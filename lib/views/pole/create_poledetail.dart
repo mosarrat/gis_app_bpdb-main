@@ -4,11 +4,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../api/api.dart';
 import '../../api/region_api.dart';
-import '../../models/region_delails_lookup/add_poledetails.dart';
-import '../../models/region_delails_lookup/line_type.dart';
-import '../../models/region_delails_lookup/sag_condition.dart';
-import '../../models/region_delails_lookup/wire_condition.dart';
-import '../../models/region_delails_lookup/wire_type.dart';
+import '../../models/pole_lookup/add_poledetails.dart';
+import '../../models/pole_lookup/line_type.dart';
+import '../../models/pole_lookup/sag_condition.dart';
+import '../../models/pole_lookup/wire_condition.dart';
+import '../../models/pole_lookup/wire_type.dart';
 import '../../models/regions/feeder_line.dart';
 import '../../models/regions/substation.dart';
 import '../../widgets/noti/notifications.dart';
@@ -21,7 +21,7 @@ class AddPoleDetails extends StatefulWidget {
   final int sndId;
   final int esuId;
   final int poleId;
-  
+
   const AddPoleDetails({
     super.key,
     required this.zoneId,
@@ -66,8 +66,7 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
   final TextEditingController _poleNo = TextEditingController();
   final TextEditingController _previousPoleNo = TextEditingController();
   final TextEditingController _backSpan = TextEditingController();
-  final TextEditingController _wireLength	= TextEditingController();	
-
+  final TextEditingController _wireLength = TextEditingController();
 
   bool _isneutral = false;
   bool _isRightPole = false;
@@ -95,15 +94,15 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
     fetchWireCondition = CallRegionApi().fetchWireCondition();
     fetchSagCondition = CallRegionApi().fetchSagCondition();
 
-  //   Fluttertoast.showToast(
-  //   msg: '${widget.esuId}',
-  //   toastLength: Toast.LENGTH_LONG,
-  //   gravity: ToastGravity.CENTER,
-  //   timeInSecForIosWeb: 1,
-  //   backgroundColor: Colors.red,
-  //   textColor: Colors.white,
-  //   fontSize: 16.0,
-  // );
+    //   Fluttertoast.showToast(
+    //   msg: '${widget.esuId}',
+    //   toastLength: Toast.LENGTH_LONG,
+    //   gravity: ToastGravity.CENTER,
+    //   timeInSecForIosWeb: 1,
+    //   backgroundColor: Colors.red,
+    //   textColor: Colors.white,
+    //   fontSize: 16.0,
+    // );
   }
 
   void setLoading(bool loading) {
@@ -181,11 +180,22 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Substation',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Substation',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -197,11 +207,22 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Substation',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Substation',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedSubstationId,
@@ -239,10 +260,22 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Feeder Line',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Feeder Line',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -254,10 +287,22 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Feeder Line',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Feeder Line',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedFeederLineId,
@@ -281,15 +326,17 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_feederLineUid, 'Feeder Line UId', false),
-                        _buildTextField(_feederWiseSerialNo, 'Feeder Wise Serial No', false),
+                        _buildTextField(
+                            _feederLineUid, 'Feeder Line UId', false),
+                        _buildTextField(_feederWiseSerialNo,
+                            'Feeder Wise Serial No', false),
                       ],
                     ),
                   ],
                 ),
               ),
               ////////////////////////////////////////////////////////////////////////////
-              
+
               ///////////////////////////////////////////////////////////////////////////////
               Theme(
                 data: ThemeData().copyWith(
@@ -307,12 +354,43 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                     FieldsetLegend(
                       legendText: 'Pole Information',
                       children: [
-                        _buildTextField(_poleId, 'Pole Id', true),
+                        // _buildTextField(_poleId, 'Pole Id', true),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: TextFormField(
+                            readOnly: true,
+                            controller: _poleId,
+                            decoration: InputDecoration(
+                              label: RichText(
+                                text: const TextSpan(
+                                  text: 'Pole Id',
+                                  style: TextStyle(
+                                    color: Color.fromARGB(255, 100, 97, 97),
+                                    fontSize: 16.0,
+                                  ),
+                                  children: [
+                                    TextSpan(
+                                      text: ' *',
+                                      style: TextStyle(
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                          ),
+                        ),
                         _buildTextField(_poleCode, 'Pole Code', true),
-                        _buildTextField(_poleUid, 'Pole UId', true),
-                        _buildTextField(_poleUniqueCode, 'Pole Unique Code', true),
-                        _buildTextField(_poleNo, 'Pole No', true),
-                        _buildTextField(_previousPoleNo, 'Previous Pole No', true),
+                        _buildTextField(_poleUid, 'Pole UId', false),
+                        _buildTextField(
+                            _poleUniqueCode, 'Pole Unique Code', false),
+                        _buildTextField(_poleNo, 'Pole No', false),
+                        _buildTextField(
+                            _previousPoleNo, 'Previous Pole No', false),
                         FutureBuilder<List<LineType>>(
                           future: fetchLineType,
                           builder: (context, snapshot) {
@@ -337,7 +415,23 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   ),
                                 ),
                                 value: selectedLineTypeId,
-                                hint: const Text('Select a Line Type'),
+                                hint: RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Line Type',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((lineType) {
                                   return DropdownMenuItem<int>(
                                     value: lineType.lineTypeId,
@@ -357,14 +451,14 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_backSpan, 'Back Span', true),
+                        _buildTextField(_backSpan, 'Back Span', false),
                       ],
                     ),
                   ],
                 ),
               ),
               ///////////////////////////////////////////////////////////////////////////
-              
+
               ///////////////////////////////////////////////////////////////////////////////
               Theme(
                 data: ThemeData().copyWith(
@@ -382,7 +476,7 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                     FieldsetLegend(
                       legendText: 'Wire Information',
                       children: [
-                        _buildTextField(_wireLength, 'Wire Length', true),
+                        _buildTextField(_wireLength, 'Wire Length', false),
                         FutureBuilder<List<WireType>>(
                           future: fetchWireType,
                           builder: (context, snapshot) {
@@ -407,7 +501,23 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   ),
                                 ),
                                 value: selectedWireTypeId,
-                                hint: const Text('Select a Wire Type'),
+                                hint: RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Wire Type',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((wireType) {
                                   return DropdownMenuItem<int>(
                                     value: wireType.id,
@@ -451,7 +561,23 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   ),
                                 ),
                                 value: selectedWireConditionId,
-                                hint: const Text('Select a Wire Condition'),
+                                hint: RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Wire Condition',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((wirecondition) {
                                   return DropdownMenuItem<int>(
                                     value: wirecondition.id,
@@ -474,14 +600,16 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                         FutureBuilder<List<SagCondition>>(
                           future: fetchSagCondition,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
-                              return DropdownButtonFormField<String>( 
+                              return DropdownButtonFormField<String>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
                                   labelStyle: TextStyle(
@@ -492,17 +620,18 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                     borderRadius: BorderRadius.circular(16.0),
                                   ),
                                 ),
-                                value: selectedPhaseAId, 
+                                value: selectedPhaseAId,
                                 hint: const Text('Select a Phase A'),
                                 items: snapshot.data!.map((sagCondition) {
-                                  return DropdownMenuItem<String>( 
-                                    value: sagCondition.id, 
-                                    child: Text('${sagCondition.id}: ${sagCondition.name}'),
+                                  return DropdownMenuItem<String>(
+                                    value: sagCondition.id,
+                                    child: Text(
+                                        '${sagCondition.id}: ${sagCondition.name}'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedPhaseAId = value; 
+                                    selectedPhaseAId = value;
                                   });
                                 },
                               );
@@ -515,14 +644,16 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                         FutureBuilder<List<SagCondition>>(
                           future: fetchSagCondition,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
-                              return DropdownButtonFormField<String>( 
+                              return DropdownButtonFormField<String>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
                                   labelStyle: TextStyle(
@@ -536,14 +667,15 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                 value: selectedPhaseBId,
                                 hint: const Text('Select a Phase B'),
                                 items: snapshot.data!.map((sagCondition) {
-                                  return DropdownMenuItem<String>( 
-                                    value: sagCondition.id, 
-                                    child: Text('${sagCondition.id}: ${sagCondition.name}'),
+                                  return DropdownMenuItem<String>(
+                                    value: sagCondition.id,
+                                    child: Text(
+                                        '${sagCondition.id}: ${sagCondition.name}'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedPhaseBId = value; 
+                                    selectedPhaseBId = value;
                                   });
                                 },
                               );
@@ -556,14 +688,16 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                         FutureBuilder<List<SagCondition>>(
                           future: fetchSagCondition,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
-                              return DropdownButtonFormField<String>( 
+                              return DropdownButtonFormField<String>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
                                   labelStyle: TextStyle(
@@ -577,14 +711,15 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                 value: selectedPhaseCId,
                                 hint: const Text('Select a Phase C'),
                                 items: snapshot.data!.map((sagCondition) {
-                                  return DropdownMenuItem<String>( 
-                                    value: sagCondition.id, 
-                                    child: Text('${sagCondition.id}: ${sagCondition.name}'),
+                                  return DropdownMenuItem<String>(
+                                    value: sagCondition.id,
+                                    child: Text(
+                                        '${sagCondition.id}: ${sagCondition.name}'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
                                   setState(() {
-                                    selectedPhaseCId = value; 
+                                    selectedPhaseCId = value;
                                   });
                                 },
                               );
@@ -609,9 +744,22 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'Is Neutral',
-                                    style: TextStyle(fontSize: 16),
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: 'In Neutral',
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 100, 97, 97),
+                                        fontSize: 16.0,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Switch(
                                     value: _isneutral,
@@ -636,9 +784,22 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  const Text(
-                                    'Is Right Pole',
-                                    style: TextStyle(fontSize: 16),
+                                  RichText(
+                                    text: const TextSpan(
+                                      text: 'Is Right Pole',
+                                      style: const TextStyle(
+                                        color: Color.fromARGB(255, 100, 97, 97),
+                                        fontSize: 16.0,
+                                      ),
+                                      children: [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                   Switch(
                                     value: _isRightPole,
@@ -650,7 +811,7 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                           ),
                         ),
                         //Radio Button
-                          Align(
+                        Align(
                           alignment: Alignment.center,
                           child: SizedBox(
                             width: double.infinity,
@@ -658,10 +819,12 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                               onPressed: () async {
                                 try {
                                   // Fetch the max poleDetailId
-                                  final int poleDetailId = await CallRegionApi().fetchMaxPoleDetailId();
+                                  final int poleDetailId = await CallRegionApi()
+                                      .fetchMaxPoleDetailId();
                                   int parseOrZero(String? text) {
                                     try {
-                                      return int.tryParse(text?.trim() ?? '') ?? 0;
+                                      return int.tryParse(text?.trim() ?? '') ??
+                                          0;
                                     } catch (e) {
                                       throw 'Invalid integer for field $text';
                                     }
@@ -669,49 +832,69 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
 
                                   double parseOrZeroDouble(String? text) {
                                     try {
-                                      return double.tryParse(text?.trim() ?? '') ??
+                                      return double.tryParse(
+                                              text?.trim() ?? '') ??
                                           0.0;
                                     } catch (e) {
                                       throw 'Invalid double for field $text';
                                     }
                                   }
 
-                                  
-                                  T checkNotNull<T>(T? value, String fieldName) {
+                                  T checkNotNull<T>(
+                                      T? value, String fieldName) {
                                     if (value == null || value == 0.00) {
                                       throw 'Invalid value for $fieldName. PLease Check Again ';
                                     }
                                     return value;
                                   }
 
-                                  PoleDetailInfo poleDetailInfo = PoleDetailInfo(
+                                  T checkNotSelect<T>(
+                                      T? value, String fieldName) {
+                                    if (value == null || value == 0.00) {
+                                      throw 'Please Select $fieldName.';
+                                    }
+                                    return value;
+                                  }
+
+                                  PoleDetailInfo poleDetailInfo =
+                                      PoleDetailInfo(
                                     zoneId: widget.zoneId,
                                     circleId: widget.circleId,
                                     sndId: widget.sndId,
                                     esuId: widget.esuId,
-                                    substationId: selectedSubstationId ?? 0,
-                                    feederLineId: selectedFeederLineId ?? 0,
-                                    feederLineUid: _feederLineUid.text, 
-                                    feederWiseSerialNo: parseOrZero(_feederWiseSerialNo.text),
+                                    substationId: checkNotSelect(
+                                        selectedSubstationId, 'Substaion'),
+                                    feederLineId: checkNotSelect(
+                                        selectedFeederLineId, 'Feeder Line'),
+                                    feederLineUid: _feederLineUid.text,
+                                    feederWiseSerialNo:
+                                        parseOrZero(_feederWiseSerialNo.text),
                                     poleId: parseOrZero(_poleId.text),
                                     poleDetailsId: poleDetailId,
-                                    poleCode: _poleCode.text,
+                                    poleCode: checkNotNull(
+                                        _poleCode.text, 'Pole Code'),
                                     poleUid: _poleUid.text,
                                     poleUniqueCode: _poleUniqueCode.text,
                                     poleNo: _poleNo.text,
                                     previousPoleNo: _previousPoleNo.text,
-                                    lineTypeId: selectedLineTypeId ?? 0,
+                                    lineTypeId: checkNotSelect(
+                                        selectedLineTypeId, 'Line Type'),
                                     backSpan: _backSpan.text,
-                                    wireLength: parseOrZeroDouble(_wireLength.text),
-                                    typeOfWireId: selectedWireTypeId ?? 0,
-                                    wireConditionId: selectedWireConditionId ?? 0,
+                                    wireLength:
+                                        parseOrZeroDouble(_wireLength.text),
+                                    typeOfWireId: checkNotSelect(
+                                        selectedWireTypeId, 'Wire Type'),
+                                    wireConditionId: checkNotSelect(
+                                        selectedWireConditionId,
+                                        'Wire Condition'),
                                     phaseAId: selectedPhaseAId ?? '',
                                     phaseBId: selectedPhaseBId ?? '',
                                     phaseCId: selectedPhaseCId ?? '',
                                     neutral: _isneutral,
                                     isRightPole: _isRightPole,
                                   );
-                                  await CallRegionApi().createPoleDetailInfo(poleDetailInfo);
+                                  await CallRegionApi()
+                                      .createPoleDetailInfo(poleDetailInfo);
 
                                   Navigator.push(
                                     context,
@@ -722,7 +905,8 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
 
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text('Pole Created Successfully'),
+                                      content:
+                                          Text('Pole Created Successfully'),
                                       backgroundColor: Colors.green,
                                     ),
                                   );
@@ -730,15 +914,16 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   //print(error);
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(
-                                        content:
-                                            Text('Failed to Create data: $error'),
+                                        content: Text(
+                                            'Failed to Create data: $error'),
                                         backgroundColor: Colors.red),
                                   );
                                 }
                               },
                               style: ButtonStyle(
                                 backgroundColor:
-                                    MaterialStateProperty.all<Color>(Colors.blue),
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.blue),
                               ),
                               child: const Text('Save',
                                   style: TextStyle(color: Colors.white)),

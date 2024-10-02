@@ -7,9 +7,9 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../api/api.dart';
 import '../../api/consumer_api.dart';
 import '../../api/region_api.dart';
-import '../../models/region_delails_lookup/pole.dart';
-import '../../models/region_delails_lookup/pole_condition.dart';
-import '../../models/region_delails_lookup/pole_type.dart';
+import '../../models/pole_lookup/pole.dart';
+import '../../models/pole_lookup/pole_condition.dart';
+import '../../models/pole_lookup/pole_type.dart';
 import '../../models/regions/circle.dart';
 import '../../models/regions/esu_info.dart';
 import '../../models/regions/snd_info.dart';
@@ -642,14 +642,14 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                       color: Color.fromARGB(255, 100, 97, 97),
                                       fontSize: 16.0,
                                     ),
-                                    children: [
-                                      TextSpan(
-                                        text: ' *',
-                                        style: TextStyle(
-                                          color: Colors.red,
-                                        ),
-                                      ),
-                                    ],
+                                    // children: [
+                                    //   TextSpan(
+                                    //     text: ' *',
+                                    //     style: TextStyle(
+                                    //       color: Colors.red,
+                                    //     ),
+                                    //   ),
+                                    // ],
                                   ),
                                 ),
                                 items: snapshot.data!.map((poleCondition) {
@@ -953,15 +953,15 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                       255, 105, 103, 103), // Label text color
                                   fontSize: 16.0, // Label font size
                                 ),
-                                children: [
-                                  TextSpan(
-                                    text: ' *',
-                                    style: TextStyle(
-                                      color: Colors
-                                          .red, // Red color for the asterisk
-                                    ),
-                                  ),
-                                ],
+                                // children: [
+                                //   TextSpan(
+                                //     text: ' *',
+                                //     style: TextStyle(
+                                //       color: Colors
+                                //           .red, // Red color for the asterisk
+                                //     ),
+                                //   ),
+                                // ],
                               ),
                             ),
                             border: OutlineInputBorder(
@@ -1012,6 +1012,7 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
+                            final int poleId = await CallRegionApi().fetchMaxPoleId();
                             try {
                               int parseOrZero(String? text) {
                                 try {
@@ -1037,7 +1038,7 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                         .format(DateTime.parse(
                                             text ?? dt.toString()));
                                   } catch (e) {
-                                    throw 'Invalid Date format';
+                                    throw 'Invalid Start Date format';
                                   }
                                 } else {
                                   return "";
@@ -1046,18 +1047,25 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
 
                               T checkNotNull<T>(T? value, String fieldName) {
                                 if (value == null || value == 0.00) {
-                                  throw 'Invalid value for $fieldName. PLease Check Again ';
+                                  throw 'Please Provide $fieldName Data.';
+                                }
+                                return value;
+                              }
+
+                              T checkNotSelect<T>(T? value, String fieldName) {
+                                if (value == null || value == 0.00) {
+                                  throw 'Please Select $fieldName.';
                                 }
                                 return value;
                               }
 
                               Poles pole = Poles(
-                                zoneId: selectedZoneId ?? 0,
-                                circleId: selectedCircleId ?? 0,
-                                sndId: selectedSnDId ?? 0,
+                                zoneId: checkNotSelect(selectedZoneId, 'Zone'),
+                                circleId: checkNotSelect(selectedCircleId, 'Circle'),
+                                sndId: checkNotSelect(selectedSnDId, 'Snd'),
                                 esuId: selectedEsuId,
-                                poleId: parseOrZero(_poleId.text),
-                                poleTypeId: selectedPoleTypeId ?? 0,
+                                poleId: poleId,
+                                poleTypeId: checkNotSelect(selectedPoleTypeId, 'Pole Type'),
                                 poleConditionId: selectedPoleConditionId ?? 0,
                                 noOfWireHt: parseOrZero(_noOfWireHt.text),
                                 noOfWireLt: parseOrZero(_noOfWireLt.text),

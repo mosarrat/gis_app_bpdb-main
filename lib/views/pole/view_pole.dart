@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import '../../api/region_api.dart';
-import '../../models/region_delails_lookup/pole_list.dart';
+import '../../models/pole_lookup/pole_list.dart';
 import 'create_poledetail.dart';
 import 'pole_details.dart';
 

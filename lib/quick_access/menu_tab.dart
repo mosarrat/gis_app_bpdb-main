@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'views/consumers/filter_consumers.dart';
-import 'views/consumers/new_consumer_exp.dart';
-import 'views/dt/add_dt.dart';
-import 'views/dt/filter_dt.dart';
-import 'views/feederline/view_feederline.dart';
-import 'views/pole/create_pole.dart';
-import 'views/regions/circle_view.dart';
-import 'views/regions/esu_view.dart';
-import 'views/regions/filter_pole_detail.dart';
-import 'views/regions/snd_view.dart';
-import 'views/regions/substation_view.dart';
-import 'views/regions/zone_view.dart';
+import '../views/consumers/filter_consumers.dart';
+import '../views/consumers/new_consumer_exp.dart';
+import '../views/dt/add_dt.dart';
+import '../views/dt/filter_dt.dart';
+import '../views/feederline/view_feederline.dart';
+import '../views/pole/create_pole.dart';
+import '../views/regions/circle_view.dart';
+import '../views/regions/esu_view.dart';
+import '../views/regions/filter_pole_detail.dart';
+import '../views/regions/snd_view.dart';
+import '../views/regions/substation_view.dart';
+import '../views/regions/zone_view.dart';
 
 class ToggleRowVisibilityTab extends StatefulWidget {
   const ToggleRowVisibilityTab({Key? key}) : super(key: key);

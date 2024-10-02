@@ -6,24 +6,24 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../constants/constant.dart';
 import '../models/app_config.dart';
-import '../models/region_delails_lookup/add_poledetails.dart';
+import '../models/pole_lookup/add_poledetails.dart';
 import '../models/region_delails_lookup/circle.dart';
 import '../models/region_delails_lookup/dt_details.dart';
 import '../models/region_delails_lookup/dt_info.dart';
 import '../models/region_delails_lookup/esu.dart';
-import '../models/region_delails_lookup/line_type.dart';
-import '../models/region_delails_lookup/pole.dart';
+import '../models/pole_lookup/line_type.dart';
+import '../models/pole_lookup/pole.dart';
 import '../models/region_delails_lookup/poleDetailsId.dart';
 import '../models/region_delails_lookup/poleId.dart';
-import '../models/region_delails_lookup/pole_condition.dart';
+import '../models/pole_lookup/pole_condition.dart';
 import '../models/region_delails_lookup/pole_image.dart';
-import '../models/region_delails_lookup/pole_list.dart';
-import '../models/region_delails_lookup/pole_type.dart';
-import '../models/region_delails_lookup/sag_condition.dart';
+import '../models/pole_lookup/pole_list.dart';
+import '../models/pole_lookup/pole_type.dart';
+import '../models/pole_lookup/sag_condition.dart';
 import '../models/region_delails_lookup/snd.dart';
 import '../models/region_delails_lookup/substation.dart';
-import '../models/region_delails_lookup/wire_condition.dart';
-import '../models/region_delails_lookup/wire_type.dart';
+import '../models/pole_lookup/wire_condition.dart';
+import '../models/pole_lookup/wire_type.dart';
 import '../models/regions/pole.dart';
 import '../models/regions/zone.dart';
 import 'package:gis_app_bpdb/models/region_delails_lookup/dt_info.dart';
@@ -270,8 +270,8 @@ class CallRegionApi {
       'activationStatusId': pole.activationStatusId,
       'verificationStateId': pole.verificationStateId,
     };
-    //debugPrint('Request Data: $requestData');
-    //return Future.error('Stopped execution for debugging.');
+    // debugPrint('Request Data: $requestData');
+    // return Future.error('Stopped execution for debugging.');
     try {
       final response = await http.post(
         Uri.parse('$myAPILink/api/Poles'),
@@ -384,20 +384,36 @@ class CallRegionApi {
 
   //--Pole Create--//
   Future<int> fetchMaxPoleDetailId() async {
-  try {
-    final response = await http.get(
-      Uri.parse('$myAPILink/api/PoleDetails/maxId'),
-    );
+    try {
+      final response = await http.get(
+        Uri.parse('$myAPILink/api/PoleDetails/maxId'),
+      );
 
-    if (response.statusCode == 200) {
-      return int.parse(response.body); 
-    } else {
-      throw 'Failed to fetch maxId';
+      if (response.statusCode == 200) {
+        return int.parse(response.body); 
+      } else {
+        throw 'Failed to fetch maxId';
+      }
+    } catch (e) {
+      throw 'Error fetching maxId: $e';
     }
-  } catch (e) {
-    throw 'Error fetching maxId: $e';
   }
-}
+
+  Future<int> fetchMaxPoleId() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$myAPILink/api/Poles/maxId'),
+      );
+
+      if (response.statusCode == 200) {
+        return int.parse(response.body); 
+      } else {
+        throw 'Failed to fetch maxId';
+      }
+    } catch (e) {
+      throw 'Error fetching maxId: $e';
+    }
+  }
 
 
   Future<Poles> createPoleDetailInfo(PoleDetailInfo poleDetailInfo) async {

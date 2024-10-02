@@ -11,10 +11,10 @@ import 'package:gis_app_bpdb/views/map/arc_gis_map_filter.dart';
 import 'package:gis_app_bpdb/widgets/chart/bar_chart_view.dart';
 import 'api/api.dart';
 import 'main.dart';
-import 'menu.dart';
-import 'menu_land.dart';
-import 'menu_tab.dart';
-import 'menu_tab_land.dart';
+import 'quick_access/menu.dart';
+import 'quick_access/menu_land.dart';
+import 'quick_access/menu_tab.dart';
+import 'quick_access/menu_tab_land.dart';
 import 'views/consumers/filter_consumers.dart';
 import 'views/consumers/new_consumer_exp.dart';
 import 'views/consumers/view_tariff_sub_category.dart';
@@ -199,7 +199,7 @@ class _DashboardState extends State<Dashboard> {
     int expandRange;
     if (height < 1300 && height > 900) {
       // print(height);
-      //print("1");
+      // print("1");
       pieheight = height / 2.6;
       barheight = height / 2.5;
       regionheight = height * 0.24;
@@ -213,7 +213,7 @@ class _DashboardState extends State<Dashboard> {
       topperheight = height / 6;
     } else if (height < 900 && height > 600) {
       // print(height);
-      //print("2");
+      // print("2");
       pieheight = height * 0.48;
       barheight = height * 0.55;
       regionheight = height * 0.28;
@@ -230,7 +230,7 @@ class _DashboardState extends State<Dashboard> {
       topperheight = height / 5.5;
     } else if (height < 600 && height > 400) {
       // print(height);
-      //print("3");
+      // print("3");
       pieheight = height * 0.6;
       barheight = height * 0.7;
       regionheight = height * 0.39;
@@ -244,7 +244,7 @@ class _DashboardState extends State<Dashboard> {
       topperheight = height / 4.5;
     } else if (height < 400 && height > 200) {
       // print(height);
-      //print("4");
+      // print("4");
       pieheight = height * 0.9;
       barheight = height * 0.99;
       regionheight = height * 0.58;
@@ -258,7 +258,7 @@ class _DashboardState extends State<Dashboard> {
       topperheight = height / 3.2;
     } else {
       // print(height);
-      //print("5");
+      // print("5");
       pieheight = height * 0.54;
       barheight = height * 0.89;
       regionheight = height * 0.40;
@@ -1132,7 +1132,8 @@ class _DashboardState extends State<Dashboard> {
                       padding: EdgeInsets.only(
                           top: 0.02, bottom: 4, left: 8, right: 8),
                       child: Card(
-                        //color: Colors.teal,
+                        // color: Colors.white,
+                        // shadowColor: Colors.teal,
                         child: ToggleRowVisibility(),
                       ),
                     ),
@@ -1142,7 +1143,7 @@ class _DashboardState extends State<Dashboard> {
                       padding: EdgeInsets.only(
                           top: 0.02, bottom: 4, left: 8, right: 8),
                       child: Card(
-                        //color: Colors.teal,
+                        //color: Colors.white,
                         child: ToggleRowVisibilityTab(),
                       ),
                     ),
@@ -1152,7 +1153,7 @@ class _DashboardState extends State<Dashboard> {
                       padding: EdgeInsets.only(
                           top: 0.02, bottom: 4, left: 8, right: 8),
                       child: Card(
-                        //color: Colors.teal,
+                        //color: Colors.white,
                         child: ToggleRowVisibility_land(),
                       ),
                     ),
@@ -1162,7 +1163,7 @@ class _DashboardState extends State<Dashboard> {
                       padding: EdgeInsets.only(
                           top: 0.02, bottom: 4, left: 8, right: 8),
                       child: Card(
-                        //color: Colors.teal,
+                        //color: Colors.white,
                         child: ToggleRowVisibilityTab_land(),
                       ),
                     ),

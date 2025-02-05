@@ -8,9 +8,13 @@ PODS:
   - fluttertoast (0.0.2):
     - Flutter
     - Toast
+  - geolocator_apple (1.2.0):
+    - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
+  - permission_handler_apple (9.1.1):
+    - Flutter
   - Reachability (3.7.6)
   - Toast (4.1.1)
 
@@ -19,7 +23,9 @@ DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_map_arcgis (from `.symlinks/plugins/flutter_map_arcgis/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - geolocator_apple (from `.symlinks/plugins/geolocator_apple/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 SPEC REPOS:
   trunk:
@@ -35,15 +41,21 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_map_arcgis/ios"
   fluttertoast:
     :path: ".symlinks/plugins/fluttertoast/ios"
+  geolocator_apple:
+    :path: ".symlinks/plugins/geolocator_apple/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_map_arcgis: 77120a3ecdc4c415923de1ed9ccb43a064e7da34
   fluttertoast: e9a18c7be5413da53898f660530c56f35edfba9c
+  geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
+  permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   Reachability: fd0ecd23705e2599e4cceeb943222ae02296cbc6
   Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
 

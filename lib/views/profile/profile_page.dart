@@ -94,7 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ), 
 
-                          const Text("Designation", style: TextStyle(color: Color.fromARGB(255, 5, 161, 182),),),
+                         Text("${user?.GroupName}", style: TextStyle(color: Color.fromARGB(255, 5, 161, 182),),),
                           
                         ],
                       ), 

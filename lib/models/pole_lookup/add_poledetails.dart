@@ -18,9 +18,9 @@ class PoleDetailInfo {
   int typeOfWireId;
   double? wireLength; // Nullable field
   int wireConditionId;
-  String phaseAId;
-  String phaseBId;
-  String phaseCId;
+  String? phaseAId;
+  String? phaseBId;
+  String? phaseCId;
   bool neutral;
   String poleUniqueCode;
   bool isRightPole;

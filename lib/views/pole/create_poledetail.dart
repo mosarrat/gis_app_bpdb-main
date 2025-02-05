@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../api/api.dart';
+import '../../api/pole_api.dart';
 import '../../api/region_api.dart';
 import '../../models/pole_lookup/add_poledetails.dart';
 import '../../models/pole_lookup/line_type.dart';
@@ -13,7 +14,7 @@ import '../../models/regions/feeder_line.dart';
 import '../../models/regions/substation.dart';
 import '../../widgets/noti/notifications.dart';
 import '../../widgets/widgets/fieldset_legend.dart';
-import '../regions/filter_pole_detail.dart';
+import 'filter_pole_detail.dart';
 
 class AddPoleDetails extends StatefulWidget {
   final int zoneId;
@@ -89,10 +90,10 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
     substations = CallApi().fetchSubstationInfo(widget.sndId);
     feederLines = Future.value([]);
 
-    fetchLineType = CallRegionApi().fetchLineType();
-    fetchWireType = CallRegionApi().fetchWireType();
-    fetchWireCondition = CallRegionApi().fetchWireCondition();
-    fetchSagCondition = CallRegionApi().fetchSagCondition();
+    fetchLineType = CallPoleApi().fetchLineType();
+    fetchWireType = CallPoleApi().fetchWireType();
+    fetchWireCondition = CallPoleApi().fetchWireCondition();
+    fetchSagCondition = CallPoleApi().fetchSagCondition();
 
     //   Fluttertoast.showToast(
     //   msg: '${widget.esuId}',
@@ -361,11 +362,14 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                             readOnly: true,
                             controller: _poleId,
                             decoration: InputDecoration(
+                              filled: true,
+                              fillColor:  Color.fromARGB(255, 241, 239, 239),
+                              
                               label: RichText(
                                 text: const TextSpan(
                                   text: 'Pole Id',
                                   style: TextStyle(
-                                    color: Color.fromARGB(255, 100, 97, 97),
+                                    color: Color.fromARGB(255, 78, 75, 75),
                                     fontSize: 16.0,
                                   ),
                                   children: [
@@ -621,7 +625,24 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   ),
                                 ),
                                 value: selectedPhaseAId,
-                                hint: const Text('Select a Phase A'),
+                                // hint: const Text('Select a Phase A'),
+                                hint: RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Phase A',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((sagCondition) {
                                   return DropdownMenuItem<String>(
                                     value: sagCondition.id,
@@ -665,7 +686,24 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   ),
                                 ),
                                 value: selectedPhaseBId,
-                                hint: const Text('Select a Phase B'),
+                                // hint: const Text('Select a Phase B'),
+                                hint: RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Phase B',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((sagCondition) {
                                   return DropdownMenuItem<String>(
                                     value: sagCondition.id,
@@ -709,7 +747,24 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                   ),
                                 ),
                                 value: selectedPhaseCId,
-                                hint: const Text('Select a Phase C'),
+                                // hint: const Text('Select a Phase C'),
+                                hint: RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Phase C',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((sagCondition) {
                                   return DropdownMenuItem<String>(
                                     value: sagCondition.id,
@@ -746,22 +801,23 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                 children: [
                                   RichText(
                                     text: const TextSpan(
-                                      text: 'In Neutral',
+                                      text: 'Is Neutral',
                                       style: const TextStyle(
                                         color: Color.fromARGB(255, 100, 97, 97),
                                         fontSize: 16.0,
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: ' *',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
+                                      // children: [
+                                      //   TextSpan(
+                                      //     text: ' *',
+                                      //     style: TextStyle(
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ],
                                     ),
                                   ),
                                   Switch(
+                                    activeColor: Colors.blue,
                                     value: _isneutral,
                                     onChanged: itemSwitchNeutral,
                                   ),
@@ -791,17 +847,18 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                         color: Color.fromARGB(255, 100, 97, 97),
                                         fontSize: 16.0,
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: ' *',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
+                                      // children: [
+                                      //   TextSpan(
+                                      //     text: ' *',
+                                      //     style: TextStyle(
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ],
                                     ),
                                   ),
                                   Switch(
+                                    activeColor: Colors.blue,
                                     value: _isRightPole,
                                     onChanged: itemSwitchIsRightPole,
                                   ),
@@ -819,7 +876,7 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                               onPressed: () async {
                                 try {
                                   // Fetch the max poleDetailId
-                                  final int poleDetailId = await CallRegionApi()
+                                  final int poleDetailId = await CallPoleApi()
                                       .fetchMaxPoleDetailId();
                                   int parseOrZero(String? text) {
                                     try {
@@ -893,7 +950,7 @@ class _AddPoleDetailsState extends State<AddPoleDetails> {
                                     neutral: _isneutral,
                                     isRightPole: _isRightPole,
                                   );
-                                  await CallRegionApi()
+                                  await CallPoleApi()
                                       .createPoleDetailInfo(poleDetailInfo);
 
                                   Navigator.push(

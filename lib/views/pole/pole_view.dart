@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import 'package:intl/intl.dart';
+import '../../api/pole_api.dart';
 import '../../api/region_api.dart';
 import '../../models/consumer_lookup/consumers.dart';
 import '../../models/consumer_lookup/single_consumers.dart';
 import '../../models/regions/pole.dart';
-import 'pole_detail.dart';
+import 'pole_details_by_poleDetailsId.dart';
 
 
 class PoleListView extends StatefulWidget {
@@ -21,7 +22,7 @@ class PoleListView extends StatefulWidget {
 }
 
 class _PoleListViewState extends State<PoleListView> {
-  final CallRegionApi api = CallRegionApi();
+  final CallPoleApi api = CallPoleApi();
   late Future<List<Pole>> _futurePoles;
 
   @override
@@ -31,7 +32,7 @@ class _PoleListViewState extends State<PoleListView> {
   }
 
   Future<List<Pole>> _fetchPoles() async {
-    return CallRegionApi().fetchPoleInfo(widget.feederLineId,);
+    return CallPoleApi().fetchPoleInfo(widget.feederLineId,);
   }
 
 ////////////////////--------View Details Comsumer Pop-up----------////////////////////////

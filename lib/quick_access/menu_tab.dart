@@ -8,7 +8,7 @@ import '../views/feederline/view_feederline.dart';
 import '../views/pole/create_pole.dart';
 import '../views/regions/circle_view.dart';
 import '../views/regions/esu_view.dart';
-import '../views/regions/filter_pole_detail.dart';
+import '../views/pole/filter_pole_detail.dart';
 import '../views/regions/snd_view.dart';
 import '../views/regions/substation_view.dart';
 import '../views/regions/zone_view.dart';
@@ -86,6 +86,7 @@ class _ToggleRowVisibilityTabState extends State<ToggleRowVisibilityTab> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => const ViewFeederlines(),
+                              // builder: (context) => const FilterFeederline(),
                             ),
                           );
                         },
@@ -141,7 +142,7 @@ class _ToggleRowVisibilityTabState extends State<ToggleRowVisibilityTab> {
                         },
                         width/12.5
                       ),
-                      SizedBox(width: width / 9.2),
+                      SizedBox(width: width / 10),
                       buildClickableIconWithTextUsingIcon(
                         Icons.add_home,
                         'Add Consumer',
@@ -155,7 +156,7 @@ class _ToggleRowVisibilityTabState extends State<ToggleRowVisibilityTab> {
                         },
                         width/19.5
                       ),
-                      SizedBox(width: width / 10.8),
+                      SizedBox(width: width / 11.5),
                       buildClickableIconWithTextUsingIcon(
                         Icons.add,
                         'Add Pole',
@@ -197,7 +198,7 @@ class _ToggleRowVisibilityTabState extends State<ToggleRowVisibilityTab> {
                                 },
                                 width/12.5
                               ),
-                              SizedBox(width: width / 9.2),
+                              SizedBox(width: width / 8.7),
                               buildClickableIconWithText(
                                 'assets/map_legend/circle.png',
                                 'Circles',
@@ -211,7 +212,7 @@ class _ToggleRowVisibilityTabState extends State<ToggleRowVisibilityTab> {
                                 },
                                 width/12.5
                               ),
-                              SizedBox(width: width / 7.5),
+                              SizedBox(width: width / 6.2),
                               buildClickableIconWithText(
                                 'assets/map_legend/snd.png',
                                 'SnD',

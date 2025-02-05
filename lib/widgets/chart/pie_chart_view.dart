@@ -107,7 +107,7 @@ class _PieChartViewState extends State<PieChartView> {
       int index = entry.key;
       ZoneData zoneInfo = entry.value;
       return LegendItem(
-        zoneName: zoneInfo.zone,
+        zoneName: zoneInfo.name,
         color: colors[index % colors.length],
       );
     }).toList();
@@ -121,15 +121,15 @@ class _PieChartViewState extends State<PieChartView> {
     if (height < 1300 && height > 900) {
       // print(height);
       // print("1");
-      pieheight = height * 0.19; 
+      pieheight = height * 0.19;
     } else if (height < 900 && height > 600) {
       // print(height);
       // print("2");
-      pieheight = height * 0.27; 
+      pieheight = height * 0.27;
     } else if (height < 600 && height > 400) {
       // print(height);
       // print("3");
-      pieheight = height * 0.3; 
+      pieheight = height * 0.3;
     } else if (height < 400 && height > 200) {
       // print(height);
       // print("4");
@@ -153,10 +153,11 @@ class _PieChartViewState extends State<PieChartView> {
           List<PieChartSectionData> pieSections =
               getPieChartData(zones, height);
           List<LegendItem> legends = getLegends(zones);
-          
+
           return Card(
             child: Padding(
-              padding: const EdgeInsets.only(bottom:16.0, left: 12.0, right:16.0, top: 24),
+              padding: const EdgeInsets.only(
+                  bottom: 16.0, left: 12.0, right: 16.0, top: 24),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -194,18 +195,15 @@ class _PieChartViewState extends State<PieChartView> {
                       ),
                     ),
                   ),
-                  SizedBox(width: width * 0.1),
-                  Expanded(
-                    flex: 1,
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: legends.length,
-                      itemBuilder: (context, index) {
-                        final legend = legends[index];
-                        return Container(
-                          //margin: EdgeInsets.only(top:8),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 8.0),
+                  SizedBox(width: width * 0.09),
+                  Container(
+                  width: width * 0.38, // Adjust container width as needed
+                  height: pieheight, // Match height with the pie chart's height
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: legends.map((legend) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
                           child: Row(
                             children: [
                               Container(
@@ -221,9 +219,10 @@ class _PieChartViewState extends State<PieChartView> {
                             ],
                           ),
                         );
-                      },
+                      }).toList(),
                     ),
                   ),
+                ),
                 ],
               ),
             ),

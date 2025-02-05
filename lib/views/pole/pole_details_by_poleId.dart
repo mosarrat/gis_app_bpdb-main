@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:intl/intl.dart';
+import '../../api/pole_api.dart';
 import '../../api/region_api.dart';
 import '../../models/region_delails_lookup/poleDetailsId.dart';
 import '../../models/region_delails_lookup/poleId.dart';
@@ -31,7 +32,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   }
 
   Future<List<PoleDetailByID>> _fetchPolesById() async {
-    return CallRegionApi().fetchPolesById(widget.poleId);
+    return CallPoleApi().fetchPolesById(widget.poleId);
   }
 
   @override

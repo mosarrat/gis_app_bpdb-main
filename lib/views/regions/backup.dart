@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:intl/intl.dart';
+import '../../api/pole_api.dart';
 import '../../api/region_api.dart';
 import '../../models/region_delails_lookup/poleDetailsId.dart';
 import '../../models/region_delails_lookup/poleId.dart';
@@ -36,15 +37,15 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   }
 
   Future<List<PoleDetails>> _fetchPolesByDetailsId() async {
-    return CallRegionApi().fetchPolesByDetailsId(widget.poleDetailsId);
+    return CallPoleApi().fetchPolesByDetailsId(widget.poleDetailsId);
   }
 
   Future<List<PoleDetailByID>> _fetchPolesById() async {
-    return CallRegionApi().fetchPolesById(widget.poleId);
+    return CallPoleApi().fetchPolesById(widget.poleId);
   }
 
   Future<List<PoleImage>> _fetchPoleImage() async {
-    return CallRegionApi().fetchPoleImage(widget.poleId);
+    return CallPoleApi().fetchPoleImage(widget.poleId);
   }
 
   @override

@@ -1,13 +1,15 @@
 // ignore_for_file: prefer_const_constructors, library_private_types_in_public_api, deprecated_member_use
 
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import 'package:gis_app_bpdb/views/map/arc_gis_map.dart';
-import 'package:gis_app_bpdb/views/map/arc_gis_map_filter.dart';
+//import 'package:gis_app_bpdb/views/map/arc_gis_map_filter.dart';
 import 'package:gis_app_bpdb/widgets/chart/bar_chart_view.dart';
 import 'api/api.dart';
 import 'main.dart';
@@ -22,11 +24,12 @@ import 'views/dt/filter_dt.dart';
 import 'views/feederline/new_feeder_ex.dart';
 import 'views/feederline/view_feederline.dart';
 import 'views/feederline/view_table.dart';
-import 'views/pole/polebysnd_filter.dart';
+import 'views/help_popup.dart';
+import 'views/pole/filter_pole_by_snd.dart';
 import 'views/profile/profile_page.dart';
 import 'views/regions/circle_view.dart';
 import 'views/regions/esu_view.dart';
-import 'views/regions/filter_pole_detail.dart';
+import 'views/pole/filter_pole_detail.dart';
 import 'views/regions/snd_view.dart';
 import 'views/regions/substation_view.dart';
 import 'views/regions/zone_view.dart';
@@ -116,19 +119,25 @@ class _DashboardState extends State<Dashboard> {
 
   void getDashboardCounting() async {
     try {
-      Map<String, dynamic> consumerCount =
-          await CallApi().fetchDashboardCounting();
-
+      // Map<String, dynamic> consumerCount =
+      //     await CallApi().fetchDashboardCounting();
+      String consumerCount = await CallApi().fetchDashboardCounting();
+      Map<String, dynamic> consumerCountMap = jsonDecode(consumerCount);
       setState(() {
-        _textCarouselItems[0]['value'] = consumerCount['feederline'].toString();
-        _textCarouselItems[1]['value'] = consumerCount['dt'].toString();
-        _textCarouselItems[2]['value'] = consumerCount['detailPole'].toString();
-        _textCarouselItems[3]['value'] = consumerCount['uniquePole'].toString();
+        _textCarouselItems[0]['value'] =
+            consumerCountMap['feederline'].toString();
+        _textCarouselItems[1]['value'] = consumerCountMap['dt'].toString();
+        _textCarouselItems[2]['value'] =
+            consumerCountMap['detailPole'].toString();
+        _textCarouselItems[3]['value'] =
+            consumerCountMap['uniquePole'].toString();
 
-        _textCarouselItems[4]['value'] = consumerCount['consumer'].toString();
+        _textCarouselItems[4]['value'] =
+            consumerCountMap['consumer'].toString();
         _textCarouselItems[5]['value'] =
-            consumerCount['servicePoint'].toString();
-        _textCarouselItems[6]['value'] = consumerCount['substation'].toString();
+            consumerCountMap['servicePoint'].toString();
+        _textCarouselItems[6]['value'] =
+            consumerCountMap['substation'].toString();
       });
     } catch (e) {
       if (kDebugMode) {
@@ -148,8 +157,8 @@ class _DashboardState extends State<Dashboard> {
 //////////////////// -----Chart ----- /////////////////////
   String? selectedData;
   String? selectedBarData;
-  String heading = "Zone Wise Consumer Count";
-  String BarChartHeading = "Zone Wise Consumer Info Report";
+  String PieChartheading = "Wise Consumer Count";
+  String BarChartHeading = "Wise Consumer Info Report";
   final _pieController = TextEditingController();
   final _barController = TextEditingController();
   final List<Map<String, dynamic>> pieDropdown = [
@@ -163,9 +172,8 @@ class _DashboardState extends State<Dashboard> {
   void _onDropdownChanged(String? newValue) {
     setState(() {
       selectedData = newValue;
-      heading = selectedData == "1"
-          ? "Zone Wise Consumer Count"
-          : "Zone Wise Pole Count";
+      PieChartheading =
+          selectedData == "1" ? "Wise Consumer Count" : "Wise Pole Count";
     });
   }
 
@@ -173,10 +181,11 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       selectedBarData = newValue;
       BarChartHeading = selectedBarData == "1"
-          ? "Zone Wise Consumer Info Report"
-          : "Zone Wise Pole Info Report";
+          ? "Wise Consumer Info Report"
+          : "Wise Pole Info Report";
     });
   }
+
 //////////////////// -----Chart ----- /////////////////////
   @override
   Widget build(BuildContext context) {
@@ -185,6 +194,17 @@ class _DashboardState extends State<Dashboard> {
     double height = MediaQuery.of(context).size.height;
     //print(height);
     User? user = globalUser;
+    int? group_id = user?.GroupId;
+    String heading = "Zone";
+    // Fluttertoast.showToast(
+    //     msg: globalToken!,
+    //     toastLength: Toast.LENGTH_LONG,
+    //     gravity: ToastGravity.CENTER,
+    //     timeInSecForIosWeb: 1,
+    //     backgroundColor: Colors.red,
+    //     textColor: Colors.white,
+    //     fontSize: 16.0,
+    //   );
     double carouselheight;
     double imgheight;
     double pieheight;
@@ -197,6 +217,7 @@ class _DashboardState extends State<Dashboard> {
     double topperheight;
     double carouselContainerHeight;
     int expandRange;
+
     if (height < 1300 && height > 900) {
       // print(height);
       // print("1");
@@ -274,15 +295,22 @@ class _DashboardState extends State<Dashboard> {
     //print(width);
     if (width >= 900) {
       expandRange = 6;
-    } 
-    else if(width >= 700){
+    } else if (width >= 700) {
       expandRange = 5;
-    }
-    else if(width >=600){
+    } else if (width >= 600) {
       expandRange = 4;
-    }
-    else {
+    } else {
       expandRange = 3;
+    }
+
+    if (group_id == 1) {
+      heading = "Zone";
+    } else if (group_id == 5) {
+      heading = "Circle";
+    } else if (group_id == 6) {
+      heading = "Snd";
+    } else if (group_id == 7) {
+      heading = "Substation";
     }
 
     return Scaffold(
@@ -423,7 +451,7 @@ class _DashboardState extends State<Dashboard> {
                     child: Column(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 5),
+                          padding: const EdgeInsets.only(left: 30.0, top: 13),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -445,7 +473,7 @@ class _DashboardState extends State<Dashboard> {
                                 Container(
                                   width: width * 0.5,
                                   child: Text(
-                                    'Zones',
+                                    'Zone',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
@@ -454,7 +482,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 20),
+                          padding: const EdgeInsets.only(left: 30.0, top: 13),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -476,7 +504,7 @@ class _DashboardState extends State<Dashboard> {
                                 Container(
                                   width: width * 0.5,
                                   child: Text(
-                                    'Circles',
+                                    'Circle',
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
@@ -485,7 +513,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 20),
+                          padding: const EdgeInsets.only(left: 30.0, top: 13),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -516,7 +544,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 20),
+                          padding: const EdgeInsets.only(left: 30.0, top: 13),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -547,7 +575,7 @@ class _DashboardState extends State<Dashboard> {
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(left: 30.0, top: 20),
+                          padding: const EdgeInsets.only(left: 30.0, top: 13),
                           child: GestureDetector(
                             onTap: () async {
                               Navigator.push(
@@ -572,7 +600,6 @@ class _DashboardState extends State<Dashboard> {
                                     style: TextStyle(fontSize: 16),
                                   ),
                                 ),
-                                // Text('Substation', style: TextStyle(fontSize: 16),),
                               ],
                             ),
                           ),
@@ -645,6 +672,7 @@ class _DashboardState extends State<Dashboard> {
                         //     ),
                         //   ),
                         // ),
+                        // -- Old Feederline View Button -- //
                         Padding(
                           padding: const EdgeInsets.only(left: 30.0, top: 18),
                           child: GestureDetector(
@@ -653,6 +681,7 @@ class _DashboardState extends State<Dashboard> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ViewFeederlines(),
+                                  // builder: (context) => ViewFeederlines(),
                                 ),
                               );
                             },
@@ -674,6 +703,7 @@ class _DashboardState extends State<Dashboard> {
                             ),
                           ),
                         ),
+                        // -- Old Feederline View Button -- //
 
                         // Padding(
                         //   padding: const EdgeInsets.only(left: 16.0),
@@ -773,7 +803,7 @@ class _DashboardState extends State<Dashboard> {
                               },
                             ),
                           ),
-                        //Pole List//
+                          //Pole List//
                         ],
                       ),
                     ),
@@ -1148,7 +1178,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
 
-                    if (expandRange == 5)
+                  if (expandRange == 5)
                     Padding(
                       padding: EdgeInsets.only(
                           top: 0.02, bottom: 4, left: 8, right: 8),
@@ -1158,7 +1188,7 @@ class _DashboardState extends State<Dashboard> {
                       ),
                     ),
 
-                    if (expandRange == 6)
+                  if (expandRange == 6)
                     Padding(
                       padding: EdgeInsets.only(
                           top: 0.02, bottom: 4, left: 8, right: 8),
@@ -1330,7 +1360,7 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         Center(
                           child: Text(
-                            heading,
+                            "$heading $PieChartheading",
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 18.0,
@@ -1384,7 +1414,7 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         Center(
                           child: Text(
-                            BarChartHeading,
+                            "$heading $BarChartHeading",
                             style: TextStyle(
                               color: Colors.blue,
                               fontSize: 18.0,
@@ -1494,6 +1524,44 @@ class _DashboardState extends State<Dashboard> {
     setState(() {
       for (int i = 0; i < _buttonStates.length; i++) {
         _buttonStates[i] = (i == selectedIndex);
+      }
+
+      switch (selectedIndex) {
+        case 0:
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ArcGISMapViewer(
+                title: 'Map Viewer',
+                mapUrl:
+                    "https://www.arcgisbd.com/server/rest/services/bpdb/general/MapServer",
+                mapcode: 0,
+                zoneId: 0,
+                circleId: 0,
+                sndId: 0,
+                substationId: 0,
+                feederlineId: 0,
+                centerLatitude: 23.7817257,
+                centerLongitude: 90.3455213,
+                defaultZoomLevel: 7,
+              ),
+            ),
+          );
+          break;
+        case 1:
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Dashboard()),
+          );
+          break;
+        case 2:
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return const HelpPopup();
+            },
+          );
+          break;
       }
     });
   }

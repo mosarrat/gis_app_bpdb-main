@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import 'package:intl/intl.dart';
-import '../../api/region_api.dart';
+import '../../api/dt_api.dart';
 import '../../constants/constant.dart';
-import '../../models/region_delails_lookup/dt_info.dart';
+import '../../models/dt_lookup/dt_info.dart';
 import 'dt_details_info.dart';
 
 class DTListView extends StatefulWidget {
@@ -21,7 +21,7 @@ class DTListView extends StatefulWidget {
 }
 
 class _DTListViewState extends State<DTListView> {
-  final CallRegionApi apiCall = CallRegionApi();
+  final CallDTApi apiCall = CallDTApi();
   late Future<List<TransformerDetails>> _futureDT;
 
   @override
@@ -40,7 +40,7 @@ class _DTListViewState extends State<DTListView> {
   }
 
   Future<List<TransformerDetails>> _fetchDT() async {
-    return CallRegionApi().fetchDT(
+    return CallDTApi().fetchDT(
       substation: widget.substation,
       feederLineId: widget.feederLineId,
     );

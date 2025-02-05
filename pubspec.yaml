@@ -42,6 +42,7 @@ dependencies:
   flutter_map: any
   latlong2: ^0.9.1
   flutter_map_geojson: ^1.0.8
+  # flutter_map_marker_cluster: ^0.4.0
   #flutter_map_cancellable_tile_provider: ^3.0.0
   fl_chart: ^0.68.0
   flutter_map_arcgis: any # or the latest version on Pub
@@ -54,6 +55,7 @@ dependencies:
   
   permission_handler: ^10.0.0
   geolocator: ^8.0.0
+  connectivity_plus: ^3.0.6
 
 dev_dependencies:
   flutter_test:
@@ -131,6 +133,7 @@ flutter:
     - assets/map_legend/consumer_serviceline.png
     - assets/map_legend/dt.png
     - assets/map_legend/substation_map.png
+    - assets/map_legend/new_substation.png
     - assets/map_legend/common_pole.png
     - assets/map_legend/lt_pole.png
     - assets/map_legend/service_point.png

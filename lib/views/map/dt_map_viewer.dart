@@ -1,11 +1,10 @@
-import 'dart:convert';
 
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_map_geojson/flutter_map_geojson.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:latlong2/latlong.dart';
-
-import '../../dashboard.dart';
 
 class DTMapViewer extends StatefulWidget {
   const DTMapViewer({
@@ -34,30 +33,19 @@ class _DTMapViewerState extends State<DTMapViewer> {
   late double width;
   late double boxheight;
 
-  // Instantiate parser, use the defaults
   GeoJsonParser geoJsonParser = GeoJsonParser(
     defaultMarkerColor: Colors.orange[900],
-    defaultMarkerIcon: Icons.electric_meter,
+    defaultMarkerIcon: null,
     defaultPolygonBorderColor: Colors.red,
     defaultPolygonFillColor: Colors.red.withOpacity(0.1),
     defaultCircleMarkerColor: Colors.red.withOpacity(0.25),
   );
 
   bool myFilterFunction(Map<String, dynamic> properties) {
-    if (properties['section'].toString().contains('Point M-4')) {
-      return false;
-    } else {
-      return true;
-    }
+    return !properties['section'].toString().contains('Point M-4');
   }
 
   void onTapMarkerFunction(BuildContext context, Map<String, dynamic> mapData) {
-    if (width < 400 && width > 200) {
-      boxheight = 60;
-    } else {
-      boxheight = 50;
-    }
-    //print(mapData);
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -67,7 +55,6 @@ class _DTMapViewerState extends State<DTMapViewer> {
             title: SizedBox(
               width: MediaQuery.of(context).size.width,
               child: const Column(
-                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Distribution Transformer",
@@ -85,7 +72,8 @@ class _DTMapViewerState extends State<DTMapViewer> {
                 borderRadius: BorderRadius.all(Radius.circular(3))),
             contentPadding: const EdgeInsets.all(0),
             insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-            backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            // backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            backgroundColor: const Color.fromARGB(255, 3, 89, 100),
             content: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.6,
@@ -104,6 +92,8 @@ class _DTMapViewerState extends State<DTMapViewer> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const TabBar(
+                        indicatorColor: const Color.fromARGB(255, 3, 89, 100),
+                        labelColor:  const Color.fromARGB(255, 3, 89, 100),
                         tabs: [
                           Tab(text: 'Details'),
                           Tab(text: 'Attachments'),
@@ -115,133 +105,47 @@ class _DTMapViewerState extends State<DTMapViewer> {
                             SingleChildScrollView(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
+                                    horizontal: 1.0, vertical: 10.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     const SizedBox(height: 10),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
-                                            'Distribution Transformer Id.',
-                                            mapData['DT']
-                                                .toString()
-                                                .split('#')[0]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
-                                            'Distribution Transformer Code',
-                                            mapData['DT'].split('#')[1]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
-                                            'Distribution Transformer Location',
-                                            mapData['DT'].split('#')[1]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('Zone Name.',
-                                            mapData['DT'].split('#')[2]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('Circle Name',
-                                            mapData['DT'].split('#')[3]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('SnD Name',
-                                            mapData['DT'].split('#')[4]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
-                                            'Substation Name',
-                                            mapData['DT'].split('#')[5]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
-                                            'Feeder Line Name',
-                                            mapData['DT'].split('#')[6]),
-                                      ),
-                                    ),
-                                    const Divider(
-                                      height: 0,
-                                    ),
+                                    const Divider(height: 0),
+                                    _buildDetailItem(
+                                        'DT Id.',
+                                        mapData['DT'].toString().split('#')[0],
+                                        isAlternate: true),
+                                    const Divider(height: 0),
+                                    _buildDetailItem(
+                                        'DT Code',
+                                        mapData['DT'].split('#')[1],
+                                        isAlternate: false),
+                                    const Divider(height: 0),
+                                    _buildDetailItem(
+                                        'DT Location',
+                                        mapData['DT'].split('#')[2],
+                                        isAlternate: true),
+                                    const Divider(height: 0),
+                                    _buildDetailItem('Zone Name.',
+                                        mapData['DT'].split('#')[3],
+                                        isAlternate: false),
+                                    const Divider(height: 0),
+                                    _buildDetailItem('Circle Name',
+                                        mapData['DT'].split('#')[4],
+                                        isAlternate: true),
+                                    const Divider(height: 0),
+                                    _buildDetailItem(
+                                        'SnD Name', mapData['DT'].split('#')[5],
+                                        isAlternate: false),
+                                    const Divider(height: 0),
+                                    _buildDetailItem('Substation Name',
+                                        mapData['DT'].split('#')[6],
+                                        isAlternate: true),
+                                    const Divider(height: 0),
+                                    _buildDetailItem('Feeder Line Name',
+                                        mapData['DT'].split('#')[7],
+                                        isAlternate: false),
+                                    const Divider(height: 0),
                                   ],
                                 ),
                               ),
@@ -256,39 +160,30 @@ class _DTMapViewerState extends State<DTMapViewer> {
                           ],
                         ),
                       ),
-                      const SizedBox(
-                        height: 20,
-                      ),
+                      const SizedBox(height: 20),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Card(
-                          color: const Color.fromARGB(255, 5, 161, 182),
+                        //child: Card(
+                          //color: const Color.fromARGB(255, 5, 161, 182),
                           child: TextButton(
                             child: const Text(
                               'Close',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: const Color.fromARGB(255, 3, 89, 100),
                                   fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
-                        ),
+                        //),
                       ),
                     ],
                   ),
                 ),
               ),
             ),
-            // actions: <Widget>[
-            //   TextButton(
-            //     onPressed: () {
-            //       Navigator.of(context).pop();
-            //     },
-            //     child: const Text('Close'),
-            //   ),
-            // ],
           ),
         );
       },
@@ -327,44 +222,66 @@ class _DTMapViewerState extends State<DTMapViewer> {
     super.initState();
 
     loadingData = true;
-    Stopwatch stopwatch2 = Stopwatch()..start();
 
     _generateGeoJson().then((_) {
-      // print(testGeoJson);
-
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 1), () {
         processData().then((_) {
-          //print("GeoJSON parsed: ${geoJsonParser.markers.length} markers");
-
           setState(() {
             loadingData = false;
           });
-
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text('GeoJson Processing time: ${stopwatch2.elapsed}'),
-          //     duration: const Duration(milliseconds: 5000),
-          //     behavior: SnackBarBehavior.floating,
-          //     backgroundColor: Colors.green,
-          //   ),
-          // );
         });
       });
     });
+geoJsonParser.markerCreationCallback = (LatLng latLng, Map<String, dynamic> properties) {
+  return Marker(
+    width: 40, 
+    height: 40, 
+    point: latLng,
+    child: GestureDetector(
+      onTap: () {
+        _handleMarkerTap(properties);
+      },
+      // child: Container(
+      //   height: 40,
+      //   width: 40,
+      //   decoration: const BoxDecoration(
+      //     color: Colors.blue,
+      //     shape: BoxShape.circle,
+      //   ),
+      //   alignment: Alignment.center, 
+      //   child: ClipOval( 
+      //     child: Image.asset(
+      //       'assets/icons/transformer.png',
+      //       width: 28, 
+      //       height: 28, 
+      //       fit: BoxFit.cover, 
+      //     ),
+      //   ),
+      // ),
+      child: Image.asset(
+        'assets/icons/transformer.png',
+        width: 28, 
+        height: 28, 
+        fit: BoxFit.cover, 
+      ),
+    ),
+  );
+};
 
-    geoJsonParser
-        .setDefaultMarkerTapCallback((Map<String, dynamic> properties) {
-      onTapMarkerFunction(context, properties);
-    });
 
     geoJsonParser.filterFunction = myFilterFunction;
+  }
+
+  void _handleMarkerTap(Map<String, dynamic> properties) {
+    //print("Marker tapped: ${properties['DT']}");
+    onTapMarkerFunction(context, properties);
   }
 
   @override
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     height = MediaQuery.of(context).size.height;
-    //print(width);
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -386,21 +303,20 @@ class _DTMapViewerState extends State<DTMapViewer> {
               color: Colors.white,
             ),
           ),
-          // backgroundColor: const Color.fromARGB(255, 5, 161, 182),
           backgroundColor: const Color.fromARGB(255, 3, 89, 100),
         ),
       ),
       body: FlutterMap(
         mapController: MapController(),
         options: MapOptions(
-          initialCenter: LatLng(widget.lat!, widget.long!),
-          initialZoom: widget.defaultZoomLevel!,
+          center: LatLng(widget.lat!, widget.long!),
+          zoom: widget.defaultZoomLevel!,
         ),
         children: [
           TileLayer(
-              urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
-              subdomains: const ['a', 'b', 'c']),
-          //userAgentPackageName: 'dev.fleaflet.flutter_map.example',
+            urlTemplate: "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+            subdomains: const ['a', 'b', 'c'],
+          ),
           loadingData
               ? const Center(child: CircularProgressIndicator())
               : MarkerLayer(markers: geoJsonParser.markers),
@@ -409,89 +325,36 @@ class _DTMapViewerState extends State<DTMapViewer> {
     );
   }
 
-  Widget _buildDetailItem(String label, String value) {
-
-    if (width < 400 && width > 200) {
-      return Padding(
-        padding: EdgeInsets.all(2.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$label :',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
+  Widget _buildDetailItem(String label, String value, {bool isAlternate = false}) {
+    return Container(
+      width: double.infinity,
+      height: 40,
+      color: isAlternate
+          ? const Color.fromARGB(255, 223, 240, 243)
+          : const Color.fromARGB(255, 241, 245, 245),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 200,
+              width: 150,
               child: Text(
-                label,
+                '$label :',
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                    fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(width: 10),
             Expanded(
               child: Text(
-                ': $value',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+                value,
+                style: const TextStyle(fontSize: 14),
               ),
             ),
           ],
         ),
-      );
-    }
-    // return Padding(
-    //   padding: const EdgeInsets.only(bottom: 12.0),
-    //   child: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       SizedBox(
-    //         width: 200,
-    //         child: Text(
-    //           label,
-    //           style: const TextStyle(
-    //             fontWeight: FontWeight.bold,
-    //             color: Colors.black87,
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(width: 10),
-    //       Expanded(
-    //         child: Text(
-    //           ': $value',
-    //           style: const TextStyle(
-    //             fontSize: 16,
-    //             color: Colors.black87,
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
+      ),
+    );
   }
 }
+

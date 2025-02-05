@@ -1,7 +1,9 @@
 // ignore_for_file: library_private_types_in_public_api, deprecated_member_use
+import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 //import 'package:gis_app_bpdb/models/consumer_lookup/tariff_sub_category,dart';
 import 'package:gis_app_bpdb/models/consumer_form_lookup/tariff_category.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../api/api.dart';
 import '../../api/consumer_api.dart';
 import '../../models/consumer_form_lookup/bussiness_type.dart';
@@ -30,6 +32,8 @@ import '../../models/regions/esu_info.dart';
 import '../../models/consumer_form_lookup/location.dart';
 import 'filter_consumers.dart';
 import '../../models/consumer_lookup/consumers.dart';
+import '../../constants/constant.dart';
+import '../../models/Login/login.dart';
 
 class NewConsumerExp extends StatefulWidget {
   const NewConsumerExp({super.key});
@@ -39,7 +43,58 @@ class NewConsumerExp extends StatefulWidget {
 }
 
 class _NewConsumerExpState extends State<NewConsumerExp> {
-final _formKey = GlobalKey<FormState>();
+  double? _latitude;
+  double? _longitude;
+  final TextEditingController _latitudeController = TextEditingController();
+  final TextEditingController _longitudeController = TextEditingController();
+
+  Future<void> _checkLocationPermission() async {
+    var status = await Permission.location.status;
+
+    if (status.isGranted) {
+      await _getCurrentLocation();
+    } else if (status.isDenied) {
+      status = await Permission.location.request();
+      if (status.isGranted) {
+        await _getCurrentLocation();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text('Location permission denied')),
+        );
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text(
+                'Location permission is permanently denied. Please enable it from settings.')),
+      );
+    }
+  }
+
+  Future<void> _getCurrentLocation() async {
+    try {
+      // Get current location
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _latitude = position.latitude;
+        _longitude = position.longitude;
+
+        // Update controllers with new values
+        _latitudeController.text = _latitude.toString();
+        _longitudeController.text = _longitude.toString();
+      });
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error getting location: $e')),
+      );
+    }
+  }
+
+  final _formKey = GlobalKey<FormState>();
 
   late Future<List<Zone>> zones;
   late Future<List<Circles>> circles;
@@ -90,6 +145,7 @@ final _formKey = GlobalKey<FormState>();
   int? selectedStructureType;
   var dt = DateTime.now(); // Date-Time
   bool isLoading = false;
+  User? user = globalUser;
 
   // #region controls
   final TextEditingController _consumerId = TextEditingController();
@@ -128,12 +184,6 @@ final _formKey = GlobalKey<FormState>();
   final TextEditingController _buildingAptNoController =
       TextEditingController();
   final TextEditingController _premiseNameController = TextEditingController();
-  // final TextEditingController _surveyDateController = TextEditingController();
-
-  String? gpsLat = "0.00";
-  String? gpsLong = "0.00";
-  final TextEditingController _latitudeController = TextEditingController();
-  final TextEditingController _longitudeController = TextEditingController();
 
   final TextEditingController _structureController = TextEditingController();
   final TextEditingController _structureMapNoController =
@@ -151,8 +201,7 @@ final _formKey = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
-    _getCurrentLocation();
-
+    _checkLocationPermission();
     zones = CallApi().fetchZoneInfo();
     circles = Future.value([]);
     snds = Future.value([]);
@@ -175,26 +224,6 @@ final _formKey = GlobalKey<FormState>();
     fetchBusinessType = CallConsumerApi().fetchBusinessType();
     fetchStructureType = CallConsumerApi().fetchStructureType();
     fetchOperatingVoltage = CallConsumerApi().fetchOperatingVoltage();
-  }
-
-  void _getCurrentLocation() async {
-    try {
-      //Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      setState(() {
-        _latitudeController.text = "0.00"; // position.latitude.toString();
-        _longitudeController.text = "0.00"; // position.longitude.toString();
-
-        gpsLat = "0.00"; // position.latitude.toString();
-        gpsLong = "0.00"; // position.longitude.toString();
-      });
-    } catch (e) {
-      //print(e);
-      _latitudeController.text = "0.00";
-      _longitudeController.text = "0.00";
-
-      gpsLat = "0.00";
-      gpsLong = "0.00";
-    }
   }
 
   void setLoading(bool loading) {
@@ -279,6 +308,8 @@ final _formKey = GlobalKey<FormState>();
     feederLines = CallApi().fetchFeederLineInfo(value!).whenComplete(() {
       setLoading(false);
     });
+    poles = Future.value([]);
+    servicePoints = Future.value([]);
   }
 
   void onFeederLineChanged(int? value) {
@@ -291,6 +322,7 @@ final _formKey = GlobalKey<FormState>();
     poles = CallApi().fetchPoleInfo(value!).whenComplete(() {
       setLoading(false);
     });
+    servicePoints = Future.value([]);
   }
 
   void onPoleChanged(int? value) {
@@ -307,12 +339,33 @@ final _formKey = GlobalKey<FormState>();
       setLoading(false);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
+    if (user?.ZoneId != null) {
+      selectedZoneId = user!.ZoneId;
+      circles = CallApi().fetchCircleInfo(selectedZoneId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.CircleId != null) {
+      selectedCircleId = user!.CircleId;
+      snds = CallApi().fetchSnDInfo(selectedCircleId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.SndId != null) {
+      selectedSnDId = user!.SndId;
+      substations =
+          CallApi().fetchSubstationInfo(selectedSnDId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -357,21 +410,34 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<Zone>>(
                           future: zones,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Zone',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Zone',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedZoneId,
@@ -379,7 +445,8 @@ final _formKey = GlobalKey<FormState>();
                                 items: snapshot.data!.map((zone) {
                                   return DropdownMenuItem<int>(
                                     value: zone.zoneId,
-                                    child: Text('${zone.zoneCode}: ${zone.zoneName}'),
+                                    child: Text(
+                                        '${zone.zoneCode}: ${zone.zoneName}'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -396,7 +463,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<Circles>>(
                           future: circles,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -405,11 +473,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Circle',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Circle',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -421,11 +500,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Circle',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Circle',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedCircleId,
@@ -453,7 +543,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<SndInfo>>(
                           future: snds,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -462,11 +553,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'SnD',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'SnD',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -478,11 +580,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'SnD',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'SnD',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedSnDId,
@@ -490,7 +603,8 @@ final _formKey = GlobalKey<FormState>();
                                 items: snapshot.data!.map((snd) {
                                   return DropdownMenuItem<int>(
                                     value: snd.sndId,
-                                    child: Text('${snd.sndCode}: ${snd.sndName}'),
+                                    child:
+                                        Text('${snd.sndCode}: ${snd.sndName}'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -510,7 +624,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<EsuInfo>>(
                           future: esu,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -546,7 +661,8 @@ final _formKey = GlobalKey<FormState>();
                                 items: snapshot.data!.map((esu) {
                                   return DropdownMenuItem<int>(
                                     value: esu.esuId,
-                                    child: Text('${esu.esuCode}: ${esu.esuName}'),
+                                    child:
+                                        Text('${esu.esuCode}: ${esu.esuName}'),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -565,7 +681,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<Substation>>(
                           future: substations,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -574,11 +691,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Substation',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Substaion',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -590,11 +718,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Substation',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
-                                    //fontWeight: FontWeight.bold,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Substaion',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedSubstationId,
@@ -622,7 +761,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<FeederLine>>(
                           future: feederLines,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -631,10 +771,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Feeder Line',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Feeder Line',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -646,10 +798,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Feeder Line',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Feeder Line',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedFeederLineId,
@@ -677,7 +841,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<Pole>>(
                           future: poles,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -686,10 +851,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Pole Details',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Pole Details',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
@@ -700,10 +877,22 @@ final _formKey = GlobalKey<FormState>();
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 decoration: InputDecoration(
-                                  labelText: 'Pole Details',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Pole Details',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedPoleId,
@@ -735,18 +924,32 @@ final _formKey = GlobalKey<FormState>();
                             }
 
                             if (snapshot.hasError) {
-                              showMessage('Error: ${snapshot.error}', 'error');
+                              //showMessage('${snapshot.error}', 'error');
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Service Point',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'Service Point',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: null,
-                                hint: const Text('No service point available!'),
+                                hint: const Text('No service point available!',
+                                style: TextStyle(color: Colors.red),
+                                ),
                                 items: [],
                                 onChanged: null,
                               );
@@ -754,10 +957,22 @@ final _formKey = GlobalKey<FormState>();
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
                                 decoration: InputDecoration(
-                                  labelText: 'Service Point',
-                                  labelStyle: TextStyle(
-                                    color: Colors.blue,
-                                    fontSize: deviceFontSize + 3,
+                                  label: RichText(
+                                    text: TextSpan(
+                                      text: 'service Point',
+                                      style: TextStyle(
+                                        color: Colors.blue,
+                                        fontSize: deviceFontSize + 3,
+                                      ),
+                                      children: const [
+                                        TextSpan(
+                                          text: ' *',
+                                          style: TextStyle(
+                                            color: Colors.red,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                                 value: selectedServicePointId,
@@ -783,7 +998,8 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<DistributionTransformer>>(
                           future: dts,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
@@ -815,7 +1031,8 @@ final _formKey = GlobalKey<FormState>();
                                   ),
                                 ),
                                 value: selectedDTId,
-                                hint: const Text('Select a Distribution Transformer'),
+                                hint: const Text(
+                                    'Select a Distribution Transformer'),
                                 items: snapshot.data!.map((dt) {
                                   return DropdownMenuItem<int>(
                                     value: dt.id,
@@ -835,8 +1052,8 @@ final _formKey = GlobalKey<FormState>();
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_feederUId, 'Feeder Line UId'),
-                        _buildTextField(_unionGeoCode, 'Union Geo Code'),
+                        _buildTextField(_feederUId, 'Feeder Line UId', false),
+                        //_buildTextField(_unionGeoCode, 'Union Geo Code'),
                       ],
                     ),
                   ],
@@ -859,47 +1076,58 @@ final _formKey = GlobalKey<FormState>();
                     FieldsetLegend(
                       legendText: 'Consumer Information',
                       children: [
-                        _buildTextField(_consumerId, 'Consumer Id'),
-                        _buildTextField(_consumerNoController, 'Consumer No'),
-                        _buildTextField(_consumerNameController, 'Name'),
+                        //_buildTextField(_consumerId, 'Consumer Id'),
+                        _buildTextField(_consumerNoController, 'Consumer No', true),
+                        _buildTextField(_consumerNameController, 'Name', true),
                         // _buildTextField(
                         //     _consumerNameBanglaController, 'Name (বাংলায়)'),
                         Padding(
-                            padding: const EdgeInsets.only(bottom: 16.0),
-                            child: TextFormField(
-                              controller: _consumerNameBanglaController,
-                              decoration: InputDecoration(
-                                labelText: 'Name (বাংলায়)',
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(16),
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: TextFormField(
+                            controller: _consumerNameBanglaController,
+                            decoration: InputDecoration(
+                              labelText: 'Name (বাংলায়)',
+                              //focusColor: Colors.blue,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(16),
+                                borderSide: const BorderSide(
+                                  color: Colors.blue, 
+                                  width: 2.0,
                                 ),
                               ),
-                              style: const TextStyle(
-                                fontFamily: 'NotoSansBengali', 
-                                fontSize: 18,
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter Name (বাংলায়)'; 
-                                }
-                                return null;
-                              },
                             ),
+                            style: const TextStyle(
+                              fontFamily: 'NotoSansBengali',
+                              fontSize: 18,
+                            ),
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Please enter Name (বাংলায়)';
+                              }
+                              return null;
+                            },
                           ),
-                        _buildTextField(_fatherNameController, 'Father Name'),
-                        _buildTextField(_nidController, 'NID'),
-                        _buildTextField(_mobileNoController, 'Mobile No'),
-                        _buildTextField(_emailController, 'Email Address'),
-                        _buildTextField(_accountNumberController, 'Account Number'),
+                        ),
+                        _buildTextField(_fatherNameController, 'Father Name', false),
+                        _buildTextField(_nidController, 'NID', false),
+                        _buildTextField(_mobileNoController, 'Mobile No', true),
+                        _buildTextField(_emailController, 'Email Address', false),
+                        _buildTextField(
+                            _accountNumberController, 'Account Number', false),
                         FutureBuilder<List<ConsumerType>>(
                           future: fetchConsumerType,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -913,7 +1141,23 @@ final _formKey = GlobalKey<FormState>();
                                   ),
                                 ),
                                 value: selectedConsumerTypeId,
-                                hint: const Text('Select a Consumer Type'),
+                                hint:RichText(
+                                  text: const TextSpan(
+                                    text: 'Select a Consumer Type',
+                                    style: const TextStyle(
+                                      color: Color.fromARGB(255, 100, 97, 97),
+                                      fontSize: 16.0,
+                                    ),
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                                 items: snapshot.data!.map((consumerType) {
                                   return DropdownMenuItem<int>(
                                     value: consumerType.consumerTypeId,
@@ -933,11 +1177,13 @@ final _formKey = GlobalKey<FormState>();
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_consumerAddressController, 'Address'),
-                        _buildTextField(_plotNoController, 'Plot No'),
-                        _buildTextField(_buildingAptNoController, 'Building Apt. No'),
-                        _buildTextField(_premiseNameController, 'Premise Name'),
-                        _buildTextField(_numberOfFloorController, 'Number of Floor'),
+                        _buildTextField(_consumerAddressController, 'Address', false),
+                        _buildTextField(_plotNoController, 'Plot No', false),
+                        _buildTextField(
+                            _buildingAptNoController, 'Building Apt. No', false),
+                        _buildTextField(_premiseNameController, 'Premise Name', false),
+                        _buildTextField(
+                            _numberOfFloorController, 'Number of Floor', false),
                       ],
                     ),
                   ],
@@ -958,19 +1204,21 @@ final _formKey = GlobalKey<FormState>();
                   childrenPadding: EdgeInsets.zero,
                   textColor: const Color.fromARGB(255, 5, 161, 182),
                   children: [
-                   FieldsetLegend(
+                    FieldsetLegend(
                       legendText: 'Tariff',
                       children: [
                         const SizedBox(height: 8.0),
                         FutureBuilder<List<TariffCategory>>(
                           future: fetchTariffCategory,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1007,12 +1255,14 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<SubCategory>>(
                           future: fetchTariffSubcategory,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1030,7 +1280,8 @@ final _formKey = GlobalKey<FormState>();
                                 items: snapshot.data!.map((tariffSubcategory) {
                                   return DropdownMenuItem<int>(
                                     value: tariffSubcategory.subCategoryId,
-                                    child: Text(tariffSubcategory.subCategoryName),
+                                    child:
+                                        Text(tariffSubcategory.subCategoryName),
                                   );
                                 }).toList(),
                                 onChanged: (value) {
@@ -1040,7 +1291,8 @@ final _formKey = GlobalKey<FormState>();
                                 },
                               );
                             } else {
-                              return const Text('No Tariff Sub Category available');
+                              return const Text(
+                                  'No Tariff Sub Category available');
                             }
                           },
                         ),
@@ -1071,12 +1323,14 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<MeterType>>(
                           future: fetchMeterType,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1110,20 +1364,23 @@ final _formKey = GlobalKey<FormState>();
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_meterModelController, 'Meter Model'),
-                        _buildTextField(_meterNumberController, 'Meter Number'),
+                        _buildTextField(_meterModelController, 'Meter Model', false),
+                        _buildTextField(_meterNumberController, 'Meter Number', false),
                         _buildTextField(
-                            _meterManufacturerController, 'Meter Manufacturer'),
-                        _buildTextField(_meterReadingController, 'Meter Reading'),
+                            _meterManufacturerController, 'Meter Manufacturer', false),
+                        _buildTextField(
+                            _meterReadingController, 'Meter Reading', false),
                         FutureBuilder<List<PhasingCode>>(
                           future: fetchPhasingCode,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1160,12 +1417,14 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<OperatingVoltage>>(
                           future: fetchOperatingVoltage,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1194,7 +1453,8 @@ final _formKey = GlobalKey<FormState>();
                                 },
                               );
                             } else {
-                              return const Text('No Operating Voltage available');
+                              return const Text(
+                                  'No Operating Voltage available');
                             }
                           },
                         ),
@@ -1235,7 +1495,8 @@ final _formKey = GlobalKey<FormState>();
                   ////minTileHeight: 25,
                   collapsedBackgroundColor:
                       const Color.fromARGB(255, 223, 240, 243),
-                  title: const Text('Connection, Business, Bill, Service Information'),
+                  title: const Text(
+                      'Connection, Business, Bill, Service Information'),
                   childrenPadding: EdgeInsets.zero,
                   textColor: const Color.fromARGB(255, 5, 161, 182),
                   children: [
@@ -1246,12 +1507,14 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<ConnectionStatus>>(
                           future: fetchConnectionStatus,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1280,7 +1543,8 @@ final _formKey = GlobalKey<FormState>();
                                 },
                               );
                             } else {
-                              return const Text('No Connection Status available');
+                              return const Text(
+                                  'No Connection Status available');
                             }
                           },
                         ),
@@ -1288,12 +1552,14 @@ final _formKey = GlobalKey<FormState>();
                         FutureBuilder<List<ConnectionType>>(
                           future: fetchConnectiontype,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1327,17 +1593,21 @@ final _formKey = GlobalKey<FormState>();
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_sanctionedLoadController, 'Sanctioned Load'),
-                        _buildTextField(_connectedLoadController, 'Connected Load'),
+                        _buildTextField(
+                            _sanctionedLoadController, 'Sanctioned Load', false),
+                        _buildTextField(
+                            _connectedLoadController, 'Connected Load', false),
                         FutureBuilder<List<BusinessType>>(
                           future: fetchBusinessType,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1371,18 +1641,21 @@ final _formKey = GlobalKey<FormState>();
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_otherBusinessController, 'Other Business'),
-                        _buildTextField(_specialCodeController, 'Special Code'),
-                        _buildTextField(_specialTypeController, 'Special Type'),
+                        _buildTextField(
+                            _otherBusinessController, 'Other Business', false),
+                        _buildTextField(_specialCodeController, 'Special Code', false),
+                        _buildTextField(_specialTypeController, 'Special Type', false),
                         FutureBuilder<List<Locations>>(
                           future: fetchLocations,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1416,20 +1689,22 @@ final _formKey = GlobalKey<FormState>();
                           },
                         ),
                         const SizedBox(height: 16.0),
-                        _buildTextField(_billGroupController, 'Bill Group'),
-                        _buildTextField(_bookNumberController, 'Book Number'),
-                        _buildTextField(_omfKwhController, 'OMF kWh (kWh)'),
-                        _buildTextField(
-                            _serviceCableSizeController, 'Service Cable Size (RM)'),
+                        _buildTextField(_billGroupController, 'Bill Group', false),
+                        _buildTextField(_bookNumberController, 'Book Number', false),
+                        _buildTextField(_omfKwhController, 'OMF kWh (kWh)', false),
+                        _buildTextField(_serviceCableSizeController,
+                            'Service Cable Size (RM)', false),
                         FutureBuilder<List<SurviceCableType>>(
                           future: fetchServiceCableType,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1458,7 +1733,8 @@ final _formKey = GlobalKey<FormState>();
                                 },
                               );
                             } else {
-                              return const Text('No Service Cable Type available');
+                              return const Text(
+                                  'No Service Cable Type available');
                             }
                           },
                         ),
@@ -1486,8 +1762,8 @@ final _formKey = GlobalKey<FormState>();
                     FieldsetLegend(
                       legendText: 'GPS Information',
                       children: [
-                        _buildTextField(_latitudeController, 'Latitude'),
-                        _buildTextField(_longitudeController, 'Longitude'),
+                        _buildTextField(_latitudeController, 'Latitude', true),
+                        _buildTextField(_longitudeController, 'Longitude', true),
                       ],
                     ),
                   ],
@@ -1511,18 +1787,20 @@ final _formKey = GlobalKey<FormState>();
                     FieldsetLegend(
                       legendText: 'Structure Information',
                       children: [
-                        _buildTextField(_structureController, 'Structure'),
+                        _buildTextField(_structureController, 'Structure', false),
                         _buildTextField(
-                            _structureMapNoController, 'Structure Map No'),
+                            _structureMapNoController, 'Structure Map No', false),
                         FutureBuilder<List<StructureType>>(
                           future: fetchStructureType,
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
                               return const SizedBox.shrink();
                             }
 
                             if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
                             } else if (snapshot.hasData) {
                               return DropdownButtonFormField<int>(
                                 isExpanded: true,
@@ -1579,7 +1857,7 @@ final _formKey = GlobalKey<FormState>();
                     FieldsetLegend(
                       legendText: 'Remarks',
                       children: [
-                        _buildTextField(_remarks, 'Remarks'),
+                        _buildTextField(_remarks, 'Remarks', false),
                       ],
                     ),
                     Align(
@@ -1599,7 +1877,8 @@ final _formKey = GlobalKey<FormState>();
 
                               double parseOrZeroDouble(String? text) {
                                 try {
-                                  return double.tryParse(text?.trim() ?? '') ?? 0.0;
+                                  return double.tryParse(text?.trim() ?? '') ??
+                                      0.0;
                                 } catch (e) {
                                   throw 'Invalid double for field $text';
                                 }
@@ -1608,62 +1887,88 @@ final _formKey = GlobalKey<FormState>();
                               String formatDate(String? text) {
                                 try {
                                   return DateFormat("yyyy-MM-dd'T'HH:mm:ss")
-                                      .format(DateTime.parse(text ?? dt.toString()));
+                                      .format(DateTime.parse(
+                                          text ?? dt.toString()));
                                 } catch (e) {
                                   throw 'Invalid date format for field Install Date';
                                 }
                               }
+
                               T checkNotNull<T>(T? value, String fieldName) {
-                                if (value == null || value == 0.00) {
-                                  throw 'Invalid value for $fieldName. PLease Check Again ';
+                                if (value == null || value == '') {
+                                  throw '$fieldName is Mandatory.';
                                 }
                                 return value;
                               }
+
+                              T checkNotSelect<T>(T? value, String fieldName) {
+                                if (value == null || value == 0.00) {
+                                  throw 'Please Select $fieldName.';
+                                }
+                                return value;
+                              }
+
+                              final int consumerId = await CallConsumerApi().fetchMaxConsumerId();
                               Consumers consumer = Consumers(
-                                zoneId: selectedZoneId ?? 0,
-                                circleId: selectedCircleId ?? 0,
-                                sndId: selectedSnDId ?? 0,
+                                zoneId: checkNotSelect(selectedZoneId, 'Zone'),
+                                circleId: checkNotSelect(selectedCircleId, 'Circle'),
+                                sndId: checkNotSelect(selectedSnDId, 'SnD'),
                                 esuId: selectedEsuId,
-                                substationId: selectedSubstationId ?? 0,
-                                feederLineId: selectedFeederLineId ?? 0,
-                                poleDetailsId: selectedPoleId ?? 0,
-                                servicesPointId: selectedServicePointId ?? 0,
+                                substationId: checkNotSelect(selectedSubstationId, 'Substation'),
+                                feederLineId: checkNotSelect(selectedFeederLineId, 'Feeder Line'),
+                                poleDetailsId: checkNotSelect(selectedPoleId, 'Pole'),
+                                servicesPointId: checkNotSelect(
+                                    selectedServicePointId, 'Service Point'),
                                 dtId: selectedDTId ?? 0,
                                 feederUId: parseOrZero(_feederUId.text),
-                                unionGeoCode: _unionGeoCode.text,
-                                consumerId: parseOrZero(_consumerId.text),
-                                customerName: _consumerNameController.text,
-                                customerNameBng: _consumerNameBanglaController.text,
+                                unionGeoCode: null,
+                                //consumerId: parseOrZero(_consumerId.text),
+                                consumerId: consumerId,
+                                consumerNo: checkNotNull(_consumerNoController.text, 'Consumer No'),
+                                customerName: checkNotNull(_consumerNameController.text, 'Consumer Name'),
+                                customerNameBng:
+                                    _consumerNameBanglaController.text,
                                 fatherName: _fatherNameController.text,
-                                customerNid: checkNotNull(_nidController.text, 'Union Geocode' ),
-                                mobileNo: checkNotNull(_mobileNoController.text, 'Mobile Number'),
-                                email: checkNotNull(_emailController.text, 'Email'),
-                                consumerNo: _consumerNoController.text,
+                                // customerNid: checkNotNull(
+                                //     _nidController.text, 'Union Geocode'),
+                                customerNid: _nidController.text,
+                                mobileNo: checkNotNull(
+                                    _mobileNoController.text, 'Mobile Number'),
+                                // email: checkNotNull(
+                                //     _emailController.text, 'Email'),
+                                email: _emailController.text,
                                 accountNumber: _accountNumberController.text,
-                                consumerTypeId: selectedConsumerTypeId ?? 0,
-                                customerAddress: _consumerAddressController.text,
+                                consumerTypeId: checkNotSelect(selectedConsumerTypeId, 'Consumer Type'),
+                                customerAddress:
+                                    _consumerAddressController.text,
                                 plotNo: _plotNoController.text,
                                 buildingAptNo: _buildingAptNoController.text,
                                 premiseName: _premiseNameController.text,
                                 numberOfFloor:
                                     parseOrZero(_numberOfFloorController.text),
                                 tariffCategoryId: selectedTariffCategoryId ?? 0,
-                                tariffSubCategoryId: selectedTariffSubCategoryId ?? 0,
+                                tariffSubCategoryId:
+                                    selectedTariffSubCategoryId ?? 0,
                                 meterTypeId: selectedMeterTypeId ?? 0,
                                 meterModel: _meterModelController.text,
                                 meterNumber: _meterNumberController.text,
-                                meterManufacturer: _meterManufacturerController.text,
-                                meterReading:
-                                    parseOrZeroDouble(_meterReadingController.text),
+                                meterManufacturer:
+                                    _meterManufacturerController.text,
+                                meterReading: parseOrZeroDouble(
+                                    _meterReadingController.text),
                                 phasingCodeTypeId: selectedPhasingCodeId ?? 0,
-                                operatingVoltageId: selectedOperatingVoltage ?? 0,
-                                installDate: formatDate(_installDateController.text),
-                                connectionStatusId: selectedConnectionStatusId ?? 0,
+                                operatingVoltageId:
+                                    selectedOperatingVoltage ?? 0,
+                                // installDate:
+                                //     formatDate(_installDateController.text),
+                                installDate: _installDateController.text,
+                                connectionStatusId:
+                                    selectedConnectionStatusId ?? 0,
                                 connectionTypeId: selectedConnectiontypeId ?? 0,
-                                sanctionedLoad:
-                                    parseOrZeroDouble(_sanctionedLoadController.text),
-                                connectedLoad:
-                                    parseOrZeroDouble(_connectedLoadController.text),
+                                sanctionedLoad: parseOrZeroDouble(
+                                    _sanctionedLoadController.text),
+                                connectedLoad: parseOrZeroDouble(
+                                    _connectedLoadController.text),
                                 businessTypeId: selectedBusinessType ?? 0,
                                 othersBusiness: _otherBusinessController.text,
                                 specialCode: _specialCodeController.text,
@@ -1671,14 +1976,19 @@ final _formKey = GlobalKey<FormState>();
                                 locationId: selectedLocationId ?? 0,
                                 billGroup: _billGroupController.text,
                                 bookNumber: _bookNumberController.text,
-                                omfKwh: parseOrZeroDouble(_omfKwhController.text),
-                                serviceCableSize:
-                                    parseOrZero(_serviceCableSizeController.text),
+                                omfKwh:
+                                    parseOrZeroDouble(_omfKwhController.text),
+                                serviceCableSize: parseOrZero(
+                                    _serviceCableSizeController.text),
                                 serviceCableTypeId: selectedServiceCableId ?? 0,
                                 surveyDate: formatDate(dt.toString()),
-                                latitude: checkNotNull(parseOrZeroDouble(_latitudeController.text), 'Latitude'),
-                                longitude:
-                                    checkNotNull(parseOrZeroDouble(_longitudeController.text), 'Longitude'),
+                                latitude: checkNotNull(
+                                    parseOrZeroDouble(_latitudeController.text),
+                                    'Latitude'),
+                                longitude: checkNotNull(
+                                    parseOrZeroDouble(
+                                        _longitudeController.text),
+                                    'Longitude'),
                                 structureId: _structureController.text,
                                 structureMapNo: _structureMapNoController.text,
                                 structureTypeId: selectedStructureType ?? 0,
@@ -1688,7 +1998,7 @@ final _formKey = GlobalKey<FormState>();
                                 verificationStateId: 2,
                                 distance_from_sp: 0,
                               );
-                              
+
                               await CallConsumerApi().createConsumer(consumer);
 
                               Navigator.push(
@@ -1699,7 +2009,8 @@ final _formKey = GlobalKey<FormState>();
 
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Consumer Created Successfully'),
+                                  content:
+                                      Text('Consumer Created Successfully'),
                                   backgroundColor: Colors.green,
                                 ),
                               );
@@ -1707,7 +2018,8 @@ final _formKey = GlobalKey<FormState>();
                               //print(error);
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
-                                    content: Text('Failed to Create data: $error'),
+                                    content:
+                                        Text('Failed to Create data: $error'),
                                     backgroundColor: Colors.red),
                               );
                             }
@@ -1732,28 +2044,102 @@ final _formKey = GlobalKey<FormState>();
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String label) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16.0),
-      child: TextFormField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: label,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(16),
+//  Widget _buildTextField(
+//       TextEditingController controller, String label, bool mandatory) {
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 16.0),
+//       child: TextFormField(
+//         controller: controller,
+//         decoration: InputDecoration(
+//           label: RichText(
+//             text: TextSpan(
+//               text: label,
+//               style: const TextStyle(
+//                 color: Color.fromARGB(255, 100, 97, 97),
+//                 fontSize: 16.0,
+//               ),
+//               children: [
+//                 if (mandatory)
+//                   const TextSpan(
+//                     text: ' *',
+//                     style: TextStyle(
+//                       color: Colors.red,
+//                     ),
+//                   ),
+//               ],
+//             ),
+//           ),
+//           border: OutlineInputBorder(
+//             borderRadius: BorderRadius.circular(16),
+//           ),
+//         ),
+//         validator: (value) {
+//           if (value == null || value.isEmpty) {
+//             return 'Please enter $label';
+//           }
+//           return null;
+//         },
+//       ),
+//     );
+//   }
+
+Widget _buildTextField(
+  TextEditingController controller, 
+  String label, 
+  bool mandatory,
+) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16.0),
+    child: TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        label: RichText(
+          text: TextSpan(
+            text: label,
+            style: const TextStyle(
+              color: Color.fromARGB(255, 100, 97, 97),
+              fontSize: 16.0,
+            ),
+            children: [
+              if (mandatory)
+                const TextSpan(
+                  text: ' *',
+                  style: TextStyle(
+                    color: Colors.red,
+                  ),
+                ),
+            ],
           ),
         ),
-        validator: (value) {
-          if (value == null || value.isEmpty) {
-            return 'Please enter $label';
-          }
-          return null;
-        },
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            color: Colors.grey, // Border color when not typing
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(16),
+          borderSide: const BorderSide(
+            color: Colors.blue, // Border color while typing
+            width: 2.0,
+          ),
+        ),
       ),
-    );
-  }
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'Please enter $label';
+        }
+        return null;
+      },
+    ),
+  );
+}
 
-  
+
+
   void _errorPrint(String label, BuildContext context) {
     final snackBar = SnackBar(content: Text('Please enter $label'));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

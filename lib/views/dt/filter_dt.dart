@@ -9,6 +9,8 @@ import '../../models/regions/zone.dart';
 import '../../models/regions/snd_info.dart';
 import '../../widgets/noti/notifications.dart';
 import 'view_dt.dart';
+import '../../constants/constant.dart';
+import '../../models/Login/login.dart';
 
 
 class FilterDTDetails extends StatefulWidget {
@@ -34,6 +36,7 @@ class _FilterPoleDetailsState extends State<FilterDTDetails> {
   //int? consumerNo;
 
   bool isLoading = false;
+  User? user = globalUser;
 
   @override
   void initState() {
@@ -106,7 +109,25 @@ class _FilterPoleDetailsState extends State<FilterDTDetails> {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
+    if (user?.ZoneId != null) {
+      selectedZoneId = user!.ZoneId;
+      circles = CallApi().fetchCircleInfo(selectedZoneId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.CircleId != null) {
+      selectedCircleId = user!.CircleId;
+      snds = CallApi().fetchSnDInfo(selectedCircleId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.SndId != null) {
+      selectedSnDId = user!.SndId;
+      substations =
+          CallApi().fetchSubstationInfo(selectedSnDId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(

@@ -9,6 +9,7 @@ import '../../constants/constant.dart';
 import '../../models/Login/login.dart';
 import '../../models/consumer_lookup/consumers.dart';
 import '../../models/consumer_lookup/single_consumers.dart';
+import 'consumer_edit_form.dart';
 import 'delete_consumer.dart';
 import 'filter_consumers.dart';
 // import 'update_consumer.dart';
@@ -20,7 +21,7 @@ class ConsumerListView extends StatefulWidget {
 
   const ConsumerListView({
     super.key,
-    required this.feederLineId, 
+    required this.feederLineId,
     required this.consumerNo,
   });
 
@@ -45,6 +46,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
       _futureConsumers = apiCall.fetchConsumers();
     });
   }
+
   Future<List<Consumers>> _fetchConsumers() async {
     return CallConsumerApi().fetchConsumers(
       feederLineId: widget.feederLineId,
@@ -65,10 +67,12 @@ class _ConsumerListViewState extends State<ConsumerListView> {
     return customerName.contains(_searchQuery) ||
         consumerNo.contains(_searchQuery);
   }
+
 ////////////////////--------View Details Comsumer Pop-up----------////////////////////////
   void _showConsumerDetails(String consumerNo) async {
     try {
-      final consumer =await CallApi().fetchConsumerDetail(consumerNo: consumerNo);
+      final consumer =
+          await CallApi().fetchConsumerDetail(consumerNo: consumerNo);
       _showDetailsDialog(consumer);
     } catch (e) {
       print(e.toString());
@@ -95,7 +99,7 @@ class _ConsumerListViewState extends State<ConsumerListView> {
       builder: (context) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(3))),
+              borderRadius: BorderRadius.all(Radius.circular(3))),
           contentPadding: const EdgeInsets.all(0),
           insetPadding: const EdgeInsets.symmetric(horizontal: 16),
           backgroundColor: const Color.fromARGB(255, 5, 161, 182),
@@ -117,276 +121,308 @@ class _ConsumerListViewState extends State<ConsumerListView> {
             ),
           ),
           content: SingleChildScrollView(
-                scrollDirection: Axis.vertical,
-                physics: const AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.zero,
-                child: Card(
-                  //width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.all(0),
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(topLeft: Radius.circular(2), topRight: Radius.circular(2),)),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15),
-                    child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ////////////////////////////////// -------- Administrative Information -------- ///////////////////////////////
-                      Theme(
-                        data: ThemeData().copyWith(
-                          //dividerColor: Colors.transparent,
-                          iconTheme: const IconThemeData(color: Colors.white),
-                        ), 
+            scrollDirection: Axis.vertical,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: EdgeInsets.zero,
+            child: Card(
+              //width: MediaQuery.of(context).size.width,
+              margin: const EdgeInsets.all(0),
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(2),
+                topRight: Radius.circular(2),
+              )),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    ////////////////////////////////// -------- Administrative Information -------- ///////////////////////////////
+                    Theme(
+                      data: ThemeData().copyWith(
+                        //dividerColor: Colors.transparent,
+                        iconTheme: const IconThemeData(color: Colors.white),
+                      ),
                       child: ExpansionTile(
                         collapsedBackgroundColor:
-                      const Color.fromARGB(255, 223, 240, 243),
+                            const Color.fromARGB(255, 223, 240, 243),
                         title: const Text('Administrative Information'),
                         // tilePadding: EdgeInsets.zero, // Removes padding around the title
-                        childrenPadding: EdgeInsets.zero, // Removes padding around the children
+                        childrenPadding: EdgeInsets
+                            .zero, // Removes padding around the children
                         //minTileHeight: 25,
                         // trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
                         children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  
-                                  Text('Zone: ${consumer.zoneName}'),
-                                  const Divider(),
-                                  Text('Circle: ${consumer.circleName}'),
-                                  const Divider(),
-                                  Text('SnD: ${consumer.sndName}'),
-                                  const Divider(),
-                                  Text('ESU: ${consumer.esuName}'),
-                                  const Divider(),
-                                  Text('Substation: ${consumer.substationName}'),
-                                  const Divider(),
-                                  Text('Feeder Line: ${consumer.feederlineName}'),
-                                  const Divider(),
-                                  Text('Services Point: ${consumer.servicesPointId}'),
-                                  const Divider(color: Colors.transparent,),
-                                ],
-                              ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Zone: ${consumer.zoneName}'),
+                                const Divider(),
+                                Text('Circle: ${consumer.circleName}'),
+                                const Divider(),
+                                Text('SnD: ${consumer.sndName}'),
+                                const Divider(),
+                                Text('ESU: ${consumer.esuName}'),
+                                const Divider(),
+                                Text('Substation: ${consumer.substationName}'),
+                                const Divider(),
+                                Text('Feeder Line: ${consumer.feederlineName}'),
+                                const Divider(),
+                                Text(
+                                    'Services Point: ${consumer.servicesPointId}'),
+                                const Divider(
+                                  color: Colors.transparent,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      ////////////////////////////////// -------- Administrative Information -------- ///////////////////////////////
-                      ////////////////////////////////// -------- Consumer Information -------- ///////////////////////////////
-                      Theme(
-                        data: ThemeData().copyWith(
-                          // dividerColor: Colors.transparent,
-                          iconTheme: const IconThemeData(color: Colors.white),
-                        ), 
+                    ),
+                    ////////////////////////////////// -------- Administrative Information -------- ///////////////////////////////
+                    ////////////////////////////////// -------- Consumer Information -------- ///////////////////////////////
+                    Theme(
+                      data: ThemeData().copyWith(
+                        // dividerColor: Colors.transparent,
+                        iconTheme: const IconThemeData(color: Colors.white),
+                      ),
                       child: ExpansionTile(
                         title: const Text('Consumer Information'),
                         // tilePadding: EdgeInsets.zero, // Removes padding around the title
-                        childrenPadding: EdgeInsets.zero, // Removes padding around the children
+                        childrenPadding: EdgeInsets
+                            .zero, // Removes padding around the children
                         //minTileHeight: 25,
                         collapsedBackgroundColor:
                             const Color.fromARGB(255, 241, 245, 245),
                         // trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
                         children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Consumer Name: ${consumer.customerName}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Consumer Name: ${consumer.customerName}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  const Divider(),
-                                  Text('Consumer No.: ${consumer.consumerNo}'),
-                                  const Divider(),
-                                  Text('Mobile: ${consumer.mobileNo ?? 'N/A'}'),
-                                  const Divider(),
-                                  Text('Account No.: ${consumer.accountNumber}'),
-                                  const Divider(),
-                                  Text('Consumer Type: ${consumer.consumerTypeName}'),
-                                  const Divider(color: Colors.transparent,),
-                                ],
-                              ),
+                                ),
+                                const Divider(),
+                                Text('Consumer No.: ${consumer.consumerNo}'),
+                                const Divider(),
+                                Text('Mobile: ${consumer.mobileNo ?? 'N/A'}'),
+                                const Divider(),
+                                Text('Account No.: ${consumer.accountNumber}'),
+                                const Divider(),
+                                Text(
+                                    'Consumer Type: ${consumer.consumerTypeName}'),
+                                const Divider(
+                                  color: Colors.transparent,
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      ////////////////////////////////// -------- Consumer Information -------- ///////////////////////////////
-                      ////////////////////////////////// -------- Meter Information Information -------- ///////////////////////////////
-                      Theme(
-                        data: ThemeData().copyWith(
-                          // dividerColor: Colors.transparent,
-                          iconTheme: const IconThemeData(color: Colors.white),
-                        ), 
+                    ),
+                    ////////////////////////////////// -------- Consumer Information -------- ///////////////////////////////
+                    ////////////////////////////////// -------- Meter Information Information -------- ///////////////////////////////
+                    Theme(
+                      data: ThemeData().copyWith(
+                        // dividerColor: Colors.transparent,
+                        iconTheme: const IconThemeData(color: Colors.white),
+                      ),
                       child: ExpansionTile(
                         title: const Text('Meter Information'),
-                        // tilePadding: EdgeInsets.zero, 
-                        childrenPadding: EdgeInsets.zero, 
-                        //minTileHeight: 25,
-                        collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
-                        // trailing: const SizedBox(),
-                        textColor: const Color.fromARGB(255, 5, 161, 182),
-                        children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Meter No.: ${consumer.meterNumber}'),
-                                  const Divider(),
-                                  Text('Meter Number: ${consumer.meterNumber}'),
-                                  const Divider(),
-                                  Text('Meter Type: ${consumer.meterTypeName}'),
-                                  const Divider(),
-                                  Text('Meter Model: ${consumer.meterModel}'),
-                                  const Divider(),
-                                  Text('Phasing Code: ${consumer.phasingCodeName}'),
-                                  const Divider(),
-                                  Text('Operating Voltage: ${consumer.operatingVoltageName}'),
-                                  const Divider(),
-                                  Text('Meter Manufacturer: ${consumer.meterManufacturer}'),
-                                  const Divider(),
-                                  Text(
-                                    'Install Date: ${consumer.installDate != null ? DateFormat('dd-MMM-yyyy').format(consumer.installDate!) : 'N/A'}',
-                                  ),
-                                  const Divider(color: Colors.transparent,),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ////////////////////////////////// -------- Meter Information Information -------- ///////////////////////////////
-                      ////////////////////////////////// -------- Tariff Information -------- ///////////////////////////////
-                      Theme(
-                        data: ThemeData().copyWith(
-                          // dividerColor: Colors.transparent,
-                          iconTheme: const IconThemeData(color: Colors.white),
-                        ), 
-                      child: ExpansionTile(
-                        title: const Text('Tariff Information'),
-                        // tilePadding: EdgeInsets.zero, 
-                        childrenPadding: EdgeInsets.zero, 
+                        // tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
                         //minTileHeight: 25,
                         collapsedBackgroundColor:
-                              const Color.fromARGB(255, 241, 245, 245),
+                            const Color.fromARGB(255, 223, 240, 243),
                         // trailing: const SizedBox(),
                         textColor: const Color.fromARGB(255, 5, 161, 182),
                         children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('Tariff: ${consumer.tariff}'),
-                                  const Divider(color: Colors.transparent,),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ////////////////////////////////// -------- Tariff Information -------- ///////////////////////////////  
-                    ////////////////////////////////// -------- Connection, Business, Bill, Services Information -------- ///////////////////////////////
-                      Theme(
-                        data: ThemeData().copyWith(
-                          // dividerColor: Colors.transparent,
-                          iconTheme: const IconThemeData(color: Colors.white),
-                        ), 
-                      child: ExpansionTile(
-                        title: const Text('Connection, Business, Bill, Services Information'),
-                        // tilePadding: EdgeInsets.zero, 
-                        childrenPadding: EdgeInsets.zero, 
-                        //minTileHeight: 25,
-                        collapsedBackgroundColor: const Color.fromARGB(255, 223, 240, 243),
-                        // trailing: const SizedBox(),
-                        textColor: const Color.fromARGB(255, 5, 161, 182),
-                        children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('Location:'),
-                                  const Divider(),
-                                  Text('Connection Status: ${consumer.connectionStatusName}'),
-                                  const Divider(),
-                                  Text('Business Type: ${consumer.businessTypeName}'),
-                                  const Divider(color: Colors.transparent,),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      ////////////////////////////////// -------- Connection, Business, Bill, Services Information -------- ///////////////////////////////  
-                     const SizedBox(
-                        height: 15,
-                      ),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Card(
-                              color: const Color.fromARGB(255, 5, 161, 182),
-                              margin: const EdgeInsets.only(right: 10, bottom: 10,),
-                              child: TextButton(
-                                child: const Text(
-                                  'Open Map View',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Meter No.: ${consumer.meterNumber}'),
+                                const Divider(),
+                                Text('Meter Number: ${consumer.meterNumber}'),
+                                const Divider(),
+                                Text('Meter Type: ${consumer.meterTypeName}'),
+                                const Divider(),
+                                Text('Meter Model: ${consumer.meterModel}'),
+                                const Divider(),
+                                Text(
+                                    'Phasing Code: ${consumer.phasingCodeName}'),
+                                const Divider(),
+                                Text(
+                                    'Operating Voltage: ${consumer.operatingVoltageName}'),
+                                const Divider(),
+                                Text(
+                                    'Meter Manufacturer: ${consumer.meterManufacturer}'),
+                                const Divider(),
+                                Text(
+                                  'Install Date: ${consumer.installDate != null ? DateFormat('dd-MMM-yyyy').format(consumer.installDate!) : 'N/A'}',
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => MapViewer(
-                                        title: 'Map View',
-                                        lat: consumer.latitude,
-                                        long: consumer.longitude,
-                                        defaultZoomLevel: 20,
-                                        properties:
-                                            '${consumer.consumerNo}#${consumer.customerName}#${consumer.meterNumber}#${consumer.zoneName}#${consumer.circleName}#${consumer.sndName}',
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            Card(
-                              color: const Color.fromARGB(255, 5, 161, 182),
-                              margin: const EdgeInsets.only(right: 10, bottom: 10,),
-                              child: TextButton(
-                                child: const Text(
-                                  'Close',
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
+                                const Divider(
+                                  color: Colors.transparent,
                                 ),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ), 
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
+                    ////////////////////////////////// -------- Meter Information Information -------- ///////////////////////////////
+                    ////////////////////////////////// -------- Tariff Information -------- ///////////////////////////////
+                    Theme(
+                      data: ThemeData().copyWith(
+                        // dividerColor: Colors.transparent,
+                        iconTheme: const IconThemeData(color: Colors.white),
+                      ),
+                      child: ExpansionTile(
+                        title: const Text('Tariff Information'),
+                        // tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
+                        //minTileHeight: 25,
+                        collapsedBackgroundColor:
+                            const Color.fromARGB(255, 241, 245, 245),
+                        // trailing: const SizedBox(),
+                        textColor: const Color.fromARGB(255, 5, 161, 182),
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Tariff: ${consumer.tariff}'),
+                                const Divider(
+                                  color: Colors.transparent,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ////////////////////////////////// -------- Tariff Information -------- ///////////////////////////////
+                    ////////////////////////////////// -------- Connection, Business, Bill, Services Information -------- ///////////////////////////////
+                    Theme(
+                      data: ThemeData().copyWith(
+                        // dividerColor: Colors.transparent,
+                        iconTheme: const IconThemeData(color: Colors.white),
+                      ),
+                      child: ExpansionTile(
+                        title: const Text(
+                            'Connection, Business, Bill, Services Information'),
+                        // tilePadding: EdgeInsets.zero,
+                        childrenPadding: EdgeInsets.zero,
+                        //minTileHeight: 25,
+                        collapsedBackgroundColor:
+                            const Color.fromARGB(255, 223, 240, 243),
+                        // trailing: const SizedBox(),
+                        textColor: const Color.fromARGB(255, 5, 161, 182),
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(left: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Location:'),
+                                const Divider(),
+                                Text(
+                                    'Connection Status: ${consumer.connectionStatusName}'),
+                                const Divider(),
+                                Text(
+                                    'Business Type: ${consumer.businessTypeName}'),
+                                const Divider(
+                                  color: Colors.transparent,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    ////////////////////////////////// -------- Connection, Business, Bill, Services Information -------- ///////////////////////////////
+                    const SizedBox(
+                      height: 15,
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Card(
+                            color: const Color.fromARGB(255, 5, 161, 182),
+                            margin: const EdgeInsets.only(
+                              right: 10,
+                              bottom: 10,
+                            ),
+                            child: TextButton(
+                              child: const Text(
+                                'Open Map View',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MapViewer(
+                                      title: 'Map View',
+                                      lat: consumer.latitude,
+                                      long: consumer.longitude,
+                                      defaultZoomLevel: 20,
+                                      properties:
+                                          '${consumer.consumerNo}#${consumer.customerName}#${consumer.meterNumber}#${consumer.zoneName}#${consumer.circleName}#${consumer.sndName}',
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          Card(
+                            color: const Color.fromARGB(255, 5, 161, 182),
+                            margin: const EdgeInsets.only(
+                              right: 10,
+                              bottom: 10,
+                            ),
+                            child: TextButton(
+                              child: const Text(
+                                'Close',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ),
+          ),
           ///////////////////////////
         );
       },
     );
   }
+
 ////////////////////--------View Details Comsumer Pop-up----------////////////////////////
   @override
   Widget build(BuildContext context) {
@@ -396,14 +432,15 @@ class _ConsumerListViewState extends State<ConsumerListView> {
         iconTheme: const IconThemeData(
           color: Colors.white, //change your color here
         ),
-        title: const Text('Consumers List',
-        style: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+        title: const Text(
+          'Consumers List',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
-      ),
-      backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+        backgroundColor: const Color.fromARGB(255, 5, 161, 182),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -468,38 +505,46 @@ class _ConsumerListViewState extends State<ConsumerListView> {
                             vertical: 5, horizontal: 10),
                         child: ListTile(
                           contentPadding: const EdgeInsets.all(10),
-                          title: Text("Consumer Name: ${consumer.customerName}",
+                          title: Text(
+                            "Consumer Name: ${consumer.customerName}",
                             style: const TextStyle(fontWeight: FontWeight.bold),
                           ),
                           subtitle: Text(
-                            'Consumer No: ${consumer.consumerNo}\r\nMeter Number: ${consumer.meterNumber}',
+                            'Consumer No: ${consumer.consumerNo}\r\nMeter Number: ${consumer.poleDetailsId}',
                             style: const TextStyle(height: 1.5),
                           ),
-                          
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              // Tooltip(
-                              //   message: 'Edit',
-                              //   child: Container(
-                              //     height: 27,
-                              //     width: 27,
-                              //     decoration: const BoxDecoration(
-                              //       color: Colors.blue,
-                              //       shape: BoxShape.circle,
-                              //     ),
-                              //     child: IconButton(
-                              //       iconSize: 12,
-                              //       icon: const Icon(
-                              //         Icons.edit_square,
-                              //         color: Colors.white,
-                              //       ),
-                              //       onPressed: () {
-                              //         showEditForm(context, apiCall, consumer);
-                              //       },
-                              //     ),
-                              //   ),
-                              // ),
+                              Tooltip(
+                                message: 'Edit',
+                                child: Container(
+                                  height: 27,
+                                  width: 27,
+                                  decoration: const BoxDecoration(
+                                    color: Colors.blue,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    iconSize: 12,
+                                    icon: const Icon(
+                                      Icons.edit_square,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      //showEditForm(context, apiCall, consumer);
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return ShowConsumerEdit(
+                                            consumerId: consumer.consumerId,
+                                          );
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
                               //const SizedBox(height: 2),
                               const SizedBox(width: 2),
                               Tooltip(

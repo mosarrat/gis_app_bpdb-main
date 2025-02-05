@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import '../../api/pole_api.dart';
 import '../../api/region_api.dart';
 import '../../models/pole_lookup/pole_list.dart';
 import 'create_poledetail.dart';
-import 'pole_details.dart';
+import 'pole_details_by_poleId.dart';
 
 class ViewPoles extends StatefulWidget {
   final int sndId;
@@ -18,7 +19,7 @@ class ViewPoles extends StatefulWidget {
 }
 
 class _ViewPolesState extends State<ViewPoles> {
-  final CallRegionApi api = CallRegionApi();
+  final CallPoleApi api = CallPoleApi();
   late Future<List<PoleList>> _futurePoles;
 
   @override
@@ -28,7 +29,7 @@ class _ViewPolesState extends State<ViewPoles> {
   }
 
   Future<List<PoleList>> _fetchPolesInfo() async {
-    return CallRegionApi().fetchPolesInfo(widget.sndId,);
+    return CallPoleApi().fetchPolesInfo(widget.sndId,);
   }
 
   @override

@@ -1,8 +1,8 @@
 class ZoneReport {
-  final String zone;
+  final String name;
   final List<TypeCount> typeCount;
 
-  ZoneReport({required this.zone, required this.typeCount});
+  ZoneReport({required this.name, required this.typeCount});
 
   // Factory constructor to create an instance from JSON
   factory ZoneReport.fromJson(Map<String, dynamic> json) {
@@ -10,7 +10,7 @@ class ZoneReport {
     List<TypeCount> typeCountList = list.map((i) => TypeCount.fromJson(i)).toList();
 
     return ZoneReport(
-      zone: json['zone'],
+      name: json['name'],
       typeCount: typeCountList,
     );
   }
@@ -18,7 +18,7 @@ class ZoneReport {
   // Method to convert an instance to JSON
   Map<String, dynamic> toJson() {
     return {
-      'zone': zone,
+      'name': name,
       'typeCount': typeCount.map((e) => e.toJson()).toList(),
     };
   }

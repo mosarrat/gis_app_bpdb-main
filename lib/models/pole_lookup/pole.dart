@@ -86,7 +86,9 @@ class Poles {
       commonPole: json['commonPole'] as bool?,
       tap: json['tap'] as bool?,
       poleNumber: json['poleNumber'] as String?,
-      poleHeight: json['poleHeight'] != null ? (json['poleHeight'] as num).toDouble() : null,
+      poleHeight: json['poleHeight'] != null
+          ? (json['poleHeight'] as num).toDouble()
+          : null,
       noOfLine33Kv: json['noOfLine33Kv'] as int?,
       noOfLine11Kv: json['noOfLine11Kv'] as int?,
       noOfLineP4Kv: json['noOfLineP4Kv'] as int?,

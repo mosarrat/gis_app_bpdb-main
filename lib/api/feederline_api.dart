@@ -10,6 +10,7 @@ import '../models/app_config.dart';
 import '../models/feederlines_lookup/feederline.dart';
 import '../models/feederlines_lookup/feederline_byid.dart';
 import '../models/regions/esu_info.dart';
+import '../models/regions/feeder_line.dart';
 import '../models/regions/feederline_conductor.dart';
 import '../models/regions/feederlinetype.dart';
 
@@ -96,7 +97,15 @@ class CallApiService {
 
   ///////////-----Feeder line-----//////////
   Future<List<FeederLines>> fetchFeederLines() async {
-    final response = await http.get(Uri.parse('$myAPILink/api/FeederLines'));
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/FeederLines'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -112,9 +121,33 @@ class CallApiService {
     }
   }
 
+  Future<List<FeederLine>> fetchFeederLinesBySubstation(
+      int substationId) async {
+    final response = await http.get(Uri.parse(
+        '$myAPILink/api/FeederLines/search?substationId=$substationId'));
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map<FeederLine>((json) => FeederLine.fromJson(json)).toList();
+      // List<dynamic> body = jsonDecode(response.body);
+      // List<FeederLines> allDatas = body.map((dynamic item) => FeederLines.fromJson(item)).toList();
+      // List<FeederLines> filteredDatas = allDatas.where((data) => data.feederLineId > 1900).toList();
+      // return filteredDatas;
+    } else {
+      throw Exception('Failed to load Feeder Lines');
+    }
+  }
+
   Future<FeederLinesById> fetchFeederLineDetails(int feederLineId) async {
-    final response =
-        await http.get(Uri.parse('$myAPILink/api/FeederLines/$feederLineId'));
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+    final response = await http
+        .get(Uri.parse('$myAPILink/api/FeederLines/$feederLineId'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
     // print("Request URL: $myAPILink/api/FeederLines/$feederLineId");
     // print("Request Status: ${response.statusCode}");
     // print("Response Body: ${response.body}");
@@ -133,7 +166,7 @@ class CallApiService {
   Future<FeederLines> createData(FeederLines feederlines) async {
     if ((feederlines.feederLineId).toString() == "") {
       throw 'Please Provide Feeder Line Id';
-    }else{
+    } else {
       final requestData = {
         'feederLineId': feederlines.feederLineId,
         'feederlineName': feederlines.feederlineName,
@@ -293,4 +326,24 @@ class CallApiService {
       throw Exception("An error occurred: $error");
     }
   }
+
+  //--DT Details--//
+  Future<List<FeederLine>> fetchFeederlineById(int id) async {
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/FeederLines/$id'), headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    });
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map<FeederLine>((json) => FeederLine.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load FeederLine info');
+    }
+  }
+  //--DT Details--//
 }

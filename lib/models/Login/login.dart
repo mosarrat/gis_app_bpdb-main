@@ -32,7 +32,7 @@ class User {
   final String? UserName;
   final String? Email;
   final String? GroupName;
-  final int? GroupId;
+  late final int? GroupId;
   final String? PhoneNumber;
   final String? BpdbEmpDesignation;
 

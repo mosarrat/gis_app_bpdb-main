@@ -36,7 +36,7 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
   // Instantiate parser, use the defaults
   GeoJsonParser geoJsonParser = GeoJsonParser(
     defaultMarkerColor: Colors.orange[900],
-    defaultMarkerIcon: Icons.add,
+    //defaultMarkerIcon: Icons.add,
     defaultPolygonBorderColor: Colors.red,
     defaultPolygonFillColor: Colors.red.withOpacity(0.1),
     defaultCircleMarkerColor: Colors.red.withOpacity(0.25),
@@ -84,7 +84,8 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                 borderRadius: BorderRadius.all(Radius.circular(3))),
             contentPadding: const EdgeInsets.all(0),
             insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-            backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            // backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            backgroundColor: const Color.fromARGB(255, 3, 89, 100),
             content: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.6,
@@ -103,6 +104,8 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const TabBar(
+                        indicatorColor: const Color.fromARGB(255, 3, 89, 100),
+                        labelColor:  const Color.fromARGB(255, 3, 89, 100),
                         tabs: [
                           Tab(text: 'Details'),
                           Tab(text: 'Attachments'),
@@ -114,7 +117,7 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                             SingleChildScrollView(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
+                                    horizontal: 1.0, vertical: 10.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -122,106 +125,43 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Pole Detail Id.',
                                             mapData['Pole']
                                                 .toString()
-                                                .split('#')[0]),
-                                      ),
-                                    ),
+                                                .split('#')[0], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('Pole Code',
-                                            mapData['Pole'].split('#')[1]),
-                                      ),
-                                    ),
+                                    _buildDetailItem('Pole Code',
+                                            mapData['Pole'].split('#')[1], isAlternate: false),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('Zone Name.',
-                                            mapData['Pole'].split('#')[2]),
-                                      ),
-                                    ),
+                                    _buildDetailItem('Zone Name.',
+                                            mapData['Pole'].split('#')[2], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('Circle Name',
-                                            mapData['Pole'].split('#')[3]),
-                                      ),
-                                    ),
+                                    _buildDetailItem('Circle Name',
+                                            mapData['Pole'].split('#')[3], isAlternate: false),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem('SnD Name',
-                                            mapData['Pole'].split('#')[4]),
-                                      ),
-                                    ),
+                                    _buildDetailItem('SnD Name',
+                                            mapData['Pole'].split('#')[4], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Substation Name',
-                                            mapData['Pole'].split('#')[5]),
-                                      ),
-                                    ),
+                                            mapData['Pole'].split('#')[5], isAlternate: false),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Feeder Line Name',
-                                            mapData['Pole'].split('#')[6]),
-                                      ),
-                                    ),
+                                            mapData['Pole'].split('#')[6], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
@@ -244,20 +184,21 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Card(
-                          color: const Color.fromARGB(255, 5, 161, 182),
+                        //child: Card(
+                          //color: const Color.fromARGB(255, 5, 161, 182),
                           child: TextButton(
                             child: const Text(
                               'Close',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: const Color.fromARGB(255, 3, 89, 100),
                                   fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
-                        ),
+                        //),
                       ),
                     ],
                   ),
@@ -302,37 +243,59 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
     super.initState();
 
     loadingData = true;
-    Stopwatch stopwatch2 = Stopwatch()..start();
 
     _generateGeoJson().then((_) {
-      // print(testGeoJson);
-
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 1), () {
         processData().then((_) {
-          //print("GeoJSON parsed: ${geoJsonParser.markers.length} markers");
-
           setState(() {
             loadingData = false;
           });
-
-          // ScaffoldMessenger.of(context).showSnackBar(
-          //   SnackBar(
-          //     content: Text('GeoJson Processing time: ${stopwatch2.elapsed}'),
-          //     duration: const Duration(milliseconds: 5000),
-          //     behavior: SnackBarBehavior.floating,
-          //     backgroundColor: Colors.green,
-          //   ),
-          // );
         });
       });
     });
-
-    geoJsonParser
-        .setDefaultMarkerTapCallback((Map<String, dynamic> properties) {
-      onTapMarkerFunction(context, properties);
-    });
-
+    geoJsonParser.markerCreationCallback = (LatLng latLng, Map<String, dynamic> properties) {
+      return Marker(
+        width: 40, 
+        height: 40, 
+        point: latLng,
+        child: GestureDetector(
+          onTap: () {
+            _handleMarkerTap(properties);
+          },
+          child: Container(
+            height: 40,
+            width: 40,
+            decoration: const BoxDecoration(
+              color: const Color.fromARGB(255, 3, 89, 100),
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center, 
+            child: ClipOval( 
+              child: Image.asset(
+                'assets/icons/power-line.png',
+                width: 28, 
+                height: 28, 
+                fit: BoxFit.cover, 
+                color: Colors.white,
+              ),
+            ),
+          ),
+          // child: Image.asset(
+          //   'assets/icons/power-line.png',
+          //   width: 28, 
+          //   height: 28, 
+          //   fit: BoxFit.cover, 
+          //   color: const Color.fromARGB(255, 3, 89, 100),
+          // ),
+        ),
+      );
+    };
     geoJsonParser.filterFunction = myFilterFunction;
+  }
+
+  void _handleMarkerTap(Map<String, dynamic> properties) {
+    //print("Marker tapped: ${properties['DT']}");
+    onTapMarkerFunction(context, properties);
   }
 
   @override
@@ -384,60 +347,35 @@ class _PoleMapViewerState extends State<PoleMapViewer> {
     );
   }
 
-  Widget _buildDetailItem(String label, String value) {
-    if (width < 400 && width > 200) {
-      return Padding(
-        padding: EdgeInsets.all(2.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$label :',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
+  Widget _buildDetailItem(String label, String value, {bool isAlternate = false}) {
+    return Container(
+      width: double.infinity,
+      height: 40,
+      color: isAlternate
+          ? const Color.fromARGB(255, 223, 240, 243)
+          : const Color.fromARGB(255, 241, 245, 245),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 200,
+              width: 145,
               child: Text(
-                label,
+                '$label :',
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                    fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(width: 10),
             Expanded(
               child: Text(
-                ': $value',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+                value,
+                style: const TextStyle(fontSize: 14),
               ),
             ),
           ],
         ),
-      );
-    }
+      ),
+    );
   }
 }

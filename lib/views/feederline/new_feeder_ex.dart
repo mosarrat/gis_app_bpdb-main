@@ -832,13 +832,14 @@ class _NewFedderLineExpState extends State<NewFedderLineExp> {
                                 isPermittedToVerify: false,
                                 isPermittedToApprove: false,
                                 isEditAvailable: false,
-                                feederLength: int.tryParse(_feederLength.text) ?? 0,
+                                feederLength: double.tryParse(_feederLength.text) ?? 0,
                                 remarks: _remarks.text,
                               ));
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => ViewFeederlines()),
+                                    //builder: (context) => FilterFeederline()),
                               );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(

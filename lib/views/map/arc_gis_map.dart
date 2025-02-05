@@ -7,9 +7,12 @@ import 'package:gis_app_bpdb/dashboard.dart';
 import 'package:latlong2/latlong.dart';
 
 import 'filter_map.dart';
+import 'map_consumer_popup.dart';
 import 'map_legends.dart';
 
 import 'package:fluttertoast/fluttertoast.dart';
+
+import 'map_service_point_popup.dart';
 
 class ArcGISMapViewer extends StatefulWidget {
   const ArcGISMapViewer({
@@ -202,6 +205,22 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                       },
                       onTap: (attributes, LatLng location) {
                         print(attributes);
+                        // showDialog(
+                        //   context: context,
+                        //   builder: (BuildContext context) {
+                        //     return ShowServicePointDetail(
+                        //       service_point_id: attributes['service_point_id'] as int,
+                        //       service_point_code: attributes['service_point_code'] as String,
+                        //       service_cable_size: attributes['service_cable_size'] as int,
+                        //       service_cable_type: attributes['service_cable_type'] as String,
+                        //       zone_name: attributes['zone_name'] as String,
+                        //       circle_name: attributes['circle_name'] as String,
+                        //       snd_name: attributes['snd_name'] as String,
+                        //       substation_name: attributes['substation_name'] as String,
+                        //       feeder_name: attributes['feeder_name'] as String,
+                        //     );
+                        //   },
+                        // );
                       },
                     )),
                     FeatureLayer(FeatureLayerOptions(
@@ -223,18 +242,13 @@ class _ArcGISMapViewer extends State<ArcGISMapViewer> {
                         showDialog(
                           context: context,
                           builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: const Text('Consumer Location'),
-                              content: Text(
-                                  'Name: ${attributes['consumer_name']}\nConsumer No: ${attributes['consumer_no']}'),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: const Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
+                            return ShowConsumerDetail(
+                              consumerNo: attributes['consumer_no'] as String,
+                              consumerName: attributes['consumer_name'] as String,
+                              meterNo: attributes['meter_no'] as String,
+                              // zoneId: attributes['zone_id'] as String,
+                              // circleId: attributes['circle_id'] as String,
+                              // sndId: attributes['snd_id'] as String,
                             );
                           },
                         );

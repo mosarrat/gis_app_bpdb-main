@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../api/chart_api.dart';
 import '../../constants/app_colors.dart';
 import '../../models/charts_lookups/bar_chart.dart';
+import '../../models/regions/feederlinetype.dart';
 
 class BarChartView extends StatefulWidget {
   final String? selectedBarData;
@@ -16,12 +17,16 @@ class BarChartView extends StatefulWidget {
 
 class _BarChartViewState extends State<BarChartView> {
   Future<List<ZoneReport>>? _futureZones;
+  Future<List<FeederLineType>>? _futureFeederLineTypes;
+
   List<ZoneReport> zoneDataList = [];
+  List<FeederLineType> feederLineTypeList = [];
 
   @override
   void initState() {
     super.initState();
     _loadData();
+    _loadFeederLineTypes();
   }
 
   @override
@@ -38,6 +43,17 @@ class _BarChartViewState extends State<BarChartView> {
       _futureZones!.then((data) {
         setState(() {
           zoneDataList = data;
+        });
+      });
+    });
+  }
+
+  void _loadFeederLineTypes() {
+    setState(() {
+      _futureFeederLineTypes = fetchFeederLineTypeInfo();
+      _futureFeederLineTypes!.then((data) {
+        setState(() {
+          feederLineTypeList = data;
         });
       });
     });
@@ -88,42 +104,6 @@ class _BarChartViewState extends State<BarChartView> {
     return maxY + (maxY * 0.1);
   }
 
-  // Widget buildTypeLegend() {
-  //   List<Color> colors = [
-  //     Colors.green,
-  //     Colors.blue,
-  //     Colors.red,
-  //     Colors.yellow,
-  //     Colors.deepPurple,
-  //     Colors.brown,
-  //     Colors.orange,
-  //     Colors.indigo,
-  //     Colors.lime,
-  //     Colors.blueGrey,
-  //   ];
-  //   return Row(
-  //     mainAxisAlignment: MainAxisAlignment.center,
-  //     children: zoneDataList.isEmpty
-  //         ? []
-  //         : zoneDataList[0].typeCount.map((typeCount) {
-  //             final index = zoneDataList[0].typeCount.indexOf(typeCount);
-  //             return Padding(
-  //               padding: const EdgeInsets.symmetric(horizontal: 8.0),
-  //               child: Row(
-  //                 children: [
-  //                   Container(
-  //                     width: 16,
-  //                     height: 16,
-  //                     color: colors[index % colors.length],
-  //                   ),
-  //                   const SizedBox(width: 4),
-  //                   Text(typeCount.type),
-  //                 ],
-  //               ),
-  //             );
-  //           }).toList(),
-  //   );
-  // }
   Widget buildTypeLegend() {
     List<Color> colors = [
       Colors.green,
@@ -139,9 +119,15 @@ class _BarChartViewState extends State<BarChartView> {
     ];
 
     List<Widget> legendRows = [];
-
     if (zoneDataList.isNotEmpty) {
-      final typeCountList = zoneDataList[0].typeCount;
+      var result = zoneDataList.length;
+      var zoneIndex;
+      if (result > 3) {
+        zoneIndex = 3;
+      } else {
+        zoneIndex = 0;
+      }
+      final typeCountList = zoneDataList[zoneIndex].typeCount;
       for (int i = 0; i < typeCountList.length; i += 2) {
         List<Widget> rowItems = [];
         for (int j = 0; j < 2; j++) {
@@ -184,26 +170,26 @@ class _BarChartViewState extends State<BarChartView> {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
     double barheight;
-  
+
     if (height < 1300 && height > 900) {
       // print(height);
-      // print("1");
-      barheight = height / 5.9;
+      //print("1");
+      barheight = height / 5.2;
     } else if (height < 900 && height > 600) {
       // print(height);
-      // print("2");
-      barheight = height / 4.6; 
+      //print("2");
+      barheight = height / 4.6;
     } else if (height < 600 && height > 400) {
       // print(height);
-      // print("3");
-      barheight = height / 5.5;
+      //print("3");
+      barheight = height / 3.8;
     } else if (height < 400 && height > 200) {
       // print(height);
-      // print("4");
+      //print("4");
       barheight = height / 2;
     } else {
       // print(height);
-      // print("5");
+      //print("5");
       barheight = height / 4.8;
     }
     return FutureBuilder<List<ZoneReport>>(
@@ -249,15 +235,59 @@ class _BarChartViewState extends State<BarChartView> {
                           bottomTitles: AxisTitles(
                             sideTitles: SideTitles(
                               showTitles: true,
+                              reservedSize: 45,
                               getTitlesWidget: (value, meta) {
                                 final zoneIndex = value.toInt();
                                 if (zoneIndex < 0 ||
                                     zoneIndex >= zoneDataList.length) {
                                   return const Text('');
                                 }
-                                return Text(
-                                  zoneDataList[zoneIndex].zone,
-                                  style: const TextStyle(fontSize: 10),
+                                // return Column(
+                                //   children: [
+                                //     Text(
+                                //       zoneDataList[zoneIndex].name.split(' ')[0], // First part before the space
+                                //       style: const TextStyle(fontSize: 10),
+                                //       softWrap: true,
+                                //       overflow: TextOverflow.visible,
+                                //     ),
+                                //     Text(
+                                //       zoneDataList[zoneIndex].name.split(' ').length > 1
+                                //           ? zoneDataList[zoneIndex].name.split(' ')[1] 
+                                //           : '',
+                                //       style: const TextStyle(fontSize: 10),
+                                //       // softWrap: true,
+                                //       // overflow: TextOverflow.visible,
+                                //     ),
+                                //   ],
+                                // );
+                                
+                                // return Text(
+                                //   zoneDataList[zoneIndex].name,
+                                //   style: const TextStyle(fontSize: 10),
+                                // );
+                                return Container(
+                                  margin: const EdgeInsets.only(top: 8),  // Add top margin here
+                                  child: Transform.rotate(
+                                    angle: 270 * 3.14159 / 150,
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          zoneDataList[zoneIndex].name.split(' ')[0],  // First part before the space
+                                          style: const TextStyle(fontSize: 10),
+                                          softWrap: true,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                        Text(
+                                          zoneDataList[zoneIndex].name.split(' ').length > 1
+                                              ? zoneDataList[zoneIndex].name.split(' ')[1]  // Second part after the space
+                                              : '',
+                                          style: const TextStyle(fontSize: 10),
+                                          softWrap: true,
+                                          overflow: TextOverflow.visible,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 );
                               },
                             ),
@@ -274,7 +304,7 @@ class _BarChartViewState extends State<BarChartView> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 14),
                   buildTypeLegend(),
                 ],
               ),

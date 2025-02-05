@@ -162,7 +162,6 @@ class _EditDialogState extends State<EditDialog> {
     selectedFeederLineId = null;
   }
 
-
   void itemSwitchGrid(bool value) {
     setState(() {
       isGridSelected = value;
@@ -216,7 +215,8 @@ class _EditDialogState extends State<EditDialog> {
     return AlertDialog(
       contentPadding: const EdgeInsets.all(16),
       insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-      title: const Text('FeederLine Update Information', 
+      title: const Text(
+        'FeederLine Update Information',
         style: TextStyle(fontSize: 23),
       ),
       content: SingleChildScrollView(
@@ -429,7 +429,6 @@ class _EditDialogState extends State<EditDialog> {
                       ),
                     ),
                   ),
-
                   _buildTextField(_feederLineToGrid, 'Feeder Line To Grid'),
                   _buildTextField(_feederLineUId, 'Feeder Line UId'),
                   FutureBuilder<List<FeederLineType>>(
@@ -558,7 +557,6 @@ class _EditDialogState extends State<EditDialog> {
                       ),
                     ),
                   ),
-                  
                   _buildTextField(_bulkCustomerName, 'Bulk Customer Name'),
                 ],
               ),
@@ -573,8 +571,8 @@ class _EditDialogState extends State<EditDialog> {
                 child: ElevatedButton(
                   onPressed: () async {
                     // Add your save functionality here
-                      try{
-                        await CallApiService().updateFeederLine(FeederLines(
+                    try {
+                      await CallApiService().updateFeederLine(FeederLines(
                         feederLineId: int.parse(_feederlineId.text),
                         feederlineName: _feederlineName.text,
                         zoneId: selectedZoneId ?? 0,
@@ -588,7 +586,8 @@ class _EditDialogState extends State<EditDialog> {
                         gridSubstationInputId: 0,
                         feederLineUId: _feederLineUId.text,
                         feederLineTypeId: selectedFeederlineTypeId ?? 0,
-                        feederConductorTypeId: selectedFeederLineConductorId ?? 0,
+                        feederConductorTypeId:
+                            selectedFeederLineConductorId ?? 0,
                         nominalVoltage:
                             double.tryParse(_nominalVoltage.text) ?? 0,
                         feederLocation: _feederLocation.text,
@@ -611,18 +610,19 @@ class _EditDialogState extends State<EditDialog> {
                         isPermittedToVerify: false,
                         isPermittedToApprove: false,
                         isEditAvailable: false,
-                        feederLength: int.tryParse(_feederLength.text) ?? 0,
+                        feederLength: double.tryParse(_feederLength.text) ?? 0,
                         remarks: _remarks.text,
                       ));
                       Navigator.of(context).pop();
                       widget.onSuccess();
-                    }catch (error){
-                        print("Error updating Data: $error");
+                    } catch (error) {
+                      print("Error updating Data: $error");
                     }
                   },
-                  style: ButtonStyle(
-                    backgroundColor:MaterialStatePropertyAll<Color>(Colors.blue),
-                        //WidgetStateProperty.all<Color>(Colors.blue),
+                  style: const ButtonStyle(
+                    backgroundColor:
+                        MaterialStatePropertyAll<Color>(Colors.blue),
+                    //WidgetStateProperty.all<Color>(Colors.blue),
                   ),
                   child:
                       const Text('Save', style: TextStyle(color: Colors.white)),

@@ -4,9 +4,10 @@
 // String removeAudioPath = 'sounds/remove.mp3';
 import '../models/Login/login.dart';
 
-String myAPILink = "http://10.55.5.19/bpdb-app"; //http://10.55.5.19/bpdb-app
-//String myAPILink = "https://ims.cegisbd.com/bpdb"; //online
-// //String myAPILink = "https://ims.cegisbd.com/rhd005"; //live
+//String myAPILink = "http://10.55.5.19/bpdb-app"; //http://10.55.5.19/bpdb-app
+String myAPILink = "https://ims.cegisbd.com/bpdb"; //online
+//String myAPILink = "https://web.bpdbgis.gov.bd";
+//String myAPILink = "https://ims.cegisbd.com/rhd005"; //live
 String timeAPILink = "https://worldtimeapi.org/api/timezone/Asia/Dhaka";
 String onlineTime = "00:00:00";
 String poleImgPath =
@@ -19,6 +20,7 @@ String poleImgPath =
 // int userLevelId = 0;
 String LoginTime = '';
 User? globalUser;
+String? globalToken;
 
 class GlobalVariables {
   static double? centerLatitude;

@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gis_app_bpdb/widgets/login/signin.dart';
-import 'package:intl/intl.dart';
+// import 'package:gis_app_bpdb/widgets/login/signin.dart';
+// import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../constants/constant.dart';
 import '../models/Login/login.dart';
@@ -37,7 +37,14 @@ class CallLoginApi {
       body: jsonEncode(requestData),
     );
     if (response.statusCode == 200) {
-      return LoginResponse.fromJson(jsonDecode(response.body));
+      //return LoginResponse.fromJson(jsonDecode(response.body));
+      final loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
+      //print(loginResponse);
+      // Store the token and user in global variables
+      globalToken = loginResponse.token;
+      globalUser = loginResponse.user;
+
+      return loginResponse;
     } else {
       throw 'Failed to log in! Please check your credentials and try again.';
     }

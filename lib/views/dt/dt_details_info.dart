@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:gis_app_bpdb/views/map/map_viewer.dart';
 import "package:carousel_slider/carousel_slider.dart";
 import 'package:intl/intl.dart';
+import '../../api/dt_api.dart';
 import '../../api/region_api.dart';
-import '../../models/region_delails_lookup/dt_details.dart';
+import '../../models/dt_lookup/dt_details.dart';
 import '../../models/region_delails_lookup/poleDetailsId.dart';
 import '../../models/region_delails_lookup/poleId.dart';
 import '../../models/region_delails_lookup/pole_image.dart';
@@ -42,7 +43,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
   }
 
   Future<List<Transformer>> _fetchDTByDetailsId() async {
-    return CallRegionApi().fetchDTByDetailsId(widget.id);
+    return CallDTApi().fetchDTByDetailsId(widget.id);
   }
 
   @override
@@ -99,16 +100,16 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                       } else if (snapshot.hasData && snapshot.data != null) {
                         final dtDetails = snapshot.data!;
                         if (dtDetails.isNotEmpty) {
-                          latitude = dtDetails.first.latitude;
-                          longitude = dtDetails.first.longitude;
-                          DTId = dtDetails.first.id;
+                          latitude = dtDetails.first.latitude!;
+                          longitude = dtDetails.first.longitude!;
+                          DTId = dtDetails.first.id!;
                           dtCode = dtDetails.first.distributionTransformerCode!;
                           dtLocation = dtDetails.first.dtLocationName!;
-                          zone = dtDetails.first.zoneName;
-                          circle = dtDetails.first.circleName;
-                          snd = dtDetails.first.snDName;
-                          substation = dtDetails.first.substationName;
-                          feederline = dtDetails.first.feederlineName;
+                          zone = dtDetails.first.zoneName!;
+                          circle = dtDetails.first.circleName!;
+                          snd = dtDetails.first.snDName!;
+                          substation = dtDetails.first.substationName!;
+                          feederline = dtDetails.first.feederlineName!;
                         }
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -331,7 +332,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                            'Rated LT Voltage : ${transformer.ratedLtVoltage ?? ''}'),
+                                            'Rated LT Voltage : ${transformer.ratedLTVoltage ?? ''}'),
                                       ),
                                     ),
                                     const Divider(
@@ -344,7 +345,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                            'Rated LT Current: ${transformer.ratedLtCurrent ?? ''}'),
+                                            'Rated LT Current: ${transformer.ratedLTCurrent ?? ''}'),
                                       ),
                                     ),
                                     const Divider(
@@ -358,7 +359,7 @@ class _ShowDetailDialogState extends State<ShowDetailDialog> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
-                                            'Rated HT Current : ${transformer.ratedHtCurrent ?? ''}'),
+                                            'Rated HT Current : ${transformer.ratedHTCurrent ?? ''}'),
                                       ),
                                     ),
                                     const Divider(

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:gis_app_bpdb/views/regions/filter_pole_detail.dart';
+import 'package:gis_app_bpdb/views/pole/filter_pole_detail.dart';
 import 'package:intl/intl.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../api/api.dart';
 import '../../api/consumer_api.dart';
+import '../../api/pole_api.dart';
 import '../../api/region_api.dart';
+import '../../constants/constant.dart';
+import '../../models/Login/login.dart';
 import '../../models/pole_lookup/pole.dart';
 import '../../models/pole_lookup/pole_condition.dart';
 import '../../models/pole_lookup/pole_type.dart';
@@ -16,7 +19,7 @@ import '../../models/regions/snd_info.dart';
 import '../../models/regions/zone.dart';
 import '../../widgets/noti/notifications.dart';
 import '../../widgets/widgets/fieldset_legend.dart';
-import 'polebysnd_filter.dart';
+import 'filter_pole_by_snd.dart';
 
 class AddPoleInfo extends StatefulWidget {
   const AddPoleInfo({super.key});
@@ -99,6 +102,7 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
 
   var dt = DateTime.now(); // Date-Time
   bool isLoading = false;
+  User? user = globalUser;
 
   @override
   void initState() {
@@ -109,8 +113,10 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
     snds = Future.value([]);
     esu = Future.value([]);
 
-    fetchPoleType = CallRegionApi().fetchPoleType();
-    fetchPoleCondition = CallRegionApi().fetchPoleCondition();
+    fetchPoleType = CallPoleApi().fetchPoleType();
+    fetchPoleCondition = CallPoleApi().fetchPoleCondition();
+    _surveyDateController.text = DateFormat('yyyy-MM-dd').format(dt);
+    _startDateController.text = DateFormat('yyyy-MM-dd').format(dt);
   }
 
   void setLoading(bool loading) {
@@ -213,6 +219,21 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    if (user?.ZoneId != null) {
+      selectedZoneId = user!.ZoneId;
+      circles = CallApi().fetchCircleInfo(selectedZoneId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.CircleId != null) {
+      selectedCircleId = user!.CircleId;
+      snds = CallApi().fetchSnDInfo(selectedCircleId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.SndId != null) {
+      selectedSnDId = user!.SndId;
+    }
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(70),
@@ -550,7 +571,7 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                     FieldsetLegend(
                       legendText: 'Pole Information',
                       children: [
-                        _buildTextField(_poleId, 'Pole Id', true),
+                        // _buildTextField(_poleId, 'Pole Id', true),
                         FutureBuilder<List<PoleType>>(
                           future: fetchPoleType,
                           builder: (context, snapshot) {
@@ -642,14 +663,14 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                       color: Color.fromARGB(255, 100, 97, 97),
                                       fontSize: 16.0,
                                     ),
-                                    // children: [
-                                    //   TextSpan(
-                                    //     text: ' *',
-                                    //     style: TextStyle(
-                                    //       color: Colors.red,
-                                    //     ),
-                                    //   ),
-                                    // ],
+                                    children: [
+                                      TextSpan(
+                                        text: ' *',
+                                        style: TextStyle(
+                                          color: Colors.red,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 items: snapshot.data!.map((poleCondition) {
@@ -700,18 +721,18 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                         color: Color.fromARGB(255, 100, 97, 97),
                                         fontSize: 16.0,
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: ' *',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
+                                      // children: [
+                                      //   TextSpan(
+                                      //     text: ' *',
+                                      //     style: TextStyle(
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ],
                                     ),
                                   ),
                                   Switch(
-                                    activeColor: Colors.blue,
+                                    //activeColor: Colors.blue,
                                     value: _streetLight,
                                     onChanged: itemSwitchStreetLight,
                                   ),
@@ -741,14 +762,14 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                         color: Color.fromARGB(255, 100, 97, 97),
                                         fontSize: 16.0,
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: ' *',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
+                                      // children: [
+                                      //   TextSpan(
+                                      //     text: ' *',
+                                      //     style: TextStyle(
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ],
                                     ),
                                   ),
                                   Switch(
@@ -781,14 +802,14 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                         color: Color.fromARGB(255, 100, 97, 97),
                                         fontSize: 16.0,
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: ' *',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
+                                      // children: [
+                                      //   TextSpan(
+                                      //     text: ' *',
+                                      //     style: TextStyle(
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ],
                                     ),
                                   ),
                                   Switch(
@@ -821,14 +842,14 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                         color: Color.fromARGB(255, 100, 97, 97),
                                         fontSize: 16.0,
                                       ),
-                                      children: [
-                                        TextSpan(
-                                          text: ' *',
-                                          style: TextStyle(
-                                            color: Colors.red,
-                                          ),
-                                        ),
-                                      ],
+                                      // children: [
+                                      //   TextSpan(
+                                      //     text: ' *',
+                                      //     style: TextStyle(
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //   ),
+                                      // ],
                                     ),
                                   ),
                                   Switch(
@@ -1012,7 +1033,8 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () async {
-                            final int poleId = await CallRegionApi().fetchMaxPoleId();
+                            final int poleId =
+                                await CallPoleApi().fetchMaxPoleId();
                             try {
                               int parseOrZero(String? text) {
                                 try {
@@ -1061,11 +1083,13 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
 
                               Poles pole = Poles(
                                 zoneId: checkNotSelect(selectedZoneId, 'Zone'),
-                                circleId: checkNotSelect(selectedCircleId, 'Circle'),
+                                circleId:
+                                    checkNotSelect(selectedCircleId, 'Circle'),
                                 sndId: checkNotSelect(selectedSnDId, 'Snd'),
                                 esuId: selectedEsuId,
                                 poleId: poleId,
-                                poleTypeId: checkNotSelect(selectedPoleTypeId, 'Pole Type'),
+                                poleTypeId: checkNotSelect(
+                                    selectedPoleTypeId, 'Pole Type'),
                                 poleConditionId: selectedPoleConditionId ?? 0,
                                 noOfWireHt: parseOrZero(_noOfWireHt.text),
                                 noOfWireLt: parseOrZero(_noOfWireLt.text),
@@ -1098,7 +1122,7 @@ class _AddPoleInfoState extends State<AddPoleInfo> {
                                 verificationStateId: 2,
                               );
 
-                              await CallRegionApi().createPole(pole);
+                              await CallPoleApi().createPole(pole);
 
                               Navigator.push(
                                 context,

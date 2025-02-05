@@ -775,7 +775,7 @@ class _EditDialogState extends State<EditDialog> {
                                     isPermittedToVerify: false,
                                     isPermittedToApprove: false,
                                     isEditAvailable: false,
-                                    feederLength: int.tryParse(_feederLength.text) ?? 0,
+                                    feederLength: double.tryParse(_feederLength.text) ?? 0,
                                     remarks: _remarks.text,
                                   ));
                                   Navigator.of(context).pop();

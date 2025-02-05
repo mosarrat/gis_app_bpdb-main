@@ -2,6 +2,8 @@
 
 import 'package:flutter/material.dart';
 import '../../api/api.dart';
+import '../../constants/constant.dart';
+import '../../models/Login/login.dart';
 import '../../models/regions/circle.dart';
 import '../../models/regions/feeder_line.dart';
 import '../../models/regions/substation.dart';
@@ -9,7 +11,6 @@ import '../../models/regions/zone.dart';
 import '../../models/regions/snd_info.dart';
 import '../../widgets/noti/notifications.dart';
 import 'pole_view.dart';
-
 
 class FilterPoleDetails extends StatefulWidget {
   const FilterPoleDetails({super.key});
@@ -25,7 +26,6 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
   late Future<List<Substation>> substations;
   late Future<List<FeederLine>> feederLines;
 
-
   int? selectedZoneId;
   int? selectedCircleId;
   int? selectedSnDId;
@@ -34,6 +34,7 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
   //int? consumerNo;
 
   bool isLoading = false;
+  User? user = globalUser;
 
   @override
   void initState() {
@@ -106,28 +107,47 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
     double deviceFontSize = 16.0 * MediaQuery.textScaleFactorOf(context);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
+    if (user?.ZoneId != null) {
+      selectedZoneId = user!.ZoneId;
+      circles = CallApi().fetchCircleInfo(selectedZoneId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.CircleId != null) {
+      selectedCircleId = user!.CircleId;
+      snds = CallApi().fetchSnDInfo(selectedCircleId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
+    if (user?.SndId != null) {
+      selectedSnDId = user!.SndId;
+      substations =
+          CallApi().fetchSubstationInfo(selectedSnDId!).whenComplete(() {
+        setLoading(false);
+      });
+    }
 
     return Scaffold(
       appBar: AppBar(
         iconTheme: const IconThemeData(
           color: Colors.white, //change your color here
         ),
-        title: const Text('Filter Poles Info',
-        style: TextStyle(
-          fontSize: 25,
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
+        title: const Text(
+          'Filter Poles Info',
+          style: TextStyle(
+            fontSize: 25,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
         ),
+        backgroundColor: const Color.fromARGB(255, 5, 161, 182),
       ),
-      backgroundColor: const Color.fromARGB(255, 5, 161, 182),
-      ),
-      
       body: SingleChildScrollView(
-        padding: EdgeInsets.only(top: 8),
+          padding: EdgeInsets.only(top: 8),
           scrollDirection: Axis.vertical,
           physics: AlwaysScrollableScrollPhysics(),
           child: SizedBox(
-            child: Column(
+              child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -145,6 +165,7 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
                         }
 
                         if (snapshot.hasError) {
+                          print({snapshot.error});
                           return Center(
                               child: Text('Error: ${snapshot.error}'));
                         } else if (snapshot.hasData) {
@@ -429,7 +450,8 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
                                 ),
                               );
                             } else {
-                              showMessage('Please enter select a Feeder Line', 'error');
+                              showMessage(
+                                  'Please enter select a Feeder Line', 'error');
                             }
                           },
                           style: ButtonStyle(
@@ -437,14 +459,17 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
                                 MaterialStateProperty.resolveWith((states) {
                               // Adjust the color based on the button state
                               if (states.contains(MaterialState.pressed)) {
-                                return const Color.fromARGB(255, 5, 161, 182).withOpacity(0.5);
+                                return const Color.fromARGB(255, 5, 161, 182)
+                                    .withOpacity(0.5);
                               }
                               return const Color.fromARGB(255, 5, 161, 182);
                             }),
                             shape: MaterialStateProperty.all(
                                 RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
-                              side: const BorderSide(color: Color.fromARGB(255, 5, 161, 182),),
+                              side: const BorderSide(
+                                color: Color.fromARGB(255, 5, 161, 182),
+                              ),
                             )),
                             elevation: MaterialStateProperty.all(4),
                           ),
@@ -465,8 +490,7 @@ class _FilterPoleDetailsState extends State<FilterPoleDetails> {
                 const Center(
                   child: CircularProgressIndicator(),
                 ),
-
-                const SizedBox(height: 16.0),
+              const SizedBox(height: 16.0),
             ],
           ))),
     );

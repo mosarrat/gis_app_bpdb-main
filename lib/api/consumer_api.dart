@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import '../constants/constant.dart';
 import '../models/app_config.dart';
-import '../models/consumer_form_lookup/consumer_list.dart';
+// import '../models/consumer_form_lookup/consumer_list.dart';
 import '../models/consumer_lookup/consumers.dart';
 import '../models/consumer_form_lookup/connection_status.dart';
 import '../models/consumer_form_lookup/connection_type.dart';
@@ -23,7 +23,7 @@ import '../models/consumer_form_lookup/consumer_type.dart';
 import '../models/regions/esu_info.dart';
 import '../models/consumer_form_lookup/tariff_category.dart';
 import '../models/consumer_form_lookup/bussiness_type.dart';
-import '../models/consumer_lookup/single_consumers.dart';
+// import '../models/consumer_lookup/single_consumers.dart';
 // Consumer Info
 
 class CallConsumerApi {
@@ -241,9 +241,10 @@ class CallConsumerApi {
     String? consumerNo,
   }) async {
     final String apiUrl = '$myAPILink/api/Consumers';
-
-    // print('feederLineId: $feederLineId');
-    // print('consumerNo: $consumerNo');
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
     final Uri uri = Uri.parse(
       consumerNo != null && consumerNo.isNotEmpty
           ? '$apiUrl/$consumerNo'
@@ -254,7 +255,14 @@ class CallConsumerApi {
     // print('Constructed URI: $uri');
 
     try {
-      final response = await http.get(uri);
+      //final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
       // print('Response status code: ${response.statusCode}');
       if (response.statusCode == 200) {
         //debugPrint(response.body);
@@ -276,111 +284,266 @@ class CallConsumerApi {
     }
   }
 
+  Future<int> fetchMaxConsumerId() async {
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+    try {
+      final response = await http.get(
+        Uri.parse('$myAPILink/api/Consumers/maxId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return int.parse(response.body);
+      } else {
+        throw 'Failed to fetch maxId';
+      }
+    } catch (e) {
+      throw 'Error fetching maxId: $e';
+    }
+  }
 
   Future<Consumers> createConsumer(Consumers consumer) async {
     /// Condition Checking ///
-    if (consumer.unionGeoCode == "" || consumer.unionGeoCode == null) {
-      throw "Please Provide Union Geocode";
-    } else {
-      final requestData = {
-        'zoneId': consumer.zoneId != 0 ? consumer.zoneId : null,
-        'circleId': consumer.circleId != 0 ? consumer.circleId : null,
-        'sndId': consumer.sndId != 0 ? consumer.sndId : null,
-        'esuId': consumer.esuId != 0 ? consumer.esuId : null,
-        'substationId':
-            consumer.substationId != 0 ? consumer.substationId : null,
-        'feederLineId':
-            consumer.feederLineId != 0 ? consumer.feederLineId : null,
-        'poleDetailsId':
-            consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
-        'servicesPointId':
-            consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
-        'dtId': consumer.dtId != 0 ? consumer.dtId : null,
-        'feederUId': consumer.feederUId != 0 ? consumer.feederUId : null,
-        'unionGeoCode': consumer.unionGeoCode,
-        'consumerId': consumer.consumerId,
-        'customerName': consumer.customerName,
-        'customerNameBng': consumer.customerNameBng,
-        'fatherName': consumer.fatherName,
-        'customerNid': consumer.customerNid,
-        'mobileNo': consumer.mobileNo,
-        'email': consumer.email,
-        'consumerNo': consumer.consumerNo,
-        'accountNumber': consumer.accountNumber,
-        'consumerTypeId':
-            consumer.consumerTypeId != 0 ? consumer.consumerTypeId : null,
-        'customerAddress': consumer.customerAddress,
-        'plotNo': consumer.plotNo,
-        'buildingAptNo': consumer.buildingAptNo,
-        'premiseName': consumer.premiseName,
-        'numberOfFloor':
-            consumer.numberOfFloor != 0 ? consumer.numberOfFloor : null,
-        'tariffCategoryId':
-            consumer.tariffCategoryId != 0 ? consumer.tariffCategoryId : null,
-        'tariffSubCategoryId': consumer.tariffSubCategoryId != 0
-            ? consumer.tariffSubCategoryId
-            : null,
-        'meterTypeId': consumer.meterTypeId != 0 ? consumer.meterTypeId : null,
-        'meterModel': consumer.meterModel,
-        'meterNumber': consumer.meterNumber,
-        'meterManufacturer': consumer.meterManufacturer,
-        'meterReading':
-            consumer.meterReading != 0 ? consumer.meterReading : null,
-        'phasingCodeTypeId':
-            consumer.phasingCodeTypeId != 0 ? consumer.phasingCodeTypeId : null,
-        'operatingVoltageId': consumer.operatingVoltageId != 0
-            ? consumer.operatingVoltageId
-            : null,
-        'installDate': consumer.installDate,
-        'connectionStatusId': consumer.connectionStatusId != 0
-            ? consumer.connectionStatusId
-            : null,
-        'connectionTypeId':
-            consumer.connectionTypeId != 0 ? consumer.connectionTypeId : null,
-        'sanctionedLoad':
-            consumer.sanctionedLoad != 0 ? consumer.sanctionedLoad : null,
-        'connectedLoad':
-            consumer.connectedLoad != 0 ? consumer.connectedLoad : null,
-        'businessTypeId':
-            consumer.businessTypeId != 0 ? consumer.businessTypeId : null,
-        'othersBusiness': consumer.othersBusiness,
-        'specialCode': consumer.specialCode,
-        'specialType': consumer.specialType,
-        'locationId': consumer.locationId != 0 ? consumer.locationId : null,
-        'billGroup': consumer.billGroup,
-        'bookNumber': consumer.bookNumber,
-        'omfKwh': consumer.omfKwh != 0.0 ? consumer.omfKwh : null,
-        'serviceCableSize':
-            consumer.serviceCableSize != 0.0 ? consumer.serviceCableSize : null,
-        'serviceCableTypeId': consumer.serviceCableTypeId != 0.0
-            ? consumer.serviceCableTypeId
-            : null,
-        'surveyDate': consumer.surveyDate,
-        'latitude': consumer.latitude,
-        'longitude': consumer.longitude,
-        'structureId': consumer.structureId != '' ? consumer.structureId : null,
-        'structureMapNo':
-            consumer.structureMapNo != '' ? consumer.structureMapNo : null,
-        'structureTypeId':
-            consumer.structureTypeId != 0 ? consumer.structureTypeId : null,
-        'startingDate': consumer.startingDate,
-        'remarks': consumer.remarks,
-        'activationStatusId': consumer.activationStatusId,
-        'verificationStateId': consumer.verificationStateId,
-        'distance_from_sp': consumer.distance_from_sp,
-      };
-      try {
-        final response = await http.post(
-          Uri.parse('$myAPILink/api/Consumers'),
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-          body: jsonEncode(requestData),
-        );
-        if (response.statusCode == 201) {
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+    final requestData = {
+      'zoneId': consumer.zoneId != 0 ? consumer.zoneId : null,
+      'circleId': consumer.circleId != 0 ? consumer.circleId : null,
+      'sndId': consumer.sndId != 0 ? consumer.sndId : null,
+      'esuId': consumer.esuId != 0 ? consumer.esuId : null,
+      'substationId': consumer.substationId != 0 ? consumer.substationId : null,
+      'feederLineId': consumer.feederLineId != 0 ? consumer.feederLineId : null,
+      'poleDetailsId':
+          consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
+      'servicesPointId':
+          consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
+      'dtId': consumer.dtId != 0 ? consumer.dtId : null,
+      'feederUId': consumer.feederUId != 0 ? consumer.feederUId : null,
+      'unionGeoCode': consumer.unionGeoCode,
+      'consumerId': consumer.consumerId,
+      'customerName': consumer.customerName,
+      'customerNameBng': consumer.customerNameBng,
+      'fatherName': consumer.fatherName,
+      'customerNid': consumer.customerNid,
+      'mobileNo': consumer.mobileNo,
+      'email': consumer.email != "" ? consumer.email : null,
+      'consumerNo': consumer.consumerNo,
+      'accountNumber': consumer.accountNumber,
+      'consumerTypeId':
+          consumer.consumerTypeId != 0 ? consumer.consumerTypeId : null,
+      'customerAddress': consumer.customerAddress,
+      'plotNo': consumer.plotNo,
+      'buildingAptNo': consumer.buildingAptNo,
+      'premiseName': consumer.premiseName,
+      'numberOfFloor':
+          consumer.numberOfFloor != 0 ? consumer.numberOfFloor : null,
+      'tariffCategoryId':
+          consumer.tariffCategoryId != 0 ? consumer.tariffCategoryId : null,
+      'tariffSubCategoryId': consumer.tariffSubCategoryId != 0
+          ? consumer.tariffSubCategoryId
+          : null,
+      'meterTypeId': consumer.meterTypeId != 0 ? consumer.meterTypeId : null,
+      'meterModel': consumer.meterModel,
+      'meterNumber': consumer.meterNumber,
+      'meterManufacturer': consumer.meterManufacturer,
+      'meterReading': consumer.meterReading != 0 ? consumer.meterReading : null,
+      'phasingCodeTypeId':
+          consumer.phasingCodeTypeId != 0 ? consumer.phasingCodeTypeId : null,
+      'operatingVoltageId':
+          consumer.operatingVoltageId != 0 ? consumer.operatingVoltageId : null,
+      'installDate': consumer.installDate != "" ? consumer.installDate : null,
+      'connectionStatusId':
+          consumer.connectionStatusId != 0 ? consumer.connectionStatusId : null,
+      'connectionTypeId':
+          consumer.connectionTypeId != 0 ? consumer.connectionTypeId : null,
+      'sanctionedLoad':
+          consumer.sanctionedLoad != 0 ? consumer.sanctionedLoad : null,
+      'connectedLoad':
+          consumer.connectedLoad != 0 ? consumer.connectedLoad : null,
+      'businessTypeId':
+          consumer.businessTypeId != 0 ? consumer.businessTypeId : null,
+      'othersBusiness': consumer.othersBusiness,
+      'specialCode': consumer.specialCode,
+      'specialType': consumer.specialType,
+      'locationId': consumer.locationId != 0 ? consumer.locationId : null,
+      'billGroup': consumer.billGroup,
+      'bookNumber': consumer.bookNumber,
+      'omfKwh': consumer.omfKwh != 0.0 ? consumer.omfKwh : null,
+      'serviceCableSize':
+          consumer.serviceCableSize != 0.0 ? consumer.serviceCableSize : null,
+      'serviceCableTypeId': consumer.serviceCableTypeId != 0.0
+          ? consumer.serviceCableTypeId
+          : null,
+      'surveyDate': consumer.surveyDate,
+      'latitude': consumer.latitude,
+      'longitude': consumer.longitude,
+      'structureId': consumer.structureId != '' ? consumer.structureId : null,
+      'structureMapNo':
+          consumer.structureMapNo != '' ? consumer.structureMapNo : null,
+      'structureTypeId':
+          consumer.structureTypeId != 0 ? consumer.structureTypeId : null,
+      'startingDate': consumer.startingDate,
+      'remarks': consumer.remarks,
+      'activationStatusId': consumer.activationStatusId,
+      'verificationStateId': consumer.verificationStateId,
+      'distance_from_sp': consumer.distance_from_sp,
+    };
+    // debugPrint('Request Data: $requestData');
+    // return Future.error('Stopped execution for debugging.');
+    try {
+      final response = await http.post(
+        Uri.parse('$myAPILink/api/Consumers'),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestData),
+      );
+      if (response.statusCode == 201) {
+        final jsonResponse = jsonDecode(response.body);
+        return Consumers.fromJson(jsonResponse);
+      } else {
+        final responseBody = jsonDecode(response.body);
+        final errors = responseBody['errors'];
+        final fieldName = errors.keys.first;
+        //print('Field causing error: $fieldName');
+        throw "$fieldName";
+      }
+    } catch (e) {
+      if (e is FormatException) {
+        throw 'Consumer Number Is Required to Be Unique';
+      } else {
+        throw 'Failed to create consumer. Please Check $e';
+      }
+      //throw 'Failed to create consumer. Please Check $e';
+    }
+    //}
+  }
+
+  Future<Consumers> updateConsumer(Consumers consumer) async {
+    //print("union: ${consumer.unionGeoCode}");
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+    final requestData = {
+      'zoneId': consumer.zoneId != 0 ? consumer.zoneId : null,
+      'circleId': consumer.circleId != 0 ? consumer.circleId : null,
+      'sndId': consumer.sndId != 0 ? consumer.sndId : null,
+      'esuId': consumer.esuId != 0 ? consumer.esuId : null,
+      'substationId': consumer.substationId != 0 ? consumer.substationId : null,
+      'feederLineId': consumer.feederLineId != 0 ? consumer.feederLineId : null,
+      'poleDetailsId':
+          consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
+      'servicesPointId':
+          consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
+      'dtId': consumer.dtId != 0 ? consumer.dtId : null,
+      'feederUId': consumer.feederUId != 0 ? consumer.feederUId : null,
+      'unionGeoCode': consumer.unionGeoCode!= ''? consumer.unionGeoCode : null,
+      'consumerId': consumer.consumerId,
+      'customerName': consumer.customerName,
+      'customerNameBng': consumer.customerNameBng,
+      'fatherName': consumer.fatherName,
+      'customerNid': consumer.customerNid,
+      'mobileNo': consumer.mobileNo,
+      'email': consumer.email,
+      'consumerNo': consumer.consumerNo,
+      'accountNumber': consumer.accountNumber,
+      'consumerTypeId':
+          consumer.consumerTypeId != 0 ? consumer.consumerTypeId : null,
+      'customerAddress': consumer.customerAddress,
+      'plotNo': consumer.plotNo,
+      'buildingAptNo': consumer.buildingAptNo,
+      'premiseName': consumer.premiseName,
+      'numberOfFloor':
+          consumer.numberOfFloor != 0 ? consumer.numberOfFloor : null,
+      'tariffCategoryId':
+          consumer.tariffCategoryId != 0 ? consumer.tariffCategoryId : null,
+      'tariffSubCategoryId': consumer.tariffSubCategoryId != 0
+          ? consumer.tariffSubCategoryId
+          : null,
+      'meterTypeId': consumer.meterTypeId != 0 ? consumer.meterTypeId : null,
+      'meterModel': consumer.meterModel,
+      'meterNumber': consumer.meterNumber,
+      'meterManufacturer': consumer.meterManufacturer,
+      'meterReading': consumer.meterReading != 0 ? consumer.meterReading : null,
+      'phasingCodeTypeId':
+          consumer.phasingCodeTypeId != 0 ? consumer.phasingCodeTypeId : null,
+      'operatingVoltageId':
+          consumer.operatingVoltageId != 0 ? consumer.operatingVoltageId : null,
+      'installDate': consumer.installDate,
+      'connectionStatusId':
+          consumer.connectionStatusId != 0 ? consumer.connectionStatusId : null,
+      'connectionTypeId':
+          consumer.connectionTypeId != 0 ? consumer.connectionTypeId : null,
+      'sanctionedLoad':
+          consumer.sanctionedLoad != 0 ? consumer.sanctionedLoad : null,
+      'connectedLoad':
+          consumer.connectedLoad != 0 ? consumer.connectedLoad : null,
+      'businessTypeId':
+          consumer.businessTypeId != 0 ? consumer.businessTypeId : null,
+      'othersBusiness': consumer.othersBusiness,
+      'specialCode': consumer.specialCode,
+      'specialType': consumer.specialType,
+      'locationId': consumer.locationId != 0 ? consumer.locationId : null,
+      'billGroup': consumer.billGroup,
+      'bookNumber': consumer.bookNumber,
+      'omfKwh': consumer.omfKwh != 0.0 ? consumer.omfKwh : null,
+      'serviceCableSize':
+          consumer.serviceCableSize != 0.0 ? consumer.serviceCableSize : null,
+      'serviceCableTypeId': consumer.serviceCableTypeId != 0.0
+          ? consumer.serviceCableTypeId
+          : null,
+      'surveyDate': consumer.surveyDate,
+      'latitude': consumer.latitude,
+      'longitude': consumer.longitude,
+      'structureId': consumer.structureId != '' ? consumer.structureId : null,
+      'structureMapNo':
+          consumer.structureMapNo != '' ? consumer.structureMapNo : null,
+      'structureTypeId':
+          consumer.structureTypeId != 0 ? consumer.structureTypeId : null,
+      'startingDate': consumer.startingDate,
+      'remarks': consumer.remarks,
+      'activationStatusId': consumer.activationStatusId,
+      'verificationStateId': consumer.verificationStateId,
+      'distance_from_sp': consumer.distance_from_sp,
+    };
+    try {
+      final response = await http.put(
+        Uri.parse('$myAPILink/api/Consumers/${consumer.consumerNo}'),
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode(requestData),
+      );
+      //print(response.statusCode);
+      if (response.statusCode == 200) {
+        if (response.body.isNotEmpty) {
           final jsonResponse = jsonDecode(response.body);
           return Consumers.fromJson(jsonResponse);
+        } else {
+          throw Exception("Expected JSON response body is empty");
+        }
+      } else if (response.statusCode == 204) {
+        return consumer;
+      } else {
+        if (response.statusCode == 500) {
+          final errorResponse = response.body.isNotEmpty
+              ? jsonDecode(response.body)
+              : {'title': 'Unknown Error', 'traceId': 'N/A'};
+          throw Exception(
+              "Failed to update data. Status Code: ${response.statusCode}, Response Body: ${errorResponse['title']}, Trace ID: ${errorResponse['traceId']}");
         } else {
           final responseBody = jsonDecode(response.body);
           final errors = responseBody['errors'];
@@ -388,141 +551,10 @@ class CallConsumerApi {
           //print('Field causing error: $fieldName');
           throw "$fieldName";
         }
-      } catch (e) {
-        throw 'Failed to create consumer. Please Check $e';
       }
-    }
-  }
-
-  Future<Consumers> updateConsumer(Consumers consumer) async {
-    if (consumer.unionGeoCode == "" || consumer.unionGeoCode == null) {
-      throw "Please Provide Union Geocode";
-    } else {
-      final requestData = {
-        'zoneId': consumer.zoneId != 0 ? consumer.zoneId : null,
-        'circleId': consumer.circleId != 0 ? consumer.circleId : null,
-        'sndId': consumer.sndId != 0 ? consumer.sndId : null,
-        'esuId': consumer.esuId != 0 ? consumer.esuId : null,
-        'substationId':
-            consumer.substationId != 0 ? consumer.substationId : null,
-        'feederLineId':
-            consumer.feederLineId != 0 ? consumer.feederLineId : null,
-        'poleDetailsId':
-            consumer.poleDetailsId != 0 ? consumer.poleDetailsId : null,
-        'servicesPointId':
-            consumer.servicesPointId != 0 ? consumer.servicesPointId : null,
-        'dtId': consumer.dtId != 0 ? consumer.dtId : null,
-        'feederUId': consumer.feederUId != 0 ? consumer.feederUId : null,
-        'unionGeoCode': consumer.unionGeoCode,
-        'consumerId': consumer.consumerId,
-        'customerName': consumer.customerName,
-        'customerNameBng': consumer.customerNameBng,
-        'fatherName': consumer.fatherName,
-        'customerNid': consumer.customerNid,
-        'mobileNo': consumer.mobileNo,
-        'email': consumer.email,
-        'consumerNo': consumer.consumerNo,
-        'accountNumber': consumer.accountNumber,
-        'consumerTypeId':
-            consumer.consumerTypeId != 0 ? consumer.consumerTypeId : null,
-        'customerAddress': consumer.customerAddress,
-        'plotNo': consumer.plotNo,
-        'buildingAptNo': consumer.buildingAptNo,
-        'premiseName': consumer.premiseName,
-        'numberOfFloor':
-            consumer.numberOfFloor != 0 ? consumer.numberOfFloor : null,
-        'tariffCategoryId':
-            consumer.tariffCategoryId != 0 ? consumer.tariffCategoryId : null,
-        'tariffSubCategoryId': consumer.tariffSubCategoryId != 0
-            ? consumer.tariffSubCategoryId
-            : null,
-        'meterTypeId': consumer.meterTypeId != 0 ? consumer.meterTypeId : null,
-        'meterModel': consumer.meterModel,
-        'meterNumber': consumer.meterNumber,
-        'meterManufacturer': consumer.meterManufacturer,
-        'meterReading':
-            consumer.meterReading != 0 ? consumer.meterReading : null,
-        'phasingCodeTypeId':
-            consumer.phasingCodeTypeId != 0 ? consumer.phasingCodeTypeId : null,
-        'operatingVoltageId': consumer.operatingVoltageId != 0
-            ? consumer.operatingVoltageId
-            : null,
-        'installDate': consumer.installDate,
-        'connectionStatusId': consumer.connectionStatusId != 0
-            ? consumer.connectionStatusId
-            : null,
-        'connectionTypeId':
-            consumer.connectionTypeId != 0 ? consumer.connectionTypeId : null,
-        'sanctionedLoad':
-            consumer.sanctionedLoad != 0 ? consumer.sanctionedLoad : null,
-        'connectedLoad':
-            consumer.connectedLoad != 0 ? consumer.connectedLoad : null,
-        'businessTypeId':
-            consumer.businessTypeId != 0 ? consumer.businessTypeId : null,
-        'othersBusiness': consumer.othersBusiness,
-        'specialCode': consumer.specialCode,
-        'specialType': consumer.specialType,
-        'locationId': consumer.locationId != 0 ? consumer.locationId : null,
-        'billGroup': consumer.billGroup,
-        'bookNumber': consumer.bookNumber,
-        'omfKwh': consumer.omfKwh != 0.0 ? consumer.omfKwh : null,
-        'serviceCableSize':
-            consumer.serviceCableSize != 0.0 ? consumer.serviceCableSize : null,
-        'serviceCableTypeId': consumer.serviceCableTypeId != 0.0
-            ? consumer.serviceCableTypeId
-            : null,
-        'surveyDate': consumer.surveyDate,
-        'latitude': consumer.latitude,
-        'longitude': consumer.longitude,
-        'structureId': consumer.structureId != '' ? consumer.structureId : null,
-        'structureMapNo':
-            consumer.structureMapNo != '' ? consumer.structureMapNo : null,
-        'structureTypeId':
-            consumer.structureTypeId != 0 ? consumer.structureTypeId : null,
-        'startingDate': consumer.startingDate,
-        'remarks': consumer.remarks,
-        'activationStatusId': consumer.activationStatusId,
-        'verificationStateId': consumer.verificationStateId,
-        'distance_from_sp': consumer.distance_from_sp,
-      };
-
-      try {
-        final response = await http.put(
-          Uri.parse('$myAPILink/api/Consumers/${consumer.consumerNo}'),
-          headers: {
-            "Content-Type": "application/json",
-            "Accept": "application/json",
-          },
-          body: jsonEncode(requestData),
-        );
-        if (response.statusCode == 200) {
-          if (response.body.isNotEmpty) {
-            final jsonResponse = jsonDecode(response.body);
-            return Consumers.fromJson(jsonResponse);
-          } else {
-            throw Exception("Expected JSON response body is empty");
-          }
-        } else if (response.statusCode == 204) {
-          return consumer;
-        } else {
-          if (response.statusCode == 500) {
-            final errorResponse = response.body.isNotEmpty
-                ? jsonDecode(response.body)
-                : {'title': 'Unknown Error', 'traceId': 'N/A'};
-            throw Exception(
-                "Failed to update data. Status Code: ${response.statusCode}, Response Body: ${errorResponse['title']}, Trace ID: ${errorResponse['traceId']}");
-          } else {
-            final responseBody = jsonDecode(response.body);
-            final errors = responseBody['errors'];
-            final fieldName = errors.keys.first;
-            //print('Field causing error: $fieldName');
-            throw "$fieldName";
-          }
-        }
-      } catch (error) {
-        //print("Error: $error");
-        throw "Please Check $error";
-      }
+    } catch (error) {
+      //print("Error: $error");
+      throw "Please Check $error";
     }
   }
 
@@ -545,6 +577,35 @@ class CallConsumerApi {
     } catch (error) {
       print("Error: $error");
       throw Exception("An error occurred: $error");
+    }
+  }
+
+  Future<Consumers> fetchConsumerById(int consumerId) async {
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+
+    final response = await http.get(
+      Uri.parse('$myAPILink/api/Consumers/$consumerId'),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+
+      if (data.isNotEmpty) {
+        // Assuming the first item in the list is the consumer data you're interested in
+        return Consumers.fromJson(data[0]);
+      } else {
+        throw Exception('No consumer data found');
+      }
+    } else {
+      throw Exception('Failed to load consumer info');
     }
   }
 }

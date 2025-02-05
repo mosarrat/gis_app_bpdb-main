@@ -704,13 +704,13 @@ class _NewFedderLineState extends State<NewFedderLine> {
                         isPermittedToVerify: false,
                         isPermittedToApprove: false,
                         isEditAvailable: false,
-                        feederLength: int.tryParse(_feederLength.text) ?? 0,
+                        feederLength: double.tryParse(_feederLength.text) ?? 0,
                         remarks: _remarks.text,
                       ));
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ViewFeederlines()),
+                             builder: (context) => ViewFeederlines()),   
                       );
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Feeder Line Info Created Successfully'),backgroundColor: Colors.green),

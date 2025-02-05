@@ -4,17 +4,18 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:gis_app_bpdb/models/region_delails_lookup/dt_info.dart';
+// import 'package:gis_app_bpdb/models/region_delails_lookup/dt_info.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
 import '../constants/constant.dart';
+import '../models/Login/login.dart';
 import '../models/app_config.dart';
 import '../models/consumer_lookup/tariff_sub_category,dart';
 import '../models/consumer_lookup/single_consumers.dart';
 import '../models/region_delails_lookup/circle.dart';
-import '../models/pole_lookup/pole_condition.dart';
-import '../models/pole_lookup/pole_type.dart';
+// import '../models/pole_lookup/pole_condition.dart';
+// import '../models/pole_lookup/pole_type.dart';
 import '../models/region_delails_lookup/snd.dart';
 import '../models/region_delails_lookup/substation.dart';
 import '../models/regions/distribution_transformer.dart';
@@ -68,110 +69,243 @@ class CallApi {
   }
 
   //#region  :: API Calling
-  Future<Map<String, dynamic>> fetchDashboardCounting() async {
-    final response =
-        await http.get(Uri.parse('$myAPILink/api/Consumers/count'));
+  // Future<Map<String, dynamic>> fetchDashboardCounting() async {
+  //   final String? token = globalToken;
+
+  //   if (token == null) {
+  //     throw Exception('Token is missing. User is not authenticated.');
+  //   }
+  //   final response =
+  //       await http.get(
+  //         Uri.parse('$myAPILink/api/Consumers/count'),
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           "Accept": "application/json",
+  //           'Authorization': 'Bearer $token',
+  //         },
+  //       );
+
+  //   if (response.statusCode == 200) {
+  //     return jsonDecode(response.body);
+  //   } else {
+  //     throw Exception('Failed to load counting!');
+  //   }
+  // }
+  Future<String> fetchDashboardCounting() async {
+    final String? token = globalToken;
+
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
+
+    final response = await http.get(
+      Uri.parse('$myAPILink/api/Consumers/count'),
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final cleanedResponse = response.body.trim();
+      try {
+        //print('Cleaned response: $cleanedResponse');
+
+        final decodedResponse = jsonDecode(cleanedResponse);
+
+        // print('Decoded response: $decodedResponse');
+        // print('Decoded response type: ${decodedResponse.runtimeType}');
+        return decodedResponse;
+      } catch (e) {
+        throw Exception('Failed to parse response body: $e');
+      }
     } else {
-      throw Exception('Failed to load counting!');
+      throw Exception(
+          'Failed to load counting! Status code: ${response.statusCode}');
     }
   }
 
+  // Future<List<Zone>> fetchZoneInfo() async {
+  //   User? user = globalUser;
+  //   int? userZoneId = user?.ZoneId;
+  //   final response = await http.get(Uri.parse('$myAPILink/api/ZoneInfoes'));
+
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = jsonDecode(response.body);
+  //     return data.map<Zone>((json) => Zone.fromJson(json)).toList();
+  //   } else {
+  //     throw Exception('Failed to load zone info');
+  //   }
+  // }
+
   Future<List<Zone>> fetchZoneInfo() async {
-    final response = await http.get(Uri.parse('$myAPILink/api/ZoneInfoes'));
+    User? user = globalUser;
+    int? userZoneId = user?.ZoneId;
+
+    // Determine the API URL
+    String apiUrl = userZoneId != null
+        ? '$myAPILink/api/ZoneInfoes/$userZoneId'
+        : '$myAPILink/api/ZoneInfoes';
+
+    final response = await http.get(Uri.parse(apiUrl));
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map<Zone>((json) => Zone.fromJson(json)).toList();
+      final data = jsonDecode(response.body);
+
+      if (userZoneId != null) {
+        // Response for a single zone (Map object)
+        return [Zone.fromJson(data)];
+      } else {
+        // Response for multiple zones (List)
+        final List<dynamic> zoneList = data;
+        return zoneList.map<Zone>((json) => Zone.fromJson(json)).toList();
+      }
     } else {
       throw Exception('Failed to load zone info');
     }
   }
-//////////////////////------Map Daetails-------///////////////////////////  
+
+//////////////////////------Map Daetails-------///////////////////////////
   Future<void> fetchZoneDetailsInfo(int zoneId) async {
-  final response = await http.get(Uri.parse('$myAPILink/api/ZoneInfoes/$zoneId'));
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = jsonDecode(response.body);
-    final zone = Zone.fromJson(data);
-    GlobalVariables.centerLatitude = zone.centerLatitude;
-    GlobalVariables.centerLongitude = zone.centerLongitude;
-    GlobalVariables.defaultZoomLevel = zone.defaultZoomLevel.toDouble();
-  } else {
-    throw Exception('Failed to load Zone info');
-  }
-}
-
-  Future<void> fetchCircleDetailsInfo(int circleId) async {
-  final response = await http.get(Uri.parse('$myAPILink/api/CircleInfoes/$circleId'));
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    final circle = Circle.fromJson(data);
-    GlobalVariables.centerLatitude = circle.centerLatitude;
-    GlobalVariables.centerLongitude = circle.centerLongitude;
-    GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
-  } else {
-    throw Exception('Failed to load Zone info');
-  }
-}
-
-  Future<void> fetchSndDetailsInfo(int sndId) async {
-  final response = await http.get(Uri.parse('$myAPILink/api/SndInfoes/$sndId'));
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    final snd = Snd.fromJson(data);
-    GlobalVariables.centerLatitude = snd.centerLatitude;
-    GlobalVariables.centerLongitude = snd.centerLongitude;
-    GlobalVariables.defaultZoomLevel = snd.defaultZoomLevel?.toDouble();
-  } else {
-    throw Exception('Failed to load Zone info');
-  }
-}
-
-  Future<void> fetchSubstationDetailsInfo(int substationId) async {
-  final response = await http.get(Uri.parse('$myAPILink/api/Substations/$substationId'));
-
-  if (response.statusCode == 200) {
-    final Map<String, dynamic> data = jsonDecode(response.body);
-
-    final circle = Substations.fromJson(data);
-    GlobalVariables.centerLatitude = circle.latitude;
-    GlobalVariables.centerLongitude = circle.longitude;
-    GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
-  } else {
-    throw Exception('Failed to load Zone info');
-  }
-}
-//////////////////////------Map Daetails-------///////////////////////////  
-
-
-  Future<List<Circles>> fetchCircleInfo(int zoneId) async {
-    final response = await http
-        .get(Uri.parse('$myAPILink/api/CircleInfoes/search?zoneId=$zoneId'));
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/ZoneInfoes/$zoneId'));
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map<Circles>((json) => Circles.fromJson(json)).toList();
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      final zone = Zone.fromJson(data);
+      GlobalVariables.centerLatitude = zone.centerLatitude;
+      GlobalVariables.centerLongitude = zone.centerLongitude;
+      GlobalVariables.defaultZoomLevel = zone.defaultZoomLevel.toDouble();
     } else {
-      throw Exception('Failed to load circle info');
+      throw Exception('Failed to load Zone info');
     }
   }
 
-  Future<List<SndInfo>> fetchSnDInfo(int circleId) async {
-    final response = await http
-        .get(Uri.parse('$myAPILink/api/SndInfoes/search?circleId=$circleId'));
+  Future<void> fetchCircleDetailsInfo(int circleId) async {
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/CircleInfoes/$circleId'));
 
     if (response.statusCode == 200) {
-      final List<dynamic> data = jsonDecode(response.body);
-      return data.map<SndInfo>((json) => SndInfo.fromJson(json)).toList();
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      final circle = Circle.fromJson(data);
+      GlobalVariables.centerLatitude = circle.centerLatitude;
+      GlobalVariables.centerLongitude = circle.centerLongitude;
+      GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
     } else {
-      throw Exception('Failed to load SnD info');
+      throw Exception('Failed to load Zone info');
+    }
+  }
+
+  Future<void> fetchSndDetailsInfo(int sndId) async {
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/SndInfoes/$sndId'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      final snd = Snd.fromJson(data);
+      GlobalVariables.centerLatitude = snd.centerLatitude;
+      GlobalVariables.centerLongitude = snd.centerLongitude;
+      GlobalVariables.defaultZoomLevel = snd.defaultZoomLevel?.toDouble();
+    } else {
+      throw Exception('Failed to load Zone info');
+    }
+  }
+
+  Future<void> fetchSubstationDetailsInfo(int substationId) async {
+    final response =
+        await http.get(Uri.parse('$myAPILink/api/Substations/$substationId'));
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+
+      final circle = Substations.fromJson(data);
+      GlobalVariables.centerLatitude = circle.latitude;
+      GlobalVariables.centerLongitude = circle.longitude;
+      GlobalVariables.defaultZoomLevel = circle.defaultZoomLevel?.toDouble();
+    } else {
+      throw Exception('Failed to load Zone info');
+    }
+  }
+//////////////////////------Map Daetails-------///////////////////////////
+
+  // Future<List<Circles>> fetchCircleInfo(int zoneId) async {
+  //   final response = await http
+  //       .get(Uri.parse('$myAPILink/api/CircleInfoes/search?zoneId=$zoneId'));
+
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = jsonDecode(response.body);
+  //     return data.map<Circles>((json) => Circles.fromJson(json)).toList();
+  //   } else {
+  //     throw Exception('Failed to load circle info');
+  //   }
+  // }
+  Future<List<Circles>> fetchCircleInfo(int zoneId) async {
+    User? user = globalUser;
+    int? userCircleId = user?.CircleId;
+
+    // Determine the API URL
+    String apiUrl = userCircleId != null
+        ? '$myAPILink/api/CircleInfoes/$userCircleId'
+        : '$myAPILink/api/CircleInfoes/search?zoneId=$zoneId';
+
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (userCircleId != null) {
+        // Response for a single zone (Map object)
+        return [Circles.fromJson(data)];
+      } else {
+        // Response for multiple zones (List)
+        final List<dynamic> circleList = data;
+        return circleList
+            .map<Circles>((json) => Circles.fromJson(json))
+            .toList();
+      }
+    } else {
+      throw Exception('Failed to load Circle info');
+    }
+  }
+
+  // Future<List<SndInfo>> fetchSnDInfo(int circleId) async {
+  //   final response = await http
+  //       .get(Uri.parse('$myAPILink/api/SndInfoes/search?circleId=$circleId'));
+
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = jsonDecode(response.body);
+  //     return data.map<SndInfo>((json) => SndInfo.fromJson(json)).toList();
+  //   } else {
+  //     throw Exception('Failed to load SnD info');
+  //   }
+  // }
+  Future<List<SndInfo>> fetchSnDInfo(int circleId) async {
+    User? user = globalUser;
+    int? userSndId = user?.SndId;
+
+    // Determine the API URL
+    String apiUrl = userSndId != null
+        ? '$myAPILink/api/SndInfoes/$userSndId'
+        : '$myAPILink/api/SndInfoes/search?circleId=$circleId';
+
+    final response = await http.get(Uri.parse(apiUrl));
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+
+      if (userSndId != null) {
+        // Response for a single zone (Map object)
+        return [SndInfo.fromJson(data)];
+      } else {
+        // Response for multiple zones (List)
+        final List<dynamic> sndList = data;
+        return sndList.map<SndInfo>((json) => SndInfo.fromJson(json)).toList();
+      }
+    } else {
+      throw Exception('Failed to load SND info');
     }
   }
 
@@ -188,8 +322,14 @@ class CallApi {
   }
 
   Future<List<FeederLine>> fetchFeederLineInfo(int substationId) async {
-    final response = await http.get(Uri.parse(
-        '$myAPILink/api/FeederLines/search?substationId=$substationId'));
+    final String? token = globalToken;
+    final response = await http.get(
+      Uri.parse('$myAPILink/api/FeederLines/search?substationId=$substationId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -200,8 +340,14 @@ class CallApi {
   }
 
   Future<List<Pole>> fetchPoleInfo(int feederId) async {
+    final String? token = globalToken;
     final response = await http.get(
-        Uri.parse('$myAPILink/api/PoleDetails/search?feederLineId=$feederId'));
+      Uri.parse('$myAPILink/api/PoleDetails/search?feederLineId=$feederId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -211,24 +357,59 @@ class CallApi {
     }
   }
 
+  // Future<List<ServicePoint>> fetchServicePoints(int poleId) async {
+  //   final response = await http.get(
+  //       Uri.parse('$myAPILink/api/ServicePoints/search?poleDetailId=$poleId'));
+
+  //   if (response.statusCode == 200) {
+  //     final List<dynamic> data = jsonDecode(response.body);
+  //     return data
+  //         .map<ServicePoint>((json) => ServicePoint.fromJson(json))
+  //         .toList();
+  //   } else {
+  //     throw Exception('Failed to load feeder lines info');
+  //   }
+  // }
+
   Future<List<ServicePoint>> fetchServicePoints(int poleId) async {
+    final String? token = globalToken;
     final response = await http.get(
-        Uri.parse('$myAPILink/api/ServicePoints/search?poleDetailId=$poleId'));
+      Uri.parse('$myAPILink/api/ServicePoints/search?poleDetailId=$poleId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
+
+      // If data is empty, you can set a specific message or code here
+      if (data.isEmpty) {
+        // Handle the no data case (you can return an empty list or throw a custom exception)
+        throw 'No service points available for the selected pole.';
+      }
+
       return data
           .map<ServicePoint>((json) => ServicePoint.fromJson(json))
           .toList();
     } else {
-      throw Exception('Failed to load feeder lines info');
+      throw Exception(
+          'Failed to load service points info. Status code: ${response.statusCode}');
     }
   }
 
   Future<List<DistributionTransformer>> fetchDistributionTransformers(
       int poleId) async {
-    final response = await http.get(Uri.parse(
-        '$myAPILink/api/DistributionTransformers/search?poleDetailId=$poleId'));
+    final String? token = globalToken;
+    final response = await http.get(
+      Uri.parse(
+          '$myAPILink/api/DistributionTransformers/search?poleDetailId=$poleId'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
 
     if (response.statusCode == 200) {
       final List<dynamic> data = jsonDecode(response.body);
@@ -269,9 +450,19 @@ class CallApi {
   Future<Consumer> fetchConsumerDetail({required String consumerNo}) async {
     final String apiUrl = '$myAPILink/api/Consumers/$consumerNo';
     final Uri uri = Uri.parse(apiUrl);
+    final String? token = globalToken;
+    if (token == null) {
+      throw Exception('Token is missing. User is not authenticated.');
+    }
 
     try {
-      final response = await http.get(uri);
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      );
 
       if (response.statusCode == 200) {
         final dynamic data = jsonDecode(response.body);
@@ -518,5 +709,4 @@ class CallApi {
   // }
 
   // // #endregion
-
 }

@@ -84,7 +84,8 @@ class _MapViewerState extends State<MapViewer> {
                 borderRadius: BorderRadius.all(Radius.circular(3))),
             contentPadding: const EdgeInsets.all(0),
             insetPadding: const EdgeInsets.symmetric(horizontal: 16),
-            backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            // backgroundColor: const Color.fromARGB(255, 5, 161, 182),
+            backgroundColor: const Color.fromARGB(255, 3, 89, 100),
             content: SizedBox(
               width: MediaQuery.of(context).size.width * 0.8,
               height: MediaQuery.of(context).size.height * 0.6,
@@ -103,6 +104,8 @@ class _MapViewerState extends State<MapViewer> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       const TabBar(
+                        indicatorColor: const Color.fromARGB(255, 3, 89, 100),
+                        labelColor:  const Color.fromARGB(255, 3, 89, 100),
                         tabs: [
                           Tab(text: 'Details'),
                           Tab(text: 'Attachments'),
@@ -114,7 +117,7 @@ class _MapViewerState extends State<MapViewer> {
                             SingleChildScrollView(
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
+                                    horizontal: 1.0, vertical: 10.0),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -122,140 +125,54 @@ class _MapViewerState extends State<MapViewer> {
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Consumer No.',
                                             mapData['Consumer']
                                                 .toString()
-                                                .split('#')[0]),
-                                      ),
-                                    ),
+                                                .split('#')[0], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Consumer',
                                             mapData['Consumer']
                                                 .toString()
-                                                .split('#')[1]),
-                                      ),
-                                    ),
+                                                .split('#')[1], isAlternate: false),
                                     const Divider(
                                       height: 0,
                                     ),
-
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Meter No.',
                                             mapData['Consumer']
                                                 .toString()
-                                                .split('#')[2]),
-                                      ),
-                                    ),
+                                                .split('#')[2], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Zone',
                                             mapData['Consumer']
                                                 .toString()
-                                                .split('#')[3]),
-                                      ),
-                                    ),
+                                                .split('#')[3], isAlternate: false),
                                     const Divider(
                                       height: 0,
                                     ),
-
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 223, 240, 243),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'Circle',
                                             mapData['Consumer']
                                                 .toString()
-                                                .split('#')[4]),
-                                      ),
-                                    ),
+                                                .split('#')[4], isAlternate: true),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    Container(
-                                      width: MediaQuery.of(context).size.width,
-                                      height: boxheight,
-                                      color: const Color.fromARGB(
-                                          255, 241, 245, 245),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: _buildDetailItem(
+                                    _buildDetailItem(
                                             'SnD',
                                             mapData['Consumer']
                                                 .toString()
-                                                .split('#')[5]),
-                                      ),
-                                    ),
+                                                .split('#')[5], isAlternate: false),
                                     const Divider(
                                       height: 0,
                                     ),
-                                    // _buildDetailItem(
-                                    //     'Consumer No.',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[0]),
-                                    // _buildDetailItem(
-                                    //     'Consumer',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[1]),
-                                    // _buildDetailItem(
-                                    //     'Meter No.',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[2]),
-                                    // _buildDetailItem(
-                                    //     'Zone',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[3]),
-                                    // _buildDetailItem(
-                                    //     'Circle',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[4]),
-                                    // _buildDetailItem(
-                                    //     'SnD',
-                                    //     mapData['Consumer']
-                                    //         .toString()
-                                    //         .split('#')[5]),
                                   ],
                                 ),
                               ),
@@ -275,20 +192,21 @@ class _MapViewerState extends State<MapViewer> {
                       ),
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Card(
-                          color: const Color.fromARGB(255, 5, 161, 182),
+                        //child: Card(
+                          //color: const Color.fromARGB(255, 5, 161, 182),
                           child: TextButton(
                             child: const Text(
                               'Close',
                               style: TextStyle(
-                                  color: Colors.white,
+                                  // color: Colors.white,
+                                  color: const Color.fromARGB(255, 3, 89, 100),
                                   fontWeight: FontWeight.bold),
                             ),
                             onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),
-                        ),
+                        //),
                       ),
                     ],
                   ),
@@ -423,89 +341,35 @@ class _MapViewerState extends State<MapViewer> {
     );
   }
 
-  Widget _buildDetailItem(String label, String value) {
-
-    if (width < 400 && width > 200) {
-      return Padding(
-        padding: EdgeInsets.all(2.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '$label :',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
-              ),
-            ),
-            const SizedBox(height: 2),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.black87,
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
+Widget _buildDetailItem(String label, String value, {bool isAlternate = false}) {
+    return Container(
+      width: double.infinity,
+      height: 40,
+      color: isAlternate
+          ? const Color.fromARGB(255, 223, 240, 243)
+          : const Color.fromARGB(255, 241, 245, 245),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-              width: 200,
+              width: 150,
               child: Text(
-                label,
+                '$label :',
                 style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
+                    fontSize: 14, fontWeight: FontWeight.bold),
               ),
             ),
-            const SizedBox(width: 10),
             Expanded(
               child: Text(
-                ': $value',
-                style: const TextStyle(
-                  fontSize: 16,
-                  color: Colors.black87,
-                ),
+                value,
+                style: const TextStyle(fontSize: 14),
               ),
             ),
           ],
         ),
-      );
-    }
-    // return Padding(
-    //   padding: const EdgeInsets.only(bottom: 12.0),
-    //   child: Row(
-    //     crossAxisAlignment: CrossAxisAlignment.start,
-    //     children: [
-    //       SizedBox(
-    //         width: 150,
-    //         child: Text(
-    //           label,
-    //           style: const TextStyle(
-    //             fontWeight: FontWeight.bold,
-    //             color: Colors.black87,
-    //           ),
-    //         ),
-    //       ),
-    //       const SizedBox(width: 10),
-    //       Expanded(
-    //         child: Text(
-    //           ': $value',
-    //           style: const TextStyle(
-    //             fontSize: 16,
-    //             color: Colors.black87,
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    // );
+      ),
+    );
   }
 }
